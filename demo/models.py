@@ -7,7 +7,14 @@ Sample code for MonkeyType demonstration exercise at PyCon 2018.
 from datetime import datetime
 import enum
 from typing import (
-    Collection, Dict, Generic, List, NamedTuple, NewType, Optional, TypeVar
+    Collection,
+    Dict,
+    Generic,
+    List,
+    NamedTuple,
+    NewType,
+    Optional,
+    TypeVar,
 )
 
 

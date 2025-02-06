@@ -66,7 +66,7 @@ def make_user(**kwargs):
 
 
 def now():
-    if sys.platform != 'win32':
+    if sys.platform != "win32":
         return datetime.now()
 
     # Workaround for Windows where two close call to datetime.now() return
@@ -133,16 +133,13 @@ def test_commented():
     repo = FakeRepo(u, other, feedentry, commented)
     box = inbox.Inbox(u, repo)
 
-    assert (
-        box.aggregate()
-        == [
-            models.AggregatedItem(
-                type=models.EventType.COMMENTED,
-                text="Commenter commented on your post.",
-                published=commented.published,
-            )
-        ]
-    )
+    assert box.aggregate() == [
+        models.AggregatedItem(
+            type=models.EventType.COMMENTED,
+            text="Commenter commented on your post.",
+            published=commented.published,
+        )
+    ]
     assert box.summarize() == "You have 1 new comment."
 
 
@@ -153,16 +150,13 @@ def test_followed():
     repo = FakeRepo(u, other, event)
     box = inbox.Inbox(u, repo)
 
-    assert (
-        box.aggregate()
-        == [
-            models.AggregatedItem(
-                type=models.EventType.FOLLOWED,
-                text="Follower started following you.",
-                published=event.published,
-            )
-        ]
-    )
+    assert box.aggregate() == [
+        models.AggregatedItem(
+            type=models.EventType.FOLLOWED,
+            text="Follower started following you.",
+            published=event.published,
+        )
+    ]
     assert box.summarize() == "You have 1 new follower."
 
 
@@ -174,16 +168,13 @@ def test_one_like():
     repo = FakeRepo(u, liker, feedentry, event)
     box = inbox.Inbox(u, repo)
 
-    assert (
-        box.aggregate()
-        == [
-            models.AggregatedItem(
-                type=models.EventType.LIKED,
-                text='Liker liked your post "My Post".',
-                published=event.published,
-            )
-        ]
-    )
+    assert box.aggregate() == [
+        models.AggregatedItem(
+            type=models.EventType.LIKED,
+            text='Liker liked your post "My Post".',
+            published=event.published,
+        )
+    ]
     assert box.summarize() == "You have 1 new like."
 
 
@@ -197,16 +188,13 @@ def test_two_likes():
     repo = FakeRepo(u, liker1, liker2, feedentry, like1, like2)
     box = inbox.Inbox(u, repo)
 
-    assert (
-        box.aggregate()
-        == [
-            models.AggregatedItem(
-                type=models.EventType.LIKED,
-                text='Liker One and Liker Two liked your post "My Post".',
-                published=like2.published,
-            )
-        ]
-    )
+    assert box.aggregate() == [
+        models.AggregatedItem(
+            type=models.EventType.LIKED,
+            text='Liker One and Liker Two liked your post "My Post".',
+            published=like2.published,
+        )
+    ]
     assert box.summarize() == "You have 2 new likes."
 
 
@@ -222,16 +210,13 @@ def test_three_likes():
     repo = FakeRepo(u, liker1, liker2, liker3, feedentry, like1, like2, like3)
     box = inbox.Inbox(u, repo)
 
-    assert (
-        box.aggregate()
-        == [
-            models.AggregatedItem(
-                type=models.EventType.LIKED,
-                text='Liker One, Liker Two and 1 others liked your post "My Post".',
-                published=like3.published,
-            )
-        ]
-    )
+    assert box.aggregate() == [
+        models.AggregatedItem(
+            type=models.EventType.LIKED,
+            text='Liker One, Liker Two and 1 others liked your post "My Post".',
+            published=like3.published,
+        )
+    ]
     assert box.summarize() == "You have 3 new likes."
 
 
@@ -248,31 +233,28 @@ def test_everything():
     like2 = make_liked(user_id=u.id, liker_id=other.id, feedentry_id=second_entry.id)
     repo = FakeRepo(u, other, first_entry, second_entry, like1, like2, comment, follow)
     box = inbox.Inbox(u, repo)
-    assert (
-        box.aggregate()
-        == [
-            models.AggregatedItem(
-                type=models.EventType.LIKED,
-                text='Other liked your post "Second Post".',
-                published=like2.published,
-            ),
-            models.AggregatedItem(
-                type=models.EventType.COMMENTED,
-                text="Other commented on your post.",
-                published=comment.published,
-            ),
-            models.AggregatedItem(
-                type=models.EventType.LIKED,
-                text='Other liked your post "My First Post".',
-                published=like1.published,
-            ),
-            models.AggregatedItem(
-                type=models.EventType.FOLLOWED,
-                text="Other started following you.",
-                published=follow.published,
-            ),
-        ]
-    )
+    assert box.aggregate() == [
+        models.AggregatedItem(
+            type=models.EventType.LIKED,
+            text='Other liked your post "Second Post".',
+            published=like2.published,
+        ),
+        models.AggregatedItem(
+            type=models.EventType.COMMENTED,
+            text="Other commented on your post.",
+            published=comment.published,
+        ),
+        models.AggregatedItem(
+            type=models.EventType.LIKED,
+            text='Other liked your post "My First Post".',
+            published=like1.published,
+        ),
+        models.AggregatedItem(
+            type=models.EventType.FOLLOWED,
+            text="Other started following you.",
+            published=follow.published,
+        ),
+    ]
     assert box.summarize() == "You have 2 new likes, 1 new follower and 1 new comment."
 
 
@@ -280,8 +262,6 @@ def test_aggregator_interface():
     agg = inbox.AggregatorInterface(FakeRepo())
 
     agg.add(
-        models.InboxEvent(
-            models.InboxEventId(1), models.UserId(2), published=now()
-        )
+        models.InboxEvent(models.InboxEventId(1), models.UserId(2), published=now())
     )
     assert agg.aggregate() == []
