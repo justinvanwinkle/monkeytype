@@ -1,6 +1,9 @@
 [project]
 name = "monkeytype"
-requires-python = "==3.13"
+requires-python = ">=3.13"
+
+[tool.poetry]
+version = "2.1.1"
 
 [tool.black]
 line_length = 80
@@ -8,10 +11,6 @@ skip_magic_trailing_comma = true
 preview = true
 enable_unstable_feature = ["hug_parens_with_braces_and_square_brackets", "wrap_long_dict_values_in_parens"]
 target_version = ["py313"]
-
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta:__legacy__"
 
 [tool.isort]
 profile = "black"
@@ -27,3 +26,42 @@ force-single-line = true
 case-sensitive = false
 order-by-type = false
 force-sort-within-sections = false
+
+
+[tool.poetry.dependencies]
+supervisor = "*"
+pycurl = "^7.45.2"
+pytz = "^2023.3.post1"
+python-dateutil = "^2.8.2"
+jinja2 = "*"
+uuid6 = "*"
+werkzeug = "*"
+multidict = "^6.1.0"
+charset-normalizer = "^3.4.1"
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+isort = "*"
+flake8 = "*"
+# necessary to work with flake8 6.0.0
+pycodestyle = "<2.11"
+pytest = "*"
+exceptiongroup = {markers="python_version < '3.11.0'"}
+mypy = "*"
+sphinx = "<7.2"
+twine = "*"
+tomli = "*"
+tox = "*"
+setuptools_rust = "*"
+libcst = "*"
+importlib_metadata = "*"
+
+[tool.poetry.group.tools.dependencies]
+ipython = "*"
+jsbeautifier = "*"
+pyright = "*"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
