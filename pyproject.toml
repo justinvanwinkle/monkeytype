@@ -1,3 +1,14 @@
+[project]
+name = "monkeytype"
+requires-python = "==3.13"
+
+[tool.black]
+line_length = 120
+skip_magic_trailing_comma = true
+preview = true
+enable_unstable_feature = ["hug_parens_with_braces_and_square_brackets", "wrap_long_dict_values_in_parens"]
+target_version = ["py313"]
+
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta:__legacy__"
