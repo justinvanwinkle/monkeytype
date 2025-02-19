@@ -23,7 +23,7 @@ from typing import Set
 from typing import Tuple
 from typing import Union
 
-from monkeytype.compat import cached_property
+from functools import cached_property
 from monkeytype.compat import is_any
 from monkeytype.compat import is_forward_ref
 from monkeytype.compat import is_generic

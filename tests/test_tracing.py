@@ -11,7 +11,7 @@ from typing import Optional
 from typing import Tuple
 
 import pytest
-from monkeytype.compat import cached_property
+from functools import cached_property
 from monkeytype.tracing import CallTrace
 from monkeytype.tracing import CallTraceLogger
 from monkeytype.tracing import get_func

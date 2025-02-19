@@ -10,7 +10,7 @@ from typing import Any
 from typing import List
 from typing import Optional
 
-from monkeytype.compat import cached_property
+from functools import cached_property
 
 
 class Dummy:

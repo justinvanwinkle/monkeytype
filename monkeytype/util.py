@@ -11,7 +11,7 @@ from typing import Any
 from typing import Callable
 from typing import Optional
 
-from monkeytype.compat import cached_property
+from functools import cached_property
 from monkeytype.exceptions import InvalidTypeError
 from monkeytype.exceptions import NameLookupError
 

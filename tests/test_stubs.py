@@ -24,7 +24,7 @@ from typing import Union
 from unittest import skipIf
 
 import pytest
-from monkeytype.compat import cached_property
+from functools import cached_property
 from monkeytype.compat import make_forward_ref
 from monkeytype.stubs import AttributeStub
 from monkeytype.stubs import build_module_stubs

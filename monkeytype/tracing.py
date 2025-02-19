@@ -21,7 +21,7 @@ from typing import Iterator
 from typing import Optional
 from typing import Union
 
-from monkeytype.compat import cached_property
+from functools import cached_property
 from monkeytype.typing import get_type
 from monkeytype.util import get_func_fqname
 
