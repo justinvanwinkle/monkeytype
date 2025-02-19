@@ -78,12 +78,10 @@ class TestImportBlockStub:
         imports["a.module"] = {"AClass"}
         imports["another.module"] = {"AnotherClass"}
         stub = ImportBlockStub(imports)
-        expected = "\n".join(
-            [
-                "from a.module import AClass",
-                "from another.module import AnotherClass",
-            ]
-        )
+        expected = "\n".join([
+            "from a.module import AClass",
+            "from another.module import AnotherClass",
+        ])
         assert stub.render() == expected
 
     def test_io_import_single(self):
@@ -91,11 +89,7 @@ class TestImportBlockStub:
         imports = ImportMap()
         imports["_io"] = {"BytesIO"}
         stub = ImportBlockStub(imports)
-        expected = "\n".join(
-            [
-                "from io import BytesIO",
-            ]
-        )
+        expected = "\n".join(["from io import BytesIO"])
         assert stub.render() == expected
 
     def test_multiple_imports(self):
@@ -103,15 +97,13 @@ class TestImportBlockStub:
         imports = ImportMap()
         imports["a.module"] = {"AClass", "AnotherClass", "AThirdClass"}
         stub = ImportBlockStub(imports)
-        expected = "\n".join(
-            [
-                "from a.module import (",
-                "    AClass,",
-                "    AThirdClass,",
-                "    AnotherClass,",
-                ")",
-            ]
-        )
+        expected = "\n".join([
+            "from a.module import (",
+            "    AClass,",
+            "    AThirdClass,",
+            "    AnotherClass,",
+            ")",
+        ])
         assert stub.render() == expected
 
     def test_multiple_io_imports(self):
@@ -120,12 +112,7 @@ class TestImportBlockStub:
         imports["_io"] = {"BytesIO", "FileIO"}
         stub = ImportBlockStub(imports)
         expected = "\n".join(
-            [
-                "from io import (",
-                "    BytesIO,",
-                "    FileIO,",
-                ")",
-            ]
+            ["from io import (", "    BytesIO,", "    FileIO,", ")"]
         )
         assert stub.render() == expected
 
@@ -168,7 +155,9 @@ def has_forward_ref() -> Optional["TestFunctionStub"]:
     pass
 
 
-def has_forward_ref_within_generator() -> Generator["TestFunctionStub", None, int]:
+def has_forward_ref_within_generator() -> (
+    Generator["TestFunctionStub", None, int]
+):
     pass
 
 
@@ -177,7 +166,10 @@ class TestAttributeStub:
         "stub, expected",
         [
             (AttributeStub(name="foo", typ=int), "    foo: int"),
-            (AttributeStub(name="foo", typ=make_forward_ref("Foo")), "    foo: 'Foo'"),
+            (
+                AttributeStub(name="foo", typ=make_forward_ref("Foo")),
+                "    foo: 'Foo'",
+            ),
         ],
     )
     def test_simple_attribute(self, stub, expected):
@@ -227,36 +219,34 @@ class TestFunctionStub:
         stub = FunctionStub(
             "test", inspect.signature(Dummy.a_class_method), FunctionKind.CLASS
         )
-        expected = "\n".join(
-            [
-                "@classmethod",
-                "def test%s: ..." % (render_signature(stub.signature),),
-            ]
-        )
+        expected = "\n".join([
+            "@classmethod",
+            "def test%s: ..." % (render_signature(stub.signature),),
+        ])
         assert stub.render() == expected
 
     def test_staticmethod(self):
         stub = FunctionStub(
-            "test", inspect.signature(Dummy.a_static_method), FunctionKind.STATIC
+            "test",
+            inspect.signature(Dummy.a_static_method),
+            FunctionKind.STATIC,
         )
-        expected = "\n".join(
-            [
-                "@staticmethod",
-                "def test%s: ..." % (render_signature(stub.signature),),
-            ]
-        )
+        expected = "\n".join([
+            "@staticmethod",
+            "def test%s: ..." % (render_signature(stub.signature),),
+        ])
         assert stub.render() == expected
 
     def test_property(self):
         stub = FunctionStub(
-            "test", inspect.signature(Dummy.a_property.fget), FunctionKind.PROPERTY
+            "test",
+            inspect.signature(Dummy.a_property.fget),
+            FunctionKind.PROPERTY,
         )
-        expected = "\n".join(
-            [
-                "@property",
-                "def test%s: ..." % (render_signature(stub.signature),),
-            ]
-        )
+        expected = "\n".join([
+            "@property",
+            "def test%s: ..." % (render_signature(stub.signature),),
+        ])
         assert stub.render() == expected
 
     @skipIf(cached_property is None, "install Django to run this test")
@@ -266,12 +256,10 @@ class TestFunctionStub:
             inspect.signature(Dummy.a_cached_property.func),
             FunctionKind.DJANGO_CACHED_PROPERTY,
         )
-        expected = "\n".join(
-            [
-                "@cached_property",
-                "def test%s: ..." % (render_signature(stub.signature),),
-            ]
-        )
+        expected = "\n".join([
+            "@cached_property",
+            "def test%s: ..." % (render_signature(stub.signature),),
+        ])
         assert stub.render() == expected
 
     def test_simple(self):
@@ -281,7 +269,9 @@ class TestFunctionStub:
             assert stub.render() == expected
 
     def test_with_prefix(self):
-        stub = FunctionStub("test", inspect.signature(simple_add), FunctionKind.MODULE)
+        stub = FunctionStub(
+            "test", inspect.signature(simple_add), FunctionKind.MODULE
+        )
         expected = "  def test%s: ..." % (render_signature(stub.signature),)
         assert stub.render(prefix="  ") == expected
 
@@ -297,7 +287,10 @@ class TestFunctionStub:
 
     def test_async_function(self):
         stub = FunctionStub(
-            "test", inspect.signature(simple_add), FunctionKind.MODULE, is_async=True
+            "test",
+            inspect.signature(simple_add),
+            FunctionKind.MODULE,
+            is_async=True,
         )
         expected = "async def test%s: ..." % (render_signature(stub.signature),)
         assert stub.render() == expected
@@ -313,7 +306,9 @@ class TestFunctionStub:
     def test_optional_union_parameter_annotation(self):
         """Optional[Union[X, Y]] should always be rendered as such, not Union[X, Y, None]"""
         stub = FunctionStub(
-            "test", inspect.signature(has_optional_union_param), FunctionKind.MODULE
+            "test",
+            inspect.signature(has_optional_union_param),
+            FunctionKind.MODULE,
         )
         expected = "def test(x: Optional[Union[int, float]]) -> None: ..."
         assert stub.render() == expected
@@ -342,19 +337,19 @@ class TestFunctionStub:
         )
         assert stub.render() == expected
 
-        expected = "\n".join(
-            [
-                "    def has_length_exceeds_120_chars(",
-                "        very_long_name_parameter_1: float,",
-                "        very_long_name_parameter_2: float",
-                "    ) -> Optional[float]: ...",
-            ]
-        )
+        expected = "\n".join([
+            "    def has_length_exceeds_120_chars(",
+            "        very_long_name_parameter_1: float,",
+            "        very_long_name_parameter_2: float",
+            "    ) -> Optional[float]: ...",
+        ])
         assert stub.render(prefix="    ") == expected
 
     def test_default_none_parameter_annotation(self):
         stub = FunctionStub(
-            "test", inspect.signature(default_none_parameter), FunctionKind.MODULE
+            "test",
+            inspect.signature(default_none_parameter),
+            FunctionKind.MODULE,
         )
         expected = "def test(x: Optional[int] = ...) -> None: ..."
         assert stub.render() == expected
@@ -382,7 +377,9 @@ class TestFunctionStub:
     def test_forward_ref_annotation(self):
         """Forward refs should be rendered as strings, not _ForwardRef(...)."""
         stub = FunctionStub(
-            "has_forward_ref", inspect.signature(has_forward_ref), FunctionKind.MODULE
+            "has_forward_ref",
+            inspect.signature(has_forward_ref),
+            FunctionKind.MODULE,
         )
         expected = "def has_forward_ref() -> Optional['TestFunctionStub']: ..."
         assert stub.render() == expected
@@ -416,16 +413,14 @@ class TestClassStub:
                 AttributeStub("bar", str),
             ],
         )
-        expected = "\n".join(
-            [
-                "class Test:",
-                "    bar: str",
-                "    foo: int",
-                "    @classmethod",
-                "    def a_class_method(cls, foo: Any) -> Optional[frame]: ...",
-                "    def an_instance_method(self, foo: Any, bar: Any) -> Optional[frame]: ...",
-            ]
-        )
+        expected = "\n".join([
+            "class Test:",
+            "    bar: str",
+            "    foo: int",
+            "    @classmethod",
+            "    def a_class_method(cls, foo: Any) -> Optional[frame]: ...",
+            "    def an_instance_method(self, foo: Any, bar: Any) -> Optional[frame]: ...",
+        ])
         assert class_stub.render() == expected
 
 
@@ -466,9 +461,7 @@ class TestReplaceTypedDictsWithStubs:
         ClassStub(
             name="FooBarTypedDict__RENAME_ME__NonTotal(FooBarTypedDict__RENAME_ME__, total=False)",
             function_stubs=[],
-            attribute_stubs=[
-                AttributeStub(name="c", typ=int),
-            ],
+            attribute_stubs=[AttributeStub(name="c", typ=int)],
         ),
     ]
 
@@ -480,25 +473,27 @@ class TestReplaceTypedDictsWithStubs:
             (Set[int], (Set[int], [])),
             (Dict[str, int], (Dict[str, int], [])),
             (Tuple[str, int], (Tuple[str, int], [])),
+            (List[List[Dict[str, int]]], (List[List[Dict[str, int]]], [])),
+            (List[List[Dict[str, int]]], (List[List[Dict[str, int]]], [])),
             (
-                List[List[Dict[str, int]]],
-                (List[List[Dict[str, int]]], []),
-            ),
-            (
-                List[List[Dict[str, int]]],
-                (List[List[Dict[str, int]]], []),
-            ),
-            (
-                List[List[make_typed_dict(required_fields={"a": int, "b": str})]],
+                List[
+                    List[make_typed_dict(required_fields={"a": int, "b": str})]
+                ],
                 (
-                    List[List[make_forward_ref("FooBarTypedDict__RENAME_ME__")]],
+                    List[
+                        List[make_forward_ref("FooBarTypedDict__RENAME_ME__")]
+                    ],
                     [SIMPLE_TYPED_DICT_STUB],
                 ),
             ),
             (
-                Dict[str, make_typed_dict(required_fields={"a": int, "b": str})],
+                Dict[
+                    str, make_typed_dict(required_fields={"a": int, "b": str})
+                ],
                 (
-                    Dict[str, make_forward_ref("FooBar2TypedDict__RENAME_ME__")],
+                    Dict[
+                        str, make_forward_ref("FooBar2TypedDict__RENAME_ME__")
+                    ],
                     [SIMPLE_TYPED_DICT_STUB2],
                 ),
             ),
@@ -510,9 +505,13 @@ class TestReplaceTypedDictsWithStubs:
                 ),
             ),
             (
-                Tuple[int, make_typed_dict(required_fields={"a": int, "b": str})],
+                Tuple[
+                    int, make_typed_dict(required_fields={"a": int, "b": str})
+                ],
                 (
-                    Tuple[int, make_forward_ref("FooBar2TypedDict__RENAME_ME__")],
+                    Tuple[
+                        int, make_forward_ref("FooBar2TypedDict__RENAME_ME__")
+                    ],
                     [SIMPLE_TYPED_DICT_STUB2],
                 ),
             ),
@@ -532,7 +531,8 @@ class TestReplaceTypedDictsWithStubs:
             ),
             (
                 make_typed_dict(
-                    required_fields={"a": int, "b": str}, optional_fields={"c": int}
+                    required_fields={"a": int, "b": str},
+                    optional_fields={"c": int},
                 ),
                 (
                     make_forward_ref("FooBarTypedDict__RENAME_ME__NonTotal"),
@@ -547,7 +547,9 @@ class TestReplaceTypedDictsWithStubs:
                 make_typed_dict(
                     required_fields={
                         "a": int,
-                        "b": make_typed_dict(required_fields={"a": int, "b": str}),
+                        "b": make_typed_dict(
+                            required_fields={"a": int, "b": str}
+                        ),
                     }
                 ),
                 (
@@ -568,7 +570,9 @@ class TestReplaceTypedDictsWithStubs:
                                 AttributeStub(name="a", typ=int),
                                 AttributeStub(
                                     name="b",
-                                    typ=make_forward_ref("BTypedDict__RENAME_ME__"),
+                                    typ=make_forward_ref(
+                                        "BTypedDict__RENAME_ME__"
+                                    ),
                                 ),
                             ],
                         ),
@@ -589,16 +593,12 @@ class TestReplaceTypedDictsWithStubs:
                         ClassStub(
                             name="FooBarTypedDict__RENAME_ME__(TypedDict)",
                             function_stubs=[],
-                            attribute_stubs=[
-                                AttributeStub(name="a", typ=int),
-                            ],
+                            attribute_stubs=[AttributeStub(name="a", typ=int)],
                         ),
                         ClassStub(
                             name="FooBar2TypedDict__RENAME_ME__(TypedDict)",
                             function_stubs=[],
-                            attribute_stubs=[
-                                AttributeStub(name="b", typ=str),
-                            ],
+                            attribute_stubs=[AttributeStub(name="b", typ=str)],
                         ),
                     ],
                 ),
@@ -606,8 +606,10 @@ class TestReplaceTypedDictsWithStubs:
         ],
     )
     def test_replace_typed_dict_with_stubs(self, typ, expected):
-        rewritten_type, stubs = ReplaceTypedDictsWithStubs.rewrite_and_get_stubs(
-            typ, class_name_hint="foo_bar"
+        rewritten_type, stubs = (
+            ReplaceTypedDictsWithStubs.rewrite_and_get_stubs(
+                typ, class_name_hint="foo_bar"
+            )
         )
         actual = rewritten_type, stubs
         assert actual == expected
@@ -651,9 +653,9 @@ module_stub_for_method_with_typed_dict = {
                         kind=FunctionKind.INSTANCE,
                         strip_modules=["mypy_extensions"],
                         is_async=False,
-                    ),
+                    )
                 ],
-            ),
+            )
         ],
         imports_stub=ImportBlockStub(typed_dict_import_map),
         typed_dict_class_stubs=[
@@ -670,9 +672,7 @@ module_stub_for_method_with_typed_dict = {
                 # to get `DummyAnInstanceMethodTypedDict__RENAME_ME__`.
                 name="DummyAnInstanceMethodTypedDict__RENAME_ME__(TypedDict)",
                 function_stubs=[],
-                attribute_stubs=[
-                    AttributeStub("c", int),
-                ],
+                attribute_stubs=[AttributeStub("c", int)],
             ),
         ],
     )
@@ -699,82 +699,80 @@ class TestModuleStub:
             class_stubs=class_stubs,
             typed_dict_class_stubs=typed_dict_class_stubs,
         )
-        expected = "\n".join(
-            [
-                "class DummyAnInstanceMethodTypedDict__RENAME_ME__(TypedDict):",
-                "    c: int",
-                "",
-                "",
-                "class FooTypedDict__RENAME_ME__(TypedDict):",
-                "    a: int",
-                "    b: str",
-                "",
-                "",
-                "@classmethod",
-                "def a_class_method(foo: Any) -> Optional[frame]: ...",
-                "",
-                "",
-                "def an_instance_method(self, foo: Any, bar: Any) -> Optional[frame]: ...",
-                "",
-                "",
-                "def has_complex_signature(",
-                "    self,",
-                "    a: Any,",
-                "    b: Any,",
-                "    /,",
-                "    c: Any,",
-                "    d: Any = ...,",
-                "    *e: Any,",
-                "    f: Any,",
-                "    g: Any = ...,",
-                "    **h: Any",
-                ") -> Optional[frame]: ...",
-                "",
-                "",
-                "class Dummy:",
-                "    def an_instance_method(",
-                "        self,",
-                "        foo: 'FooTypedDict__RENAME_ME__',",
-                "        bar: int",
-                "    ) -> 'DummyAnInstanceMethodTypedDict__RENAME_ME__': ...",
-                "",
-                "",
-                "class Test:",
-                "    @classmethod",
-                "    def a_class_method(foo: Any) -> Optional[frame]: ...",
-                "    def an_instance_method(self, foo: Any, bar: Any) -> Optional[frame]: ...",
-                "    def has_complex_signature(",
-                "        self,",
-                "        a: Any,",
-                "        b: Any,",
-                "        /,",
-                "        c: Any,",
-                "        d: Any = ...,",
-                "        *e: Any,",
-                "        f: Any,",
-                "        g: Any = ...,",
-                "        **h: Any",
-                "    ) -> Optional[frame]: ...",
-                "",
-                "",
-                "class Test2:",
-                "    @classmethod",
-                "    def a_class_method(foo: Any) -> Optional[frame]: ...",
-                "    def an_instance_method(self, foo: Any, bar: Any) -> Optional[frame]: ...",
-                "    def has_complex_signature(",
-                "        self,",
-                "        a: Any,",
-                "        b: Any,",
-                "        /,",
-                "        c: Any,",
-                "        d: Any = ...,",
-                "        *e: Any,",
-                "        f: Any,",
-                "        g: Any = ...,",
-                "        **h: Any",
-                "    ) -> Optional[frame]: ...",
-            ]
-        )
+        expected = "\n".join([
+            "class DummyAnInstanceMethodTypedDict__RENAME_ME__(TypedDict):",
+            "    c: int",
+            "",
+            "",
+            "class FooTypedDict__RENAME_ME__(TypedDict):",
+            "    a: int",
+            "    b: str",
+            "",
+            "",
+            "@classmethod",
+            "def a_class_method(foo: Any) -> Optional[frame]: ...",
+            "",
+            "",
+            "def an_instance_method(self, foo: Any, bar: Any) -> Optional[frame]: ...",
+            "",
+            "",
+            "def has_complex_signature(",
+            "    self,",
+            "    a: Any,",
+            "    b: Any,",
+            "    /,",
+            "    c: Any,",
+            "    d: Any = ...,",
+            "    *e: Any,",
+            "    f: Any,",
+            "    g: Any = ...,",
+            "    **h: Any",
+            ") -> Optional[frame]: ...",
+            "",
+            "",
+            "class Dummy:",
+            "    def an_instance_method(",
+            "        self,",
+            "        foo: 'FooTypedDict__RENAME_ME__',",
+            "        bar: int",
+            "    ) -> 'DummyAnInstanceMethodTypedDict__RENAME_ME__': ...",
+            "",
+            "",
+            "class Test:",
+            "    @classmethod",
+            "    def a_class_method(foo: Any) -> Optional[frame]: ...",
+            "    def an_instance_method(self, foo: Any, bar: Any) -> Optional[frame]: ...",
+            "    def has_complex_signature(",
+            "        self,",
+            "        a: Any,",
+            "        b: Any,",
+            "        /,",
+            "        c: Any,",
+            "        d: Any = ...,",
+            "        *e: Any,",
+            "        f: Any,",
+            "        g: Any = ...,",
+            "        **h: Any",
+            "    ) -> Optional[frame]: ...",
+            "",
+            "",
+            "class Test2:",
+            "    @classmethod",
+            "    def a_class_method(foo: Any) -> Optional[frame]: ...",
+            "    def an_instance_method(self, foo: Any, bar: Any) -> Optional[frame]: ...",
+            "    def has_complex_signature(",
+            "        self,",
+            "        a: Any,",
+            "        b: Any,",
+            "        /,",
+            "        c: Any,",
+            "        d: Any = ...,",
+            "        *e: Any,",
+            "        f: Any,",
+            "        g: Any = ...,",
+            "        **h: Any",
+            "    ) -> Optional[frame]: ...",
+        ])
         assert mod_stub.render() == expected
 
     def test_render_nested_typed_dict(self):
@@ -785,7 +783,9 @@ class TestModuleStub:
                     required_fields={
                         # Naming the key 'z' to test a class name
                         # that comes last in alphabetical order.
-                        "z": make_typed_dict(required_fields={"a": int, "b": str}),
+                        "z": make_typed_dict(
+                            required_fields={"a": int, "b": str}
+                        ),
                         "b": str,
                     }
                 ),
@@ -796,90 +796,78 @@ class TestModuleStub:
             existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
         )
         entries = [function]
-        expected = "\n".join(
-            [
-                "from mypy_extensions import TypedDict",
-                "",
-                "",
-                "class FooTypedDict__RENAME_ME__(TypedDict):",
-                "    b: str",
-                # We can forward-reference a class that is defined afterwards.
-                "    z: 'ZTypedDict__RENAME_ME__'",
-                "",
-                "",
-                "class ZTypedDict__RENAME_ME__(TypedDict):",
-                "    a: int",
-                "    b: str",
-                "",
-                "",
-                "class Dummy:",
-                "    def an_instance_method(self, foo: 'FooTypedDict__RENAME_ME__', bar: int) -> int: ...",
-            ]
-        )
+        expected = "\n".join([
+            "from mypy_extensions import TypedDict",
+            "",
+            "",
+            "class FooTypedDict__RENAME_ME__(TypedDict):",
+            "    b: str",
+            # We can forward-reference a class that is defined afterwards.
+            "    z: 'ZTypedDict__RENAME_ME__'",
+            "",
+            "",
+            "class ZTypedDict__RENAME_ME__(TypedDict):",
+            "    a: int",
+            "    b: str",
+            "",
+            "",
+            "class Dummy:",
+            "    def an_instance_method(self, foo: 'FooTypedDict__RENAME_ME__', bar: int) -> int: ...",
+        ])
         self.maxDiff = None
         assert build_module_stubs(entries)["tests.util"].render() == expected
 
     def test_render_return_typed_dict(self):
         function = FunctionDefinition.from_callable_and_traced_types(
             Dummy.an_instance_method,
-            {
-                "foo": int,
-                "bar": int,
-            },
+            {"foo": int, "bar": int},
             make_typed_dict(required_fields={"a": int, "b": str}),
             yield_type=None,
             existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
         )
         entries = [function]
-        expected = "\n".join(
-            [
-                "from mypy_extensions import TypedDict",
-                "",
-                "",
-                "class DummyAnInstanceMethodTypedDict__RENAME_ME__(TypedDict):",
-                "    a: int",
-                "    b: str",
-                "",
-                "",
-                "class Dummy:",
-                "    def an_instance_method(self, foo: int, bar: int)"
-                " -> 'DummyAnInstanceMethodTypedDict__RENAME_ME__': ...",
-            ]
-        )
+        expected = "\n".join([
+            "from mypy_extensions import TypedDict",
+            "",
+            "",
+            "class DummyAnInstanceMethodTypedDict__RENAME_ME__(TypedDict):",
+            "    a: int",
+            "    b: str",
+            "",
+            "",
+            "class Dummy:",
+            "    def an_instance_method(self, foo: int, bar: int)"
+            " -> 'DummyAnInstanceMethodTypedDict__RENAME_ME__': ...",
+        ])
         self.maxDiff = None
         assert build_module_stubs(entries)["tests.util"].render() == expected
 
     def test_render_yield_typed_dict(self):
         function = FunctionDefinition.from_callable_and_traced_types(
             Dummy.an_instance_method,
-            {
-                "foo": int,
-                "bar": int,
-            },
+            {"foo": int, "bar": int},
             int,
             yield_type=make_typed_dict(required_fields={"a": int, "b": str}),
             existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
         )
         entries = [function]
-        expected = "\n".join(
-            [
-                "from mypy_extensions import TypedDict",
-                "from typing import Generator",
-                "",
-                "",
-                "class DummyAnInstanceMethodYieldTypedDict__RENAME_ME__(TypedDict):",
-                "    a: int",
-                "    b: str",
-                "",
-                "",
-                "class Dummy:",
-                "    def an_instance_method(",
-                "        self,",
-                "        foo: int,",
-                "        bar: int",
-                "    ) -> Generator['DummyAnInstanceMethodYieldTypedDict__RENAME_ME__', None, int]: ...",
-            ]
-        )
+        expected = "\n".join([
+            "from mypy_extensions import TypedDict",
+            "from typing import Generator",
+            "",
+            "",
+            "class DummyAnInstanceMethodYieldTypedDict__RENAME_ME__(TypedDict):",
+            "    a: int",
+            "    b: str",
+            "",
+            "",
+            "class Dummy:",
+            "    def an_instance_method(",
+            "        self,",
+            "        foo: int,",
+            "        bar: int",
+            "    ) -> Generator['DummyAnInstanceMethodYieldTypedDict__RENAME_ME__', None, int]: ...",
+        ])
         self.maxDiff = None
         assert build_module_stubs(entries)["tests.util"].render() == expected
 
@@ -895,20 +883,18 @@ class TestModuleStub:
             existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
         )
         entries = [function]
-        expected = "\n".join(
-            [
-                "from mypy_extensions import TypedDict",
-                "from typing import List",
-                "",
-                "",
-                "class FooTypedDict__RENAME_ME__(TypedDict):",
-                "    a: int",
-                "",
-                "",
-                "class Dummy:",
-                "    def an_instance_method(self, foo: List['FooTypedDict__RENAME_ME__'], bar: int) -> int: ...",
-            ]
-        )
+        expected = "\n".join([
+            "from mypy_extensions import TypedDict",
+            "from typing import List",
+            "",
+            "",
+            "class FooTypedDict__RENAME_ME__(TypedDict):",
+            "    a: int",
+            "",
+            "",
+            "class Dummy:",
+            "    def an_instance_method(self, foo: List['FooTypedDict__RENAME_ME__'], bar: int) -> int: ...",
+        ])
         self.maxDiff = None
         assert build_module_stubs(entries)["tests.util"].render() == expected
 
@@ -926,48 +912,41 @@ class TestModuleStub:
             existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
         )
         entries = [function]
-        expected = "\n".join(
-            [
-                "from mypy_extensions import TypedDict",
-                "",
-                "",
-                "class FooTypedDict__RENAME_ME__(TypedDict):",
-                "    a: int",
-                "",
-                "",
-                "class FooTypedDict__RENAME_ME__NonTotal(FooTypedDict__RENAME_ME__, total=False):",
-                "    b: str",
-                "",
-                "",
-                "class Dummy:",
-                "    def an_instance_method(self, foo: 'FooTypedDict__RENAME_ME__NonTotal', bar: int) -> int: ...",
-            ]
-        )
+        expected = "\n".join([
+            "from mypy_extensions import TypedDict",
+            "",
+            "",
+            "class FooTypedDict__RENAME_ME__(TypedDict):",
+            "    a: int",
+            "",
+            "",
+            "class FooTypedDict__RENAME_ME__NonTotal(FooTypedDict__RENAME_ME__, total=False):",
+            "    b: str",
+            "",
+            "",
+            "class Dummy:",
+            "    def an_instance_method(self, foo: 'FooTypedDict__RENAME_ME__NonTotal', bar: int) -> int: ...",
+        ])
         assert build_module_stubs(entries)["tests.util"].render() == expected
 
     def test_render_return_empty_tuple(self):
         """Regression test for #190."""
         function = FunctionDefinition.from_callable_and_traced_types(
             Dummy.an_instance_method,
-            {
-                "foo": int,
-                "bar": int,
-            },
+            {"foo": int, "bar": int},
             Tuple[()],
             yield_type=None,
             existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
         )
         entries = [function]
-        expected = "\n".join(
-            [
-                "from typing import Tuple",
-                "",
-                "",
-                "class Dummy:",
-                "    def an_instance_method(self, foo: int, bar: int)"
-                " -> Tuple[()]: ...",
-            ]
-        )
+        expected = "\n".join([
+            "from typing import Tuple",
+            "",
+            "",
+            "class Dummy:",
+            "    def an_instance_method(self, foo: int, bar: int)"
+            " -> Tuple[()]: ...",
+        ])
         self.maxDiff = None
         assert build_module_stubs(entries)["tests.util"].render() == expected
 
@@ -985,7 +964,9 @@ class TestBuildModuleStubs:
         dummy_stub = ClassStub(
             "Dummy",
             function_stubs=[
-                _func_stub_from_callable(Dummy.a_class_method.__func__, to_strip),
+                _func_stub_from_callable(
+                    Dummy.a_class_method.__func__, to_strip
+                ),
                 _func_stub_from_callable(Dummy.an_instance_method, to_strip),
                 _func_stub_from_callable(Dummy.a_static_method, to_strip),
             ],
@@ -1039,7 +1020,9 @@ class TestStubIndexBuilder:
             return_annotation=str,
         )
         mod_stub = ModuleStub(
-            function_stubs=[FunctionStub("untyped_helper", sig, FunctionKind.MODULE)]
+            function_stubs=[
+                FunctionStub("untyped_helper", sig, FunctionKind.MODULE)
+            ]
         )
         expected = {"tests.test_stubs": mod_stub}
         assert idxb.get_stubs() == expected
@@ -1095,8 +1078,12 @@ class TestUpdateSignatureArgs:
 
     def test_update_class(self):
         """Don't annotate the first arg of classmethods"""
-        sig = Signature.from_callable(UpdateSignatureHelper.a_class_method.__func__)
-        sig = update_signature_args(sig, {"cls": Type[UpdateSignatureHelper]}, True)
+        sig = Signature.from_callable(
+            UpdateSignatureHelper.a_class_method.__func__
+        )
+        sig = update_signature_args(
+            sig, {"cls": Type[UpdateSignatureHelper]}, True
+        )
         expected = Signature(
             parameters=[Parameter("cls", Parameter.POSITIONAL_OR_KEYWORD)]
         )
@@ -1142,7 +1129,9 @@ class TestUpdateSignatureArgs:
         )
         params = [
             Parameter(
-                "a", Parameter.POSITIONAL_OR_KEYWORD, annotation=inspect.Parameter.empty
+                "a",
+                Parameter.POSITIONAL_OR_KEYWORD,
+                annotation=inspect.Parameter.empty,
             ),
             Parameter("b", Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
         ]
@@ -1159,7 +1148,9 @@ class TestUpdateSignatureArgs:
         )
         params = [
             Parameter(
-                "a", Parameter.POSITIONAL_OR_KEYWORD, annotation=inspect.Parameter.empty
+                "a",
+                Parameter.POSITIONAL_OR_KEYWORD,
+                annotation=inspect.Parameter.empty,
             ),
             Parameter("b", Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
         ]
@@ -1198,7 +1189,7 @@ class TestUpdateSignatureReturn:
             parameters=[
                 Parameter("a", Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
                 Parameter("b", Parameter.POSITIONAL_OR_KEYWORD),
-            ],
+            ]
         )
         assert sig == expected
 
@@ -1234,7 +1225,9 @@ class TestUpdateSignatureReturn:
     def test_update_yield_none_and_return(self):
         sig = Signature.from_callable(UpdateSignatureHelper.a_class_method)
         sig = update_signature_return(sig, return_type=str, yield_type=NoneType)
-        assert sig == Signature(return_annotation=Generator[NoneType, NoneType, str])
+        assert sig == Signature(
+            return_annotation=Generator[NoneType, NoneType, str]
+        )
 
     def test_update_yield_and_return_none(self):
         sig = Signature.from_callable(UpdateSignatureHelper.a_class_method)
@@ -1263,10 +1256,7 @@ class TestFunctionKind:
             (Dummy.a_cached_property.func, FunctionKind.DJANGO_CACHED_PROPERTY)
         )
 
-    @pytest.mark.parametrize(
-        "func, expected",
-        cases,
-    )
+    @pytest.mark.parametrize("func, expected", cases)
     def test_from_callable(self, func, expected):
         assert FunctionKind.from_callable(func) == expected
 
@@ -1282,10 +1272,7 @@ class TestFunctionDefinition:
     if cached_property:
         cases.append((Dummy.a_cached_property.func, True))
 
-    @pytest.mark.parametrize(
-        "func, expected",
-        cases,
-    )
+    @pytest.mark.parametrize("func, expected", cases)
     def test_has_self(self, func, expected):
         defn = FunctionDefinition.from_callable(func)
         assert defn.has_self == expected
@@ -1348,22 +1335,17 @@ class TestFunctionDefinition:
         ),
     ]
     if cached_property:
-        cases.append(
-            (
-                Dummy.a_cached_property.func,
-                FunctionDefinition(
-                    "tests.util",
-                    "Dummy.a_cached_property",
-                    FunctionKind.DJANGO_CACHED_PROPERTY,
-                    Signature.from_callable(Dummy.a_cached_property.func),
-                ),
-            )
-        )
+        cases.append((
+            Dummy.a_cached_property.func,
+            FunctionDefinition(
+                "tests.util",
+                "Dummy.a_cached_property",
+                FunctionKind.DJANGO_CACHED_PROPERTY,
+                Signature.from_callable(Dummy.a_cached_property.func),
+            ),
+        ))
 
-    @pytest.mark.parametrize(
-        "func, expected",
-        cases,
-    )
+    @pytest.mark.parametrize("func, expected", cases)
     def test_from_callable(self, func, expected):
         defn = FunctionDefinition.from_callable(func)
         assert defn == expected
@@ -1409,7 +1391,9 @@ class TestFunctionDefinition:
             (
                 Dummy.an_instance_method,
                 {
-                    "foo": make_typed_dict(required_fields={"a": int, "b": str}),
+                    "foo": make_typed_dict(
+                        required_fields={"a": int, "b": str}
+                    ),
                     "bar": make_typed_dict(required_fields={"c": int}),
                 },
                 int,
@@ -1455,9 +1439,7 @@ class TestFunctionDefinition:
                         ClassStub(
                             name="BarTypedDict__RENAME_ME__(TypedDict)",
                             function_stubs=[],
-                            attribute_stubs=[
-                                AttributeStub("c", int),
-                            ],
+                            attribute_stubs=[AttributeStub("c", int)],
                         ),
                     ],
                 ),
@@ -1524,12 +1506,7 @@ class Parent:
 class TestGetImportsForAnnotation:
     @pytest.mark.parametrize(
         "anno",
-        [
-            inspect.Parameter.empty,
-            inspect.Signature.empty,
-            "not a type",
-            int,
-        ],
+        [inspect.Parameter.empty, inspect.Signature.empty, "not a type", int],
     )
     def test_no_imports(self, anno):
         """We shouldn't import any builtins, non-types, or empty annos"""
@@ -1537,10 +1514,7 @@ class TestGetImportsForAnnotation:
 
     @pytest.mark.parametrize(
         "anno, expected",
-        [
-            (Any, {"typing": {"Any"}}),
-            (Union[int, str], {"typing": {"Union"}}),
-        ],
+        [(Any, {"typing": {"Any"}}), (Union[int, str], {"typing": {"Union"}})],
     )
     def test_special_case_types(self, anno, expected):
         """Any and Union do not have module/qualname and need to be treated specially"""
@@ -1576,7 +1550,9 @@ class TestGetImportsForAnnotation:
 class TestGetImportsForSignature:
     def test_default_none_parameter_imports(self):
         stub = FunctionStub(
-            "test", inspect.signature(default_none_parameter), FunctionKind.MODULE
+            "test",
+            inspect.signature(default_none_parameter),
+            FunctionKind.MODULE,
         )
         expected = {"typing": {"Optional"}}
         assert get_imports_for_signature(stub.signature) == expected

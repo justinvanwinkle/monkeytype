@@ -57,7 +57,9 @@ class LikesAggregator(AggregatorInterface[LikedEvent]):
         super().__init__(repo)
 
     def add(self, event):
-        self.events_by_feedentry_id.setdefault(event.feedentry_id, []).append(event)
+        self.events_by_feedentry_id.setdefault(event.feedentry_id, []).append(
+            event
+        )
         self.user_ids.add(event.liker_id)
 
     def aggregate(self):
@@ -69,7 +71,9 @@ class LikesAggregator(AggregatorInterface[LikedEvent]):
         return [
             AggregatedItem(
                 type=self.type,
-                text=self._describe(events, feedentries_by_id[fid], users_by_id),
+                text=self._describe(
+                    events, feedentries_by_id[fid], users_by_id
+                ),
                 published=max(e.published for e in events),
             )
             for fid, events in self.events_by_feedentry_id.items()
@@ -138,7 +142,8 @@ class Inbox:
                 aggregator.add(event)
 
         items = chain.from_iterable(
-            agg.aggregate() for agg in chain.from_iterable(aggregators_by_type.values())
+            agg.aggregate()
+            for agg in chain.from_iterable(aggregators_by_type.values())
         )
 
         return sorted(items, key=attrgetter("published"), reverse=True)

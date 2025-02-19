@@ -23,7 +23,11 @@ InboxEventId = NewType("InboxEventId", int)
 class FeedEntry:
 
     def __init__(
-        self, id: FeedEntryId, user_id: UserId, caption: str, published: datetime
+        self,
+        id: FeedEntryId,
+        user_id: UserId,
+        caption: str,
+        published: datetime,
     ) -> None:
         self.id = id
         self.user_id = user_id
@@ -48,7 +52,9 @@ class EventType(enum.Enum):
 class InboxEvent:
     type: EventType
 
-    def __init__(self, id: InboxEventId, user_id: UserId, published: datetime) -> None:
+    def __init__(
+        self, id: InboxEventId, user_id: UserId, published: datetime
+    ) -> None:
         self.id = id
         self.user_id = user_id
         self.published = published
@@ -112,7 +118,9 @@ class RepoInterface:
     def get_feed_entries_for_user_id(self, user_id: UserId) -> List[FeedEntry]:
         raise NotImplementedError()
 
-    def get_users_by_ids(self, ids: Collection[UserId]) -> Dict[UserId, Optional[User]]:
+    def get_users_by_ids(
+        self, ids: Collection[UserId]
+    ) -> Dict[UserId, Optional[User]]:
         raise NotImplementedError()
 
     def get_inbox_events_for_user_id(self, user_id: UserId) -> List[InboxEvent]:

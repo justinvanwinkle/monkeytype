@@ -111,7 +111,10 @@ def get_imports_for_annotation(anno: Any) -> ImportMap:
         anno is inspect.Parameter.empty
         or anno is inspect.Signature.empty
         or not (
-            isinstance(anno, type) or is_any(anno) or is_union(anno) or is_generic(anno)
+            isinstance(anno, type)
+            or is_any(anno)
+            or is_union(anno)
+            or is_generic(anno)
         )
         or anno.__module__ == "builtins"
     ):
@@ -217,8 +220,7 @@ def update_signature_return(
 
 
 def shrink_traced_types(
-    traces: Iterable[CallTrace],
-    max_typed_dict_size: int,
+    traces: Iterable[CallTrace], max_typed_dict_size: int
 ) -> Tuple[Dict[str, type], Optional[type], Optional[type]]:
     """Merges the traced types and returns the minimally equivalent types"""
     arg_types: DefaultDict[str, Set[type]] = collections.defaultdict(set)
@@ -232,12 +234,17 @@ def shrink_traced_types(
         if t.yield_type is not None:
             yield_types.add(t.yield_type)
     shrunken_arg_types = {
-        name: shrink_types(ts, max_typed_dict_size) for name, ts in arg_types.items()
+        name: shrink_types(ts, max_typed_dict_size)
+        for name, ts in arg_types.items()
     }
     return_type = (
-        shrink_types(return_types, max_typed_dict_size) if return_types else None
+        shrink_types(return_types, max_typed_dict_size)
+        if return_types
+        else None
     )
-    yield_type = shrink_types(yield_types, max_typed_dict_size) if yield_types else None
+    yield_type = (
+        shrink_types(yield_types, max_typed_dict_size) if yield_types else None
+    )
     return (shrunken_arg_types, return_type, yield_type)
 
 
@@ -438,7 +445,9 @@ def render_signature(
             # OK, we have an '*args'-like parameter, so we won't need
             # a '*' to separate keyword-only arguments
             render_kw_only_separator = False
-        elif kind == inspect.Parameter.KEYWORD_ONLY and render_kw_only_separator:
+        elif (
+            kind == inspect.Parameter.KEYWORD_ONLY and render_kw_only_separator
+        ):
             # We have a keyword-only parameter to render and we haven't
             # rendered an '*args'-like parameter before, so add a '*'
             # separator to the parameters list ("foo(arg1, *, arg2)" case)
@@ -461,7 +470,9 @@ def render_signature(
 
     # first try render it into one single line, if it doesn't exceed
     # the limit then just use it
-    rendered_single_line = "({})".format(", ".join(formatted_params)) + rendered_return
+    rendered_single_line = (
+        "({})".format(", ".join(formatted_params)) + rendered_return
+    )
     if max_line_len is None or len(rendered_single_line) <= max_line_len:
         return rendered_single_line
 
@@ -477,11 +488,7 @@ def render_signature(
 
 
 class AttributeStub(Stub):
-    def __init__(
-        self,
-        name: str,
-        typ: type,
-    ) -> None:
+    def __init__(self, name: str, typ: type) -> None:
         self.name = name
         self.typ = typ
 
@@ -555,7 +562,9 @@ class ClassStub(Stub):
             f"class {self.name}:",
             *[
                 stub.render(prefix="    ")
-                for stub in sorted(self.attribute_stubs, key=lambda stub: stub.name)
+                for stub in sorted(
+                    self.attribute_stubs, key=lambda stub: stub.name
+                )
             ],
             *[
                 stub.render(prefix="    ")
@@ -589,21 +598,21 @@ class ReplaceTypedDictsWithStubs(TypeRewriter):
         args = getattr(container, "__args__", None)
         if args is None:
             return container
-        elif args == ((),) or args == ():  # special case of empty tuple `Tuple[()]`
+        elif (
+            args == ((),) or args == ()
+        ):  # special case of empty tuple `Tuple[()]`
             elems: Tuple[Any, ...] = ()
         else:
             # Avoid adding a suffix for the first one so that
             # single-element containers don't have a numeric suffix.
-            elems, stub_lists = zip(
-                *[
-                    self.rewrite_and_get_stubs(
-                        elem,
-                        class_name_hint=self._class_name_hint
-                        + ("" if index == 0 else str(index + 1)),
-                    )
-                    for index, elem in enumerate(args)
-                ]
-            )
+            elems, stub_lists = zip(*[
+                self.rewrite_and_get_stubs(
+                    elem,
+                    class_name_hint=self._class_name_hint
+                    + ("" if index == 0 else str(index + 1)),
+                )
+                for index, elem in enumerate(args)
+            ])
             for stubs in stub_lists:
                 self.stubs.extend(stubs)
         # Value of type "type" is not indexable.
@@ -645,11 +654,15 @@ class ReplaceTypedDictsWithStubs(TypeRewriter):
         elif has_required_fields and not has_optional_fields:
             self._add_typed_dict_class_stub(required_fields, class_name)
         elif not has_required_fields and has_optional_fields:
-            self._add_typed_dict_class_stub(optional_fields, class_name, total=False)
+            self._add_typed_dict_class_stub(
+                optional_fields, class_name, total=False
+            )
         else:
             self._add_typed_dict_class_stub(required_fields, class_name)
             base_class_name = class_name
-            class_name = get_typed_dict_class_name(self._class_name_hint) + "NonTotal"
+            class_name = (
+                get_typed_dict_class_name(self._class_name_hint) + "NonTotal"
+            )
             self._add_typed_dict_class_stub(
                 optional_fields, class_name, base_class_name, total=False
             )
@@ -691,9 +704,13 @@ class ModuleStub(Stub):
             self.typed_dict_class_stubs, key=lambda s: s.name
         ):
             parts.append(typed_dict_class_stub.render())
-        for func_stub in sorted(self.function_stubs.values(), key=lambda s: s.name):
+        for func_stub in sorted(
+            self.function_stubs.values(), key=lambda s: s.name
+        ):
             parts.append(func_stub.render())
-        for class_stub in sorted(self.class_stubs.values(), key=lambda s: s.name):
+        for class_stub in sorted(
+            self.class_stubs.values(), key=lambda s: s.name
+        ):
             parts.append(class_stub.render())
         return "\n\n\n".join(parts)
 
@@ -753,8 +770,10 @@ class FunctionDefinition:
         typed_dict_class_stubs: List[ClassStub] = []
         new_arg_types = {}
         for name, typ in arg_types.items():
-            rewritten_type, stubs = ReplaceTypedDictsWithStubs.rewrite_and_get_stubs(
-                typ, class_name_hint=name
+            rewritten_type, stubs = (
+                ReplaceTypedDictsWithStubs.rewrite_and_get_stubs(
+                    typ, class_name_hint=name
+                )
             )
             new_arg_types[name] = rewritten_type
             typed_dict_class_stubs.extend(stubs)
@@ -762,23 +781,30 @@ class FunctionDefinition:
         if return_type:
             # Replace the dot in a qualified name.
             class_name_hint = func.__qualname__.replace(".", "_")
-            return_type, stubs = ReplaceTypedDictsWithStubs.rewrite_and_get_stubs(
-                return_type, class_name_hint
+            return_type, stubs = (
+                ReplaceTypedDictsWithStubs.rewrite_and_get_stubs(
+                    return_type, class_name_hint
+                )
             )
             typed_dict_class_stubs.extend(stubs)
 
         if yield_type:
             # Replace the dot in a qualified name.
             class_name_hint = func.__qualname__.replace(".", "_") + "Yield"
-            yield_type, stubs = ReplaceTypedDictsWithStubs.rewrite_and_get_stubs(
-                yield_type, class_name_hint
+            yield_type, stubs = (
+                ReplaceTypedDictsWithStubs.rewrite_and_get_stubs(
+                    yield_type, class_name_hint
+                )
             )
             typed_dict_class_stubs.extend(stubs)
 
         function = FunctionDefinition.from_callable(func)
         signature = function.signature
         signature = update_signature_args(
-            signature, new_arg_types, function.has_self, existing_annotation_strategy
+            signature,
+            new_arg_types,
+            function.has_self,
+            existing_annotation_strategy,
         )
         signature = update_signature_return(
             signature, return_type, yield_type, existing_annotation_strategy
@@ -835,7 +861,9 @@ def get_updated_definition(
     )
 
 
-def build_module_stubs(entries: Iterable[FunctionDefinition]) -> Dict[str, ModuleStub]:
+def build_module_stubs(
+    entries: Iterable[FunctionDefinition],
+) -> Dict[str, ModuleStub]:
     """Given an iterable of function definitions, build the corresponding stubs"""
     mod_stubs: Dict[str, ModuleStub] = {}
     for entry in entries:
@@ -854,7 +882,11 @@ def build_module_stubs(entries: Iterable[FunctionDefinition]) -> Dict[str, Modul
         if entry.typed_dict_class_stubs:
             imports["mypy_extensions"].add("TypedDict")
         func_stub = FunctionStub(
-            name, entry.signature, entry.kind, list(imports.keys()), entry.is_async
+            name,
+            entry.signature,
+            entry.kind,
+            list(imports.keys()),
+            entry.is_async,
         )
         # Don't need to import anything from the same module
         imports.pop(entry.module, None)
@@ -879,15 +911,19 @@ def build_module_stubs_from_traces(
     rewriter: Optional[TypeRewriter] = None,
 ) -> Dict[str, ModuleStub]:
     """Given an iterable of call traces, build the corresponding stubs."""
-    index: DefaultDict[Callable[..., Any], Set[CallTrace]] = collections.defaultdict(
-        set
+    index: DefaultDict[Callable[..., Any], Set[CallTrace]] = (
+        collections.defaultdict(set)
     )
     for trace in traces:
         index[trace.func].add(trace)
     defns = []
     for func, traces in index.items():
         defn = get_updated_definition(
-            func, traces, max_typed_dict_size, rewriter, existing_annotation_strategy
+            func,
+            traces,
+            max_typed_dict_size,
+            rewriter,
+            existing_annotation_strategy,
         )
         defns.append(defn)
     return build_module_stubs(defns)

@@ -76,14 +76,18 @@ class TestGetFunc:
     cases = [
         (GetFuncHelper.a_static_method(), GetFuncHelper.a_static_method),
         (GetFuncHelper.a_class_method(), GetFuncHelper.a_class_method.__func__),
-        (GetFuncHelper().an_instance_method(), GetFuncHelper.an_instance_method),
+        (
+            GetFuncHelper().an_instance_method(),
+            GetFuncHelper.an_instance_method,
+        ),
         (a_module_function(), a_module_function),
         (GetFuncHelper().a_property, GetFuncHelper.a_property.fget),
     ]
     if cached_property:
-        cases.append(
-            (GetFuncHelper().a_cached_property, GetFuncHelper.a_cached_property.func)
-        )
+        cases.append((
+            GetFuncHelper().a_cached_property,
+            GetFuncHelper.a_cached_property.func,
+        ))
 
     @pytest.mark.parametrize("frame, expected_func", cases)
     def test_get_func(self, frame, expected_func):
@@ -202,7 +206,9 @@ class TestTraceCalls:
     def test_simple_call(self, collector):
         with trace_calls(collector, max_typed_dict_size=0):
             simple_add(1, 2)
-        assert collector.traces == [CallTrace(simple_add, {"a": int, "b": int}, int)]
+        assert collector.traces == [
+            CallTrace(simple_add, {"a": int, "b": int}, int)
+        ]
 
     def test_kw_only_arg(self, collector):
         with trace_calls(collector, max_typed_dict_size=0):
@@ -266,13 +272,17 @@ class TestTraceCalls:
         with trace_calls(collector, max_typed_dict_size=0):
             for _ in squares(3):
                 pass
-        assert collector.traces == [CallTrace(squares, {"n": int}, NoneType, int)]
+        assert collector.traces == [
+            CallTrace(squares, {"n": int}, NoneType, int)
+        ]
 
     def test_locally_defined_class_trace(self, collector):
         with trace_calls(collector, max_typed_dict_size=0):
             cls, method = call_method_on_locally_defined_class(3)
         assert len(collector.traces) == 2
-        assert collector.traces[0] == CallTrace(method, {"self": cls, "n": int}, int)
+        assert collector.traces[0] == CallTrace(
+            method, {"self": cls, "n": int}, int
+        )
 
     def test_locally_defined_function_trace(self, collector):
         with trace_calls(collector, max_typed_dict_size=0):
@@ -309,7 +319,9 @@ class TestTraceCalls:
         ):
             simple_add(1, 2)
             explicit_return_none()
-        assert collector.traces == [CallTrace(simple_add, {"a": int, "b": int}, int)]
+        assert collector.traces == [
+            CallTrace(simple_add, {"a": int, "b": int}, int)
+        ]
 
     def test_lazy_value(self, collector):
         """Check that function lookup does not invoke custom descriptors.

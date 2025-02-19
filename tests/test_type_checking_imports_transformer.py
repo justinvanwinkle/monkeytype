@@ -10,7 +10,9 @@ from libcst.codemod import Codemod
 from libcst.codemod import CodemodContext
 from libcst.codemod import CodemodTest
 from libcst.codemod.visitors import ImportItem
-from monkeytype.type_checking_imports_transformer import MoveImportsToTypeCheckingBlockVisitor
+from monkeytype.type_checking_imports_transformer import (
+    MoveImportsToTypeCheckingBlockVisitor,
+)
 
 
 class TestMoveImportsToTypeCheckingBlockVisitor(CodemodTest):
@@ -25,8 +27,7 @@ class TestMoveImportsToTypeCheckingBlockVisitor(CodemodTest):
     ) -> None:
         context = CodemodContext()
         MoveImportsToTypeCheckingBlockVisitor.store_imports_in_context(
-            context,
-            import_items_to_be_moved,
+            context, import_items_to_be_moved
         )
         self.assertCodemod(before, after, context_override=context)
 
@@ -37,10 +38,7 @@ class TestMoveImportsToTypeCheckingBlockVisitor(CodemodTest):
             from a import B
             import c.C
         """
-        import_items_to_be_moved = [
-            ImportItem("a", "B"),
-            ImportItem("c.C"),
-        ]
+        import_items_to_be_moved = [ImportItem("a", "B"), ImportItem("c.C")]
         expected = """
             from __future__ import annotations
             from typing import TYPE_CHECKING
@@ -64,10 +62,7 @@ class TestMoveImportsToTypeCheckingBlockVisitor(CodemodTest):
             if TYPE_CHECKING:
                 from d import E
         """
-        import_items_to_be_moved = [
-            ImportItem("a", "B"),
-            ImportItem("c.C"),
-        ]
+        import_items_to_be_moved = [ImportItem("a", "B"), ImportItem("c.C")]
         expected = """
             from __future__ import annotations
 

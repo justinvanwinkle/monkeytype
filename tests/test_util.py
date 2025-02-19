@@ -26,7 +26,9 @@ NOT_A_FUNCTION = "not_a_function"
 
 class TestGetNameInModule:
     def test_get_existing_name(self):
-        obj = get_name_in_module(a_module_func.__module__, a_module_func.__qualname__)
+        obj = get_name_in_module(
+            a_module_func.__module__, a_module_func.__qualname__
+        )
         assert obj == a_module_func
         # Make sure we handle nested classes
         obj = get_name_in_module(Outer.__module__, Outer.Inner.f.__qualname__)
@@ -38,7 +40,9 @@ class TestGetNameInModule:
 
     def test_get_nonexistent_qualname(self):
         with pytest.raises(NameLookupError):
-            get_name_in_module(a_module_func.__module__, "Outer.xxx_i_dont_exist_xxx")
+            get_name_in_module(
+                a_module_func.__module__, "Outer.xxx_i_dont_exist_xxx"
+            )
 
 
 class TestGetFuncInModule:

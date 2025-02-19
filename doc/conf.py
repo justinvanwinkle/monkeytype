@@ -61,7 +61,9 @@ author = "Matt Page & Carl Meyer"
 # built documents.
 #
 
-with open(os.path.join(os.path.dirname(os.path.abspath(".")), "setup.cfg")) as f:
+with open(
+    os.path.join(os.path.dirname(os.path.abspath(".")), "setup.cfg")
+) as f:
     for line in f:
         if line.startswith("version ="):
             version_from_code = line.split("=")[1].strip()
@@ -149,22 +151,22 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
-latex_documents = [
-    (
-        master_doc,
-        "MonkeyType.tex",
-        "MonkeyType Documentation",
-        "Matt Page \\& Carl Meyer",
-        "manual",
-    ),
-]
+latex_documents = [(
+    master_doc,
+    "MonkeyType.tex",
+    "MonkeyType Documentation",
+    "Matt Page \\& Carl Meyer",
+    "manual",
+)]
 
 
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, "monkeytype", "MonkeyType Documentation", [author], 1)]
+man_pages = [
+    (master_doc, "monkeytype", "MonkeyType Documentation", [author], 1)
+]
 
 
 # -- Options for Texinfo output -------------------------------------------
@@ -172,17 +174,15 @@ man_pages = [(master_doc, "monkeytype", "MonkeyType Documentation", [author], 1)
 # Grouping the document tree into Texinfo files. List of tuples
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
-texinfo_documents = [
-    (
-        master_doc,
-        "MonkeyType",
-        "MonkeyType Documentation",
-        author,
-        "MonkeyType",
-        "One line description of project.",
-        "Miscellaneous",
-    ),
-]
+texinfo_documents = [(
+    master_doc,
+    "MonkeyType",
+    "MonkeyType Documentation",
+    author,
+    "MonkeyType",
+    "One line description of project.",
+    "Miscellaneous",
+)]
 
 # Theme options
 html_theme_options = {

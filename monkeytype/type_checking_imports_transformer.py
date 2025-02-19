@@ -33,18 +33,14 @@ from libcst.helpers import get_absolute_module_from_package_for_import
 class MoveImportsToTypeCheckingBlockVisitor(ContextAwareTransformer):
     CONTEXT_KEY = "MoveImportsToTypeCheckingBlockVisitor"
 
-    def __init__(
-        self,
-        context: CodemodContext,
-    ) -> None:
+    def __init__(self, context: CodemodContext) -> None:
         super().__init__(context)
 
         self.import_items_to_be_moved: List[ImportItem] = []
 
     @staticmethod
     def store_imports_in_context(
-        context: CodemodContext,
-        import_items_to_be_moved: List[ImportItem],
+        context: CodemodContext, import_items_to_be_moved: List[ImportItem]
     ) -> None:
         context.scratch[MoveImportsToTypeCheckingBlockVisitor.CONTEXT_KEY] = (
             import_items_to_be_moved,
@@ -66,7 +62,9 @@ class MoveImportsToTypeCheckingBlockVisitor(ContextAwareTransformer):
     def _get_import_module(self) -> Module:
         empty_code = libcst.parse_module("")
         context = CodemodContext()
-        context.scratch[AddImportsVisitor.CONTEXT_KEY] = self.import_items_to_be_moved
+        context.scratch[AddImportsVisitor.CONTEXT_KEY] = (
+            self.import_items_to_be_moved
+        )
         transformer = AddImportsVisitor(context)
         transformed_source_module = transformer.transform_module(empty_code)
         return transformed_source_module
@@ -80,7 +78,9 @@ class MoveImportsToTypeCheckingBlockVisitor(ContextAwareTransformer):
             body=import_module.body,
         )
 
-    def _split_module(self, module: Module) -> Tuple[
+    def _split_module(
+        self, module: Module
+    ) -> Tuple[
         List[Union[SimpleStatementLine, BaseCompoundStatement]],
         List[Union[SimpleStatementLine, BaseCompoundStatement]],
     ]:
@@ -108,14 +108,17 @@ class MoveImportsToTypeCheckingBlockVisitor(ContextAwareTransformer):
 
         import_module = self._get_import_module()
 
-        placeholder_module = libcst.parse_module("\nif TYPE_CHECKING:\n    pass\n")
+        placeholder_module = libcst.parse_module(
+            "\nif TYPE_CHECKING:\n    pass\n"
+        )
         type_checking_block_module = self._replace_pass_with_imports(
-            placeholder_module,
-            import_module,
+            placeholder_module, import_module
         )
 
         # Find the point of insertion for the TYPE_CHECKING block
-        statements_before_imports, statements_after_imports = self._split_module(module)
+        statements_before_imports, statements_after_imports = (
+            self._split_module(module)
+        )
 
         updated_body_list = [
             *statements_before_imports,
@@ -126,17 +129,16 @@ class MoveImportsToTypeCheckingBlockVisitor(ContextAwareTransformer):
         return module.with_changes(body=updated_body_list)
 
     @staticmethod
-    def _remove_typing_module(import_item_list: List[ImportItem]) -> List[ImportItem]:
+    def _remove_typing_module(
+        import_item_list: List[ImportItem],
+    ) -> List[ImportItem]:
         ret: List[ImportItem] = []
         for import_item in import_item_list:
             if import_item.module_name != "typing":
                 ret.append(import_item)
         return ret
 
-    def transform_module_impl(
-        self,
-        tree: Module,
-    ) -> Module:
+    def transform_module_impl(self, tree: Module) -> Module:
         # Add from typing import TYPE_CHECKING
         tree = self._add_type_checking_import(tree)
 
@@ -165,10 +167,7 @@ class MoveImportsToTypeCheckingBlockVisitor(ContextAwareTransformer):
 
 
 class RemoveImportsTransformer(CSTTransformer):
-    def __init__(
-        self,
-        import_items_to_be_removed: List[ImportItem],
-    ) -> None:
+    def __init__(self, import_items_to_be_removed: List[ImportItem]) -> None:
         super().__init__()
         self.import_items_to_be_removed = import_items_to_be_removed
 
@@ -186,7 +185,9 @@ class RemoveImportsTransformer(CSTTransformer):
                     found = True
                     break
             if not found:
-                names_to_keep.append(name.with_changes(comma=MaybeSentinel.DEFAULT))
+                names_to_keep.append(
+                    name.with_changes(comma=MaybeSentinel.DEFAULT)
+                )
 
         if not names_to_keep:
             return RemoveFromParent()
@@ -202,7 +203,9 @@ class RemoveImportsTransformer(CSTTransformer):
             return updated_node
 
         names_to_keep = []
-        module_name = get_absolute_module_from_package_for_import(None, updated_node)
+        module_name = get_absolute_module_from_package_for_import(
+            None, updated_node
+        )
         for name in updated_node.names:
             name_value = name.name.value
             found = False
@@ -214,7 +217,9 @@ class RemoveImportsTransformer(CSTTransformer):
                     found = True
                     break
             if not found:
-                names_to_keep.append(name.with_changes(comma=MaybeSentinel.DEFAULT))
+                names_to_keep.append(
+                    name.with_changes(comma=MaybeSentinel.DEFAULT)
+                )
 
         if not names_to_keep:
             return RemoveFromParent()

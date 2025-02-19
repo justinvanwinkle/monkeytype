@@ -72,7 +72,9 @@ def store_data():
     with tempfile.NamedTemporaryFile(prefix="monkeytype_tests") as db_file:
         conn = sqlite3.connect(db_file.name)
         create_call_trace_table(conn)
-        with mock.patch.dict(os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}):
+        with mock.patch.dict(
+            os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}
+        ):
             yield SQLiteStore(conn), db_file
 
 
@@ -116,13 +118,13 @@ def func2(a: int, b: int) -> None: ...
 
 
 def test_print_stub_ignore_existing_annotations(store, db_file, stdout, stderr):
-    traces = [
-        CallTrace(func_anno, {"a": int, "b": int}, int),
-    ]
+    traces = [CallTrace(func_anno, {"a": int, "b": int}, int)]
     store.add(traces)
     with mock.patch.dict(os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}):
         ret = cli.main(
-            ["stub", func.__module__, "--ignore-existing-annotations"], stdout, stderr
+            ["stub", func.__module__, "--ignore-existing-annotations"],
+            stdout,
+            stderr,
         )
     expected = """def func_anno(a: int, b: int) -> int: ...
 """
@@ -211,9 +213,7 @@ def test_no_traces(store, db_file, stdout, stderr, arg, error):
 
 
 def test_display_list_of_modules(store, db_file, stdout, stderr):
-    traces = [
-        CallTrace(func, {"a": int, "b": str}, NoneType),
-    ]
+    traces = [CallTrace(func, {"a": int, "b": str}, NoneType)]
     store.add(traces)
     with mock.patch.dict(os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}):
         ret = cli.main(["list-modules"], stdout, stderr)
@@ -257,7 +257,9 @@ def test_display_sample_count_from_cli(store, db_file, stdout, stderr):
     ]
     store.add(traces)
     with mock.patch.dict(os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}):
-        ret = cli.main(["stub", func.__module__, "--sample-count"], stdout, stderr)
+        ret = cli.main(
+            ["stub", func.__module__, "--sample-count"], stdout, stderr
+        )
     expected = """Annotation for tests.test_cli.func based on 1 call trace(s).
 Annotation for tests.test_cli.func2 based on 1 call trace(s).
 """
@@ -297,7 +299,9 @@ def test_verbose_failed_traces(store, db_file, stdout, stderr):
 
 def test_cli_context_manager_activated(capsys, stdout, stderr):
     ret = cli.main(
-        ["-c", f"{__name__}:LoudContextConfig()", "stub", "some.module"], stdout, stderr
+        ["-c", f"{__name__}:LoudContextConfig()", "stub", "some.module"],
+        stdout,
+        stderr,
     )
     out, err = capsys.readouterr()
     assert out == "IN SETUP: stub\nIN TEARDOWN: stub\n"
@@ -310,7 +314,9 @@ def test_pathlike_parameter(store, db_file, capsys, stdout, stderr):
         with pytest.raises(SystemExit):
             cli.main(["stub", "test/foo.py:bar"], stdout, stderr)
         out, err = capsys.readouterr()
-        assert "test/foo.py does not look like a valid Python import path" in err
+        assert (
+            "test/foo.py does not look like a valid Python import path" in err
+        )
 
 
 def test_toplevel_filename_parameter(store, db_file, stdout, stderr):
@@ -321,7 +327,9 @@ def test_toplevel_filename_parameter(store, db_file, stdout, stderr):
         def side_effect(x):
             return True if x == filename else orig_exists(x)
 
-        with mock.patch("os.path.exists", side_effect=side_effect) as mock_exists:
+        with mock.patch(
+            "os.path.exists", side_effect=side_effect
+        ) as mock_exists:
             ret = cli.main(["stub", filename], stdout, stderr)
             mock_exists.assert_called_with(filename)
         err_msg = (
@@ -345,7 +353,9 @@ def test_apply_stub_init(store, db_file, stdout, stderr, collector):
         ret = cli.main(["apply", Foo.__module__], stdout, stderr)
 
     assert ret == 0
-    assert "def __init__(self, arg1: str, arg2: int) -> None:" in stdout.getvalue()
+    assert (
+        "def __init__(self, arg1: str, arg2: int) -> None:" in stdout.getvalue()
+    )
 
 
 def test_apply_stub_file_with_spaces(store, db_file, stdout, stderr):
@@ -362,9 +372,13 @@ def my_test_function(a, b):
         with mock.patch("sys.path", sys.path + [tempdir]):
             import my_test_module as mtm
 
-            traces = [CallTrace(mtm.my_test_function, {"a": int, "b": str}, NoneType)]
+            traces = [
+                CallTrace(mtm.my_test_function, {"a": int, "b": str}, NoneType)
+            ]
             store.add(traces)
-            with mock.patch.dict(os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}):
+            with mock.patch.dict(
+                os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}
+            ):
                 ret = cli.main(["apply", "my_test_module"], stdout, stderr)
     assert ret == 0
     assert "warning:" not in stdout.getvalue()

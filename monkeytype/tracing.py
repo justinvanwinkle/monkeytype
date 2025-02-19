@@ -66,14 +66,12 @@ class CallTrace:
         )
 
     def __hash__(self) -> int:
-        return hash(
-            (
-                self.func,
-                frozenset(self.arg_types.items()),
-                self.return_type,
-                self.yield_type,
-            )
-        )
+        return hash((
+            self.func,
+            frozenset(self.arg_types.items()),
+            self.return_type,
+            self.yield_type,
+        ))
 
     def add_yield_type(self, typ: type) -> None:
         if self.yield_type is None:
@@ -116,7 +114,9 @@ def get_func_in_mro(obj: Any, code: CodeType) -> Optional[Callable[..., Any]]:
         return None
     if isinstance(val, (classmethod, staticmethod)):
         cand = val.__func__
-    elif isinstance(val, property) and (val.fset is None) and (val.fdel is None):
+    elif (
+        isinstance(val, property) and (val.fset is None) and (val.fdel is None)
+    ):
         cand = cast(Callable[..., Any], val.fget)
     elif cached_property and isinstance(val, cached_property):
         cand = val.func
@@ -241,12 +241,15 @@ class CallTracer:
         if frame in self.traces:
             # resuming a generator; we've already seen this frame
             return
-        arg_names = code.co_varnames[: code.co_argcount + code.co_kwonlyargcount]
+        arg_names = code.co_varnames[
+            : code.co_argcount + code.co_kwonlyargcount
+        ]
         arg_types = {}
         for name in arg_names:
             if name in frame.f_locals:
                 arg_types[name] = get_type(
-                    frame.f_locals[name], max_typed_dict_size=self.max_typed_dict_size
+                    frame.f_locals[name],
+                    max_typed_dict_size=self.max_typed_dict_size,
                 )
         self.traces[frame] = CallTrace(func, arg_types)
 
@@ -300,7 +303,9 @@ def trace_calls(
 ) -> Iterator[None]:
     """Enable call tracing for a block of code"""
     old_trace = sys.getprofile()
-    sys.setprofile(CallTracer(logger, max_typed_dict_size, code_filter, sample_rate))
+    sys.setprofile(
+        CallTracer(logger, max_typed_dict_size, code_filter, sample_rate)
+    )
     try:
         yield
     finally:

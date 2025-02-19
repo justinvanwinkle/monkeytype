@@ -80,7 +80,9 @@ def make_query(
 
 
 class SQLiteStore(CallTraceStore):
-    def __init__(self, conn: sqlite3.Connection, table: str = DEFAULT_TABLE) -> None:
+    def __init__(
+        self, conn: sqlite3.Connection, table: str = DEFAULT_TABLE
+    ) -> None:
         self.conn = conn
         self.table = table
 
@@ -93,16 +95,14 @@ class SQLiteStore(CallTraceStore):
     def add(self, traces: Iterable[CallTrace]) -> None:
         values = []
         for row in serialize_traces(traces):
-            values.append(
-                (
-                    datetime.datetime.now(),
-                    row.module,
-                    row.qualname,
-                    row.arg_types,
-                    row.return_type,
-                    row.yield_type,
-                )
-            )
+            values.append((
+                datetime.datetime.now(),
+                row.module,
+                row.qualname,
+                row.arg_types,
+                row.return_type,
+                row.yield_type,
+            ))
         with self.conn:
             self.conn.executemany(
                 "INSERT INTO {table} VALUES (?, ?, ?, ?, ?, ?)".format(
@@ -112,9 +112,14 @@ class SQLiteStore(CallTraceStore):
             )
 
     def filter(
-        self, module: str, qualname_prefix: Optional[str] = None, limit: int = 2000
+        self,
+        module: str,
+        qualname_prefix: Optional[str] = None,
+        limit: int = 2000,
     ) -> List[CallTraceThunk]:
-        sql_query, values = make_query(self.table, module, qualname_prefix, limit)
+        sql_query, values = make_query(
+            self.table, module, qualname_prefix, limit
+        )
         with self.conn:
             cur = self.conn.cursor()
             cur.execute(sql_query, values)

@@ -82,10 +82,7 @@ def type_to_dict(typ: type) -> TypeDict:
         qualname = qualname_of_generic(typ)
     else:
         qualname = typ.__qualname__
-    d: TypeDict = {
-        "module": typ.__module__,
-        "qualname": qualname,
-    }
+    d: TypeDict = {"module": typ.__module__, "qualname": qualname}
     elem_types = getattr(typ, "__args__", None)
     # In Python < 3.9, bare generics still have args
     is_bare_generic = typ in {Dict, List, Tuple}
@@ -108,7 +105,8 @@ _HIDDEN_BUILTIN_TYPES: Dict[str, type] = {
 
 def typed_dict_from_dict(d: TypeDict) -> type:
     return TypedDict(
-        d["qualname"], {k: type_from_dict(v) for k, v in d["elem_types"].items()}
+        d["qualname"],
+        {k: type_from_dict(v) for k, v in d["elem_types"].items()},
     )
 
 
@@ -162,13 +160,17 @@ def arg_types_to_json(arg_types: Dict[str, type]) -> str:
 def arg_types_from_json(arg_types_json: str) -> Dict[str, type]:
     """Reify the encoded argument types from the format produced by arg_types_to_json."""
     arg_types = json.loads(arg_types_json)
-    return {name: type_from_dict(type_dict) for name, type_dict in arg_types.items()}
+    return {
+        name: type_from_dict(type_dict) for name, type_dict in arg_types.items()
+    }
 
 
 TypeEncoder = Callable[[type], str]
 
 
-def maybe_encode_type(encode: TypeEncoder, typ: Optional[type]) -> Optional[str]:
+def maybe_encode_type(
+    encode: TypeEncoder, typ: Optional[type]
+) -> Optional[str]:
     if typ is None:
         return None
     return encode(typ)
@@ -177,7 +179,9 @@ def maybe_encode_type(encode: TypeEncoder, typ: Optional[type]) -> Optional[str]
 TypeDecoder = Callable[[str], type]
 
 
-def maybe_decode_type(decode: TypeDecoder, encoded: Optional[str]) -> Optional[type]:
+def maybe_decode_type(
+    decode: TypeDecoder, encoded: Optional[str]
+) -> Optional[type]:
     if (encoded is None) or (encoded == "null"):
         return None
     return decode(encoded)

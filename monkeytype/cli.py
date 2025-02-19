@@ -32,7 +32,9 @@ from monkeytype.stubs import build_module_stubs_from_traces
 from monkeytype.stubs import ExistingAnnotationStrategy
 from monkeytype.stubs import Stub
 from monkeytype.tracing import CallTrace
-from monkeytype.type_checking_imports_transformer import MoveImportsToTypeCheckingBlockVisitor
+from monkeytype.type_checking_imports_transformer import (
+    MoveImportsToTypeCheckingBlockVisitor,
+)
 from monkeytype.typing import NoOpRewriter
 from monkeytype.util import get_name_in_module
 
@@ -58,7 +60,9 @@ def module_path_with_qualname(path: str) -> Tuple[str, str]:
     """Require that path be of the form <module>:<qualname>."""
     module, qualname = module_path(path)
     if qualname is None:
-        raise argparse.ArgumentTypeError("must be of the form <module>:<qualname>")
+        raise argparse.ArgumentTypeError(
+            "must be of the form <module>:<qualname>"
+        )
     return module, qualname
 
 
@@ -102,7 +106,10 @@ def display_sample_count(traces: List[CallTrace], stderr: IO[str]) -> None:
     """Print to stderr the number of traces each stub is based on."""
     sample_counter = collections.Counter([t.funcname for t in traces])
     for name, count in sample_counter.items():
-        print(f"Annotation for {name} based on {count} call trace(s).", file=stderr)
+        print(
+            f"Annotation for {name} based on {count} call trace(s).",
+            file=stderr,
+        )
 
 
 def get_stub(
@@ -180,15 +187,16 @@ def apply_stub_using_libcst(
         transformed_source_module = transformer.transform_module(source_module)
 
         if confine_new_imports_in_type_checking_block:
-            newly_imported_items = get_newly_imported_items(stub_module, source_module)
+            newly_imported_items = get_newly_imported_items(
+                stub_module, source_module
+            )
 
             context = CodemodContext()
             MoveImportsToTypeCheckingBlockVisitor.store_imports_in_context(
-                context,
-                newly_imported_items,
+                context, newly_imported_items
             )
-            type_checking_block_transformer = MoveImportsToTypeCheckingBlockVisitor(
-                context
+            type_checking_block_transformer = (
+                MoveImportsToTypeCheckingBlockVisitor(context)
             )
             transformed_source_module = (
                 type_checking_block_transformer.transform_module(
@@ -239,7 +247,8 @@ def get_diff(
         if stub1 != stub2:
             stub_diff = "".join(
                 difflib.ndiff(
-                    stub1.splitlines(keepends=True), stub2.splitlines(keepends=True)
+                    stub1.splitlines(keepends=True),
+                    stub2.splitlines(keepends=True),
                 )
             )
             diff.append(stub_diff[:-1])
@@ -271,14 +280,18 @@ def list_modules_handler(
     print(output, file=file)
 
 
-def run_handler(args: argparse.Namespace, stdout: IO[str], stderr: IO[str]) -> None:
+def run_handler(
+    args: argparse.Namespace, stdout: IO[str], stderr: IO[str]
+) -> None:
     # remove initial `monkeytype run`
     old_argv = sys.argv.copy()
     try:
         with trace(args.config):
             sys.argv = [args.script_path] + args.script_args
             if args.m:
-                runpy.run_module(args.script_path, run_name="__main__", alter_sys=True)
+                runpy.run_module(
+                    args.script_path, run_name="__main__", alter_sys=True
+                )
             else:
                 runpy.run_path(args.script_path, run_name="__main__")
     finally:
@@ -293,7 +306,7 @@ def update_args_from_config(args: argparse.Namespace) -> None:
 
 def main(argv: List[str], stdout: IO[str], stderr: IO[str]) -> int:
     parser = argparse.ArgumentParser(
-        description="Generate and apply stub files from collected type information.",
+        description="Generate and apply stub files from collected type information."
     )
     parser.add_argument(
         "--disable-type-rewriting",
@@ -345,10 +358,7 @@ def main(argv: List[str], stdout: IO[str], stderr: IO[str]) -> int:
     run_parser.add_argument(
         "-m", action="store_true", help="Run a library module as a script"
     )
-    run_parser.add_argument(
-        "script_args",
-        nargs=argparse.REMAINDER,
-    )
+    run_parser.add_argument("script_args", nargs=argparse.REMAINDER)
     run_parser.set_defaults(handler=run_handler)
 
     apply_parser = subparsers.add_parser(
