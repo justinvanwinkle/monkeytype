@@ -4,49 +4,42 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 from collections import defaultdict
-from typing import (
-    Any,
-    Callable,
-    DefaultDict,
-    Dict,
-    Iterator,
-    List,
-    Optional,
-    Set,
-    Tuple as typing_Tuple,
-    Type,
-    TypeVar,
-    Union,
-    Generator,
-)
+from typing import Any
+from typing import Callable
+from typing import DefaultDict
+from typing import Dict
+from typing import Generator
+from typing import Iterator
+from typing import List
+from typing import Optional
+from typing import Set
+from typing import Tuple as typing_Tuple
+from typing import Type
+from typing import TypeVar
+from typing import Union
 
 import pytest
-
-from monkeytype.typing import (
-    NoneType,
-    RemoveEmptyContainers,
-    RewriteConfigDict,
-    RewriteLargeUnion,
-    RewriteMostSpecificCommonBase,
-    RewriteAnonymousTypedDictToDict,
-    field_annotations,
-    get_type,
-    is_list,
-    is_typed_dict,
-    make_typed_dict,
-    shrink_types,
-    types_equal,
-    RewriteGenerator,
-    TypeRewriter,
-    DUMMY_OPTIONAL_TYPED_DICT_NAME,
-    DUMMY_REQUIRED_TYPED_DICT_NAME,
-    DUMMY_TYPED_DICT_NAME,
-)
-
+from monkeytype.typing import DUMMY_OPTIONAL_TYPED_DICT_NAME
+from monkeytype.typing import DUMMY_REQUIRED_TYPED_DICT_NAME
+from monkeytype.typing import DUMMY_TYPED_DICT_NAME
+from monkeytype.typing import field_annotations
+from monkeytype.typing import get_type
+from monkeytype.typing import is_list
+from monkeytype.typing import is_typed_dict
+from monkeytype.typing import make_typed_dict
+from monkeytype.typing import NoneType
+from monkeytype.typing import RemoveEmptyContainers
+from monkeytype.typing import RewriteAnonymousTypedDictToDict
+from monkeytype.typing import RewriteConfigDict
+from monkeytype.typing import RewriteGenerator
+from monkeytype.typing import RewriteLargeUnion
+from monkeytype.typing import RewriteMostSpecificCommonBase
+from monkeytype.typing import shrink_types
+from monkeytype.typing import TypeRewriter
+from monkeytype.typing import types_equal
 from mypy_extensions import TypedDict
 
 from .util import Dummy
-
 
 VERY_LARGE_MAX_TYPED_DICT_SIZE = 200
 

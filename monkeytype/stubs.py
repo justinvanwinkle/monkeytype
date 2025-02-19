@@ -9,42 +9,39 @@ import enum
 import inspect
 import logging
 import re
-from abc import ABCMeta, abstractmethod
-from typing import (
-    Any,
-    Callable,
-    DefaultDict,
-    Dict,
-    ForwardRef,
-    Iterable,
-    List,
-    Optional,
-    Set,
-    Tuple,
-    Union,
-)
+from abc import ABCMeta
+from abc import abstractmethod
+from typing import Any
+from typing import Callable
+from typing import DefaultDict
+from typing import Dict
+from typing import ForwardRef
+from typing import Iterable
+from typing import List
+from typing import Optional
+from typing import Set
+from typing import Tuple
+from typing import Union
 
-from monkeytype.compat import (
-    cached_property,
-    is_any,
-    is_forward_ref,
-    is_generic,
-    is_union,
-    make_forward_ref,
-    qualname_of_generic,
-)
-from monkeytype.tracing import CallTrace, CallTraceLogger
-from monkeytype.typing import (
-    GenericTypeRewriter,
-    NoneType,
-    NoOpRewriter,
-    TypeRewriter,
-    field_annotations,
-    make_generator,
-    make_iterator,
-    shrink_types,
-)
-from monkeytype.util import get_name_in_module, pascal_case
+from monkeytype.compat import cached_property
+from monkeytype.compat import is_any
+from monkeytype.compat import is_forward_ref
+from monkeytype.compat import is_generic
+from monkeytype.compat import is_union
+from monkeytype.compat import make_forward_ref
+from monkeytype.compat import qualname_of_generic
+from monkeytype.tracing import CallTrace
+from monkeytype.tracing import CallTraceLogger
+from monkeytype.typing import field_annotations
+from monkeytype.typing import GenericTypeRewriter
+from monkeytype.typing import make_generator
+from monkeytype.typing import make_iterator
+from monkeytype.typing import NoneType
+from monkeytype.typing import NoOpRewriter
+from monkeytype.typing import shrink_types
+from monkeytype.typing import TypeRewriter
+from monkeytype.util import get_name_in_module
+from monkeytype.util import pascal_case
 
 logger = logging.getLogger(__name__)
 

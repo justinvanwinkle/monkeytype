@@ -3,9 +3,11 @@
 #
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
-from typing import ContextManager, Optional
+from typing import ContextManager
+from typing import Optional
 
-from monkeytype.config import Config, get_default_config
+from monkeytype.config import Config
+from monkeytype.config import get_default_config
 from monkeytype.tracing import trace_calls
 
 

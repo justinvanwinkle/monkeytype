@@ -3,13 +3,11 @@
 #
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 import sqlite3
 
-from monkeytype.db.sqlite import (
-    create_call_trace_table,
-    SQLiteStore,
-)
+import pytest
+from monkeytype.db.sqlite import create_call_trace_table
+from monkeytype.db.sqlite import SQLiteStore
 from monkeytype.tracing import CallTrace
 
 

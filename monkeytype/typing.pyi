@@ -4,12 +4,21 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 
 # The shrink_types and get_type functions construct new types at runtime. Mypy
 # cannot currently type these functions, so the type signatures live here.
 from typing import _Union  # type: ignore[attr-defined]
-from typing import Any, Dict, Generic, Iterable, List, Optional, Set, Tuple, TypeVar
+from typing import Any
+from typing import Dict
+from typing import Generic
+from typing import Iterable
+from typing import List
+from typing import Optional
+from typing import Set
+from typing import Tuple
+from typing import TypeVar
 
 NoneType: type = ...
 NotImplementedType: type = ...

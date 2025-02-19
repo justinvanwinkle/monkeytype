@@ -13,28 +13,26 @@ import os.path
 import runpy
 import sys
 from pathlib import Path
-from typing import IO, TYPE_CHECKING, List, Optional, Tuple
+from typing import IO
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import TYPE_CHECKING
 
-from libcst import Module, parse_module
+from libcst import Module
+from libcst import parse_module
 from libcst.codemod import CodemodContext
-from libcst.codemod.visitors import (
-    ApplyTypeAnnotationsVisitor,
-    GatherImportsVisitor,
-    ImportItem,
-)
-
+from libcst.codemod.visitors import ApplyTypeAnnotationsVisitor
+from libcst.codemod.visitors import GatherImportsVisitor
+from libcst.codemod.visitors import ImportItem
 from monkeytype import trace
 from monkeytype.config import Config
 from monkeytype.exceptions import MonkeyTypeError
-from monkeytype.stubs import (
-    ExistingAnnotationStrategy,
-    Stub,
-    build_module_stubs_from_traces,
-)
+from monkeytype.stubs import build_module_stubs_from_traces
+from monkeytype.stubs import ExistingAnnotationStrategy
+from monkeytype.stubs import Stub
 from monkeytype.tracing import CallTrace
-from monkeytype.type_checking_imports_transformer import (
-    MoveImportsToTypeCheckingBlockVisitor,
-)
+from monkeytype.type_checking_imports_transformer import MoveImportsToTypeCheckingBlockVisitor
 from monkeytype.typing import NoOpRewriter
 from monkeytype.util import get_name_in_module
 

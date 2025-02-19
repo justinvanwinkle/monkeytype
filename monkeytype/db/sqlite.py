@@ -6,10 +6,16 @@
 import datetime
 import logging
 import sqlite3
-from typing import Iterable, List, Optional, Tuple, Union
+from typing import Iterable
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Union
 
-from monkeytype.db.base import CallTraceStore, CallTraceThunk
-from monkeytype.encoding import CallTraceRow, serialize_traces
+from monkeytype.db.base import CallTraceStore
+from monkeytype.db.base import CallTraceThunk
+from monkeytype.encoding import CallTraceRow
+from monkeytype.encoding import serialize_traces
 from monkeytype.tracing import CallTrace
 
 logger = logging.getLogger(__name__)

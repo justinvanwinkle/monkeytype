@@ -5,22 +5,17 @@
 # LICENSE file in the root directory of this source tree.
 import inspect
 from types import FrameType
-from typing import (
-    Callable,
-    Iterator,
-    Optional,
-    Tuple,
-)
+from typing import Callable
+from typing import Iterator
+from typing import Optional
+from typing import Tuple
 
 import pytest
-
 from monkeytype.compat import cached_property
-from monkeytype.tracing import (
-    CallTrace,
-    CallTraceLogger,
-    get_func,
-    trace_calls,
-)
+from monkeytype.tracing import CallTrace
+from monkeytype.tracing import CallTraceLogger
+from monkeytype.tracing import get_func
+from monkeytype.tracing import trace_calls
 from monkeytype.typing import NoneType
 
 

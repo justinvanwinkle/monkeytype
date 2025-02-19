@@ -5,16 +5,30 @@
 # LICENSE file in the root directory of this source tree.
 import json
 import logging
-from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Type, TypeVar
+from typing import Any
+from typing import Callable
+from typing import Dict
+from typing import Iterable
+from typing import List
+from typing import Optional
+from typing import Tuple
+from typing import Type
+from typing import TypeVar
 
-from mypy_extensions import TypedDict
-
-from monkeytype.compat import is_any, is_generic, is_union, qualname_of_generic
+from monkeytype.compat import is_any
+from monkeytype.compat import is_generic
+from monkeytype.compat import is_union
+from monkeytype.compat import qualname_of_generic
 from monkeytype.db.base import CallTraceThunk
 from monkeytype.exceptions import InvalidTypeError
 from monkeytype.tracing import CallTrace
-from monkeytype.typing import NoneType, NotImplementedType, is_typed_dict, mappingproxy
-from monkeytype.util import get_func_in_module, get_name_in_module
+from monkeytype.typing import is_typed_dict
+from monkeytype.typing import mappingproxy
+from monkeytype.typing import NoneType
+from monkeytype.typing import NotImplementedType
+from monkeytype.util import get_func_in_module
+from monkeytype.util import get_name_in_module
+from mypy_extensions import TypedDict
 
 logger = logging.getLogger(__name__)
 

@@ -3,26 +3,30 @@
 #
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
-from typing import List, Tuple, Union, cast
+from typing import cast
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import libcst
-from libcst import (
-    BaseCompoundStatement,
-    BaseSmallStatement,
-    BaseSuite,
-    CSTTransformer,
-    FlattenSentinel,
-    Import,
-    ImportFrom,
-    ImportStar,
-    MaybeSentinel,
-    Module,
-    RemovalSentinel,
-    RemoveFromParent,
-    SimpleStatementLine,
-)
-from libcst.codemod import CodemodContext, ContextAwareTransformer
-from libcst.codemod.visitors import AddImportsVisitor, GatherImportsVisitor, ImportItem
+from libcst import BaseCompoundStatement
+from libcst import BaseSmallStatement
+from libcst import BaseSuite
+from libcst import CSTTransformer
+from libcst import FlattenSentinel
+from libcst import Import
+from libcst import ImportFrom
+from libcst import ImportStar
+from libcst import MaybeSentinel
+from libcst import Module
+from libcst import RemovalSentinel
+from libcst import RemoveFromParent
+from libcst import SimpleStatementLine
+from libcst.codemod import CodemodContext
+from libcst.codemod import ContextAwareTransformer
+from libcst.codemod.visitors import AddImportsVisitor
+from libcst.codemod.visitors import GatherImportsVisitor
+from libcst.codemod.visitors import ImportItem
 from libcst.helpers import get_absolute_module_from_package_for_import
 
 

@@ -6,37 +6,33 @@
 import functools
 import inspect
 import types
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from collections import defaultdict
 from itertools import chain
-from typing import (
-    Any,
-    Callable,
-    DefaultDict,
-    Dict,
-    Generator,
-    Generic,
-    Iterable,
-    Iterator,
-    List,
-    Set,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import Any
+from typing import Callable
+from typing import DefaultDict
+from typing import Dict
+from typing import Generator
+from typing import Generic
+from typing import Iterable
+from typing import Iterator
+from typing import List
+from typing import Set
+from typing import Tuple
+from typing import Type
+from typing import TypeVar
+from typing import Union
 
+from monkeytype.compat import is_any
+from monkeytype.compat import is_generic
+from monkeytype.compat import is_generic_of
+from monkeytype.compat import is_typed_dict
+from monkeytype.compat import is_union
+from monkeytype.compat import name_of_generic
+from monkeytype.compat import types_equal
 from mypy_extensions import TypedDict
-
-from monkeytype.compat import (
-    is_any,
-    is_generic,
-    is_generic_of,
-    is_typed_dict,
-    is_union,
-    name_of_generic,
-    types_equal,
-)
 
 DUMMY_TYPED_DICT_NAME = "DUMMY_NAME"
 DUMMY_REQUIRED_TYPED_DICT_NAME = "REQUIRED_TYPED_DICT_NAME"

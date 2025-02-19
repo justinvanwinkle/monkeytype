@@ -3,20 +3,18 @@
 #
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 from unittest import skipIf
 
+import pytest
 from monkeytype.compat import cached_property
-from monkeytype.exceptions import (
-    InvalidTypeError,
-    NameLookupError,
-)
-from monkeytype.util import (
-    get_func_in_module,
-    get_name_in_module,
-    pascal_case,
-)
-from .util import Dummy, Outer
+from monkeytype.exceptions import InvalidTypeError
+from monkeytype.exceptions import NameLookupError
+from monkeytype.util import get_func_in_module
+from monkeytype.util import get_name_in_module
+from monkeytype.util import pascal_case
+
+from .util import Dummy
+from .util import Outer
 
 
 def a_module_func():

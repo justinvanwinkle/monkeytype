@@ -7,20 +7,20 @@ Sample code for MonkeyType demonstration exercise at PyCon 2018.
 from collections import Counter
 from itertools import chain
 from operator import attrgetter
-from typing import Dict, List, Set
+from typing import Dict
+from typing import List
+from typing import Set
 
-from models import (
-    AggregatedItem,
-    AggregatorInterface,
-    CommentedEvent,
-    EventType,
-    FeedEntryId,
-    FollowedEvent,
-    LikedEvent,
-    RepoInterface,
-    User,
-    UserId,
-)
+from models import AggregatedItem
+from models import AggregatorInterface
+from models import CommentedEvent
+from models import EventType
+from models import FeedEntryId
+from models import FollowedEvent
+from models import LikedEvent
+from models import RepoInterface
+from models import User
+from models import UserId
 
 
 class CommentsAggregator(AggregatorInterface[CommentedEvent]):

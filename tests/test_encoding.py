@@ -3,41 +3,34 @@
 #
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
-from typing import (
-    Any,
-    Dict,
-    List,
-    Optional,
-    Set,
-    Tuple,
-    Type,
-    Union,
-)
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Set
+from typing import Tuple
+from typing import Type
+from typing import Union
+from unittest.mock import Mock
 
 import pytest
-
-from monkeytype.encoding import (
-    CallTraceRow,
-    maybe_decode_type,
-    maybe_encode_type,
-    type_from_dict,
-    type_from_json,
-    type_to_dict,
-    type_to_json,
-    serialize_traces,
-)
-from mypy_extensions import TypedDict
+from monkeytype.encoding import CallTraceRow
+from monkeytype.encoding import maybe_decode_type
+from monkeytype.encoding import maybe_encode_type
+from monkeytype.encoding import serialize_traces
+from monkeytype.encoding import type_from_dict
+from monkeytype.encoding import type_from_json
+from monkeytype.encoding import type_to_dict
+from monkeytype.encoding import type_to_json
 from monkeytype.exceptions import InvalidTypeError
 from monkeytype.tracing import CallTrace
-from monkeytype.typing import (
-    DUMMY_TYPED_DICT_NAME,
-    NoneType,
-    NotImplementedType,
-    mappingproxy,
-)
-from .util import Outer
+from monkeytype.typing import DUMMY_TYPED_DICT_NAME
+from monkeytype.typing import mappingproxy
+from monkeytype.typing import NoneType
+from monkeytype.typing import NotImplementedType
+from mypy_extensions import TypedDict
 
-from unittest.mock import Mock
+from .util import Outer
 
 
 def dummy_func(a, b):

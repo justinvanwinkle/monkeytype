@@ -4,56 +4,52 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 import inspect
-from inspect import (
-    Parameter,
-    Signature,
-)
+from inspect import Parameter
+from inspect import Signature
 from textwrap import dedent
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Generator,
-    Iterable,
-    Iterator,
-    List,
-    NewType,
-    Optional,
-    Set,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import Any
+from typing import Callable
+from typing import Dict
+from typing import Generator
+from typing import Iterable
+from typing import Iterator
+from typing import List
+from typing import NewType
+from typing import Optional
+from typing import Set
+from typing import Tuple
+from typing import Type
+from typing import TypeVar
+from typing import Union
 from unittest import skipIf
 
 import pytest
-
-from monkeytype.compat import cached_property, make_forward_ref
-from monkeytype.stubs import (
-    AttributeStub,
-    ClassStub,
-    ExistingAnnotationStrategy,
-    FunctionDefinition,
-    FunctionStub,
-    FunctionKind,
-    ImportBlockStub,
-    ImportMap,
-    ModuleStub,
-    ReplaceTypedDictsWithStubs,
-    StubIndexBuilder,
-    build_module_stubs,
-    get_imports_for_annotation,
-    get_imports_for_signature,
-    render_annotation,
-    render_signature,
-    shrink_traced_types,
-    update_signature_args,
-    update_signature_return,
-)
+from monkeytype.compat import cached_property
+from monkeytype.compat import make_forward_ref
+from monkeytype.stubs import AttributeStub
+from monkeytype.stubs import build_module_stubs
+from monkeytype.stubs import ClassStub
+from monkeytype.stubs import ExistingAnnotationStrategy
+from monkeytype.stubs import FunctionDefinition
+from monkeytype.stubs import FunctionKind
+from monkeytype.stubs import FunctionStub
+from monkeytype.stubs import get_imports_for_annotation
+from monkeytype.stubs import get_imports_for_signature
+from monkeytype.stubs import ImportBlockStub
+from monkeytype.stubs import ImportMap
+from monkeytype.stubs import ModuleStub
+from monkeytype.stubs import render_annotation
+from monkeytype.stubs import render_signature
+from monkeytype.stubs import ReplaceTypedDictsWithStubs
+from monkeytype.stubs import shrink_traced_types
+from monkeytype.stubs import StubIndexBuilder
+from monkeytype.stubs import update_signature_args
+from monkeytype.stubs import update_signature_return
 from monkeytype.tracing import CallTrace
-from monkeytype.typing import NoneType, make_typed_dict
+from monkeytype.typing import make_typed_dict
+from monkeytype.typing import NoneType
 from mypy_extensions import TypedDict
+
 from .util import Dummy
 
 UserId = NewType("UserId", int)

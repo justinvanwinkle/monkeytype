@@ -3,16 +3,14 @@
 #
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
-import pytest
 import sqlite3
-
-from monkeytype.db.base import CallTraceStoreLogger
-from monkeytype.db.sqlite import (
-    create_call_trace_table,
-    SQLiteStore,
-)
-from monkeytype.tracing import trace_calls
 from unittest.mock import patch
+
+import pytest
+from monkeytype.db.base import CallTraceStoreLogger
+from monkeytype.db.sqlite import create_call_trace_table
+from monkeytype.db.sqlite import SQLiteStore
+from monkeytype.tracing import trace_calls
 
 
 def normal_func(a, b):

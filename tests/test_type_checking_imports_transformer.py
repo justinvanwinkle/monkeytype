@@ -3,14 +3,14 @@
 #
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
-from typing import Type, List
+from typing import List
+from typing import Type
 
-from libcst.codemod import CodemodTest, Codemod, CodemodContext
+from libcst.codemod import Codemod
+from libcst.codemod import CodemodContext
+from libcst.codemod import CodemodTest
 from libcst.codemod.visitors import ImportItem
-
-from monkeytype.type_checking_imports_transformer import (
-    MoveImportsToTypeCheckingBlockVisitor,
-)
+from monkeytype.type_checking_imports_transformer import MoveImportsToTypeCheckingBlockVisitor
 
 
 class TestMoveImportsToTypeCheckingBlockVisitor(CodemodTest):

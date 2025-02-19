@@ -3,34 +3,30 @@
 #
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
-from contextlib import contextmanager
 import io
 import os
 import os.path
-import pytest
 import sqlite3
 import sys
 import tempfile
 import textwrap
+from contextlib import contextmanager
 from typing import Iterator
-
 from unittest import mock
 
+import pytest
 from libcst import parse_module
 from libcst.codemod.visitors import ImportItem
-
 from monkeytype import cli
 from monkeytype.config import DefaultConfig
-from monkeytype.db.sqlite import (
-    create_call_trace_table,
-    SQLiteStore,
-)
+from monkeytype.db.sqlite import create_call_trace_table
+from monkeytype.db.sqlite import SQLiteStore
 from monkeytype.exceptions import MonkeyTypeError
 from monkeytype.tracing import CallTrace
 from monkeytype.typing import NoneType
 
-from .testmodule import Foo
 from .test_tracing import trace_calls
+from .testmodule import Foo
 
 
 def func_foo():

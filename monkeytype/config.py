@@ -8,15 +8,21 @@ import os
 import pathlib
 import sys
 import sysconfig
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
+from abc import abstractmethod
 from contextlib import contextmanager
 from types import CodeType
-from typing import Iterator, Optional
+from typing import Iterator
+from typing import Optional
 
-from monkeytype.db.base import CallTraceStore, CallTraceStoreLogger
+from monkeytype.db.base import CallTraceStore
+from monkeytype.db.base import CallTraceStoreLogger
 from monkeytype.db.sqlite import SQLiteStore
-from monkeytype.tracing import CallTraceLogger, CodeFilter
-from monkeytype.typing import DEFAULT_REWRITER, NoOpRewriter, TypeRewriter
+from monkeytype.tracing import CallTraceLogger
+from monkeytype.tracing import CodeFilter
+from monkeytype.typing import DEFAULT_REWRITER
+from monkeytype.typing import NoOpRewriter
+from monkeytype.typing import TypeRewriter
 
 
 class Config(metaclass=ABCMeta):

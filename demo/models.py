@@ -4,19 +4,16 @@
 Sample code for MonkeyType demonstration exercise at PyCon 2018.
 
 """
-from datetime import datetime
 import enum
-from typing import (
-    Collection,
-    Dict,
-    Generic,
-    List,
-    NamedTuple,
-    NewType,
-    Optional,
-    TypeVar,
-)
-
+from datetime import datetime
+from typing import Collection
+from typing import Dict
+from typing import Generic
+from typing import List
+from typing import NamedTuple
+from typing import NewType
+from typing import Optional
+from typing import TypeVar
 
 UserId = NewType("UserId", int)
 FeedEntryId = NewType("FeedEntryId", int)

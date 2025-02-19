@@ -6,11 +6,9 @@
 import inspect
 import os
 from types import FrameType
-from typing import (
-    Any,
-    List,
-    Optional,
-)
+from typing import Any
+from typing import List
+from typing import Optional
 
 from monkeytype.compat import cached_property
 

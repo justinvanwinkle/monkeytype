@@ -3,10 +3,14 @@
 #
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
-from abc import ABCMeta, abstractmethod
-from typing import Iterable, List, Optional
+from abc import ABCMeta
+from abc import abstractmethod
+from typing import Iterable
+from typing import List
+from typing import Optional
 
-from monkeytype.tracing import CallTrace, CallTraceLogger
+from monkeytype.tracing import CallTrace
+from monkeytype.tracing import CallTraceLogger
 
 
 class CallTraceThunk(metaclass=ABCMeta):

@@ -5,8 +5,12 @@ Sample code for MonkeyType demonstration exercise at PyCon 2018.
 
 """
 import sys
-from datetime import datetime, timedelta
-from typing import Collection, Dict, List, Optional
+from datetime import datetime
+from datetime import timedelta
+from typing import Collection
+from typing import Dict
+from typing import List
+from typing import Optional
 
 import inbox
 import models

@@ -7,10 +7,13 @@ import importlib
 import inspect
 import re
 import types
-from typing import Any, Callable, Optional
+from typing import Any
+from typing import Callable
+from typing import Optional
 
 from monkeytype.compat import cached_property
-from monkeytype.exceptions import InvalidTypeError, NameLookupError
+from monkeytype.exceptions import InvalidTypeError
+from monkeytype.exceptions import NameLookupError
 
 
 def get_func_fqname(func: Callable[..., Any]) -> str:
