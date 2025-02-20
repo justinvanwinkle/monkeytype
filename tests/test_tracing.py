@@ -4,6 +4,7 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 import inspect
+from functools import cached_property
 from types import FrameType
 from typing import Callable
 from typing import Iterator
@@ -11,7 +12,6 @@ from typing import Optional
 from typing import Tuple
 
 import pytest
-from functools import cached_property
 from monkeytype.tracing import CallTrace
 from monkeytype.tracing import CallTraceLogger
 from monkeytype.tracing import get_func

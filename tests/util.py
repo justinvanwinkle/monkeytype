@@ -5,12 +5,11 @@
 # LICENSE file in the root directory of this source tree.
 import inspect
 import os
+from functools import cached_property
 from types import FrameType
 from typing import Any
 from typing import List
 from typing import Optional
-
-from functools import cached_property
 
 
 class Dummy:

@@ -16,7 +16,6 @@ from monkeytype.type_checking_imports_transformer import (
 
 
 class TestMoveImportsToTypeCheckingBlockVisitor(CodemodTest):
-
     TRANSFORM: Type[Codemod] = MoveImportsToTypeCheckingBlockVisitor
 
     def run_test_case(

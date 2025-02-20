@@ -11,6 +11,7 @@ import sys
 from abc import ABCMeta
 from abc import abstractmethod
 from contextlib import contextmanager
+from functools import cached_property
 from types import CodeType
 from types import FrameType
 from typing import Any
@@ -21,7 +22,6 @@ from typing import Iterator
 from typing import Optional
 from typing import Union
 
-from functools import cached_property
 from monkeytype.typing import get_type
 from monkeytype.util import get_func_fqname
 

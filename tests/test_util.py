@@ -3,10 +3,10 @@
 #
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
+from functools import cached_property
 from unittest import skipIf
 
 import pytest
-from functools import cached_property
 from monkeytype.exceptions import InvalidTypeError
 from monkeytype.exceptions import NameLookupError
 from monkeytype.util import get_func_in_module

@@ -4,6 +4,7 @@
 Sample code for MonkeyType demonstration exercise at PyCon 2018.
 
 """
+
 from collections import Counter
 from itertools import chain
 from operator import attrgetter
@@ -121,7 +122,6 @@ class FollowersAggregator(AggregatorInterface[FollowedEvent]):
 
 
 class Inbox:
-
     def __init__(self, user: User, repo: RepoInterface) -> None:
         self.user = user
         self.repo = repo

@@ -11,6 +11,7 @@ import logging
 import re
 from abc import ABCMeta
 from abc import abstractmethod
+from functools import cached_property
 from typing import Any
 from typing import Callable
 from typing import DefaultDict
@@ -23,7 +24,6 @@ from typing import Set
 from typing import Tuple
 from typing import Union
 
-from functools import cached_property
 from monkeytype.compat import is_any
 from monkeytype.compat import is_forward_ref
 from monkeytype.compat import is_generic

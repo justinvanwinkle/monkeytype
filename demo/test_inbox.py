@@ -4,6 +4,7 @@
 Sample code for MonkeyType demonstration exercise at PyCon 2018.
 
 """
+
 import sys
 from datetime import datetime
 from datetime import timedelta
@@ -17,7 +18,6 @@ import models
 
 
 class FakeRepo(models.RepoInterface):
-
     def __init__(self, *objs: object) -> None:
         self.objs = objs
 

@@ -724,7 +724,6 @@ def get_default_dict_with_dict(key, value):
 
 
 class TestGetType:
-
     @pytest.mark.parametrize(
         "value, expected_type",
         [
@@ -1034,7 +1033,6 @@ class TestRewriteMostSpecificCommonBase:
         assert rewritten == expected
 
     def test_multiple_bases(self):
-
         class Base1:
             pass
 

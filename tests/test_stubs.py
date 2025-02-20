@@ -4,6 +4,7 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 import inspect
+from functools import cached_property
 from inspect import Parameter
 from inspect import Signature
 from textwrap import dedent
@@ -24,7 +25,6 @@ from typing import Union
 from unittest import skipIf
 
 import pytest
-from functools import cached_property
 from monkeytype.compat import make_forward_ref
 from monkeytype.stubs import AttributeStub
 from monkeytype.stubs import build_module_stubs
