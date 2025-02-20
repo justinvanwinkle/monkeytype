@@ -44,7 +44,7 @@ def get_func_in_module(module: str, qualname: str) -> Callable[..., Any]:
             raise InvalidTypeError(
                 f"Property {module}.{qualname} is missing getter"
             )
-    elif cached_property and isinstance(func, cached_property):
+    elif isinstance(func, cached_property):
         func = func.func
     elif not isinstance(func, (types.FunctionType, types.BuiltinFunctionType)):
         raise InvalidTypeError(

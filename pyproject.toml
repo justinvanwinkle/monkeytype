@@ -29,15 +29,6 @@ force-sort-within-sections = false
 
 
 [tool.poetry.dependencies]
-supervisor = "*"
-pycurl = "^7.45.2"
-pytz = "^2023.3.post1"
-python-dateutil = "^2.8.2"
-jinja2 = "*"
-uuid6 = "*"
-werkzeug = "*"
-multidict = "^6.1.0"
-charset-normalizer = "^3.4.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"

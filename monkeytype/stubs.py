@@ -15,7 +15,6 @@ from functools import cached_property
 from typing import Any
 from typing import Callable
 from typing import DefaultDict
-from typing import Dict
 from typing import ForwardRef
 from typing import Iterable
 from typing import List
@@ -68,7 +67,7 @@ class FunctionKind(enum.Enum):
             return FunctionKind.STATIC
         elif isinstance(func_or_desc, property):
             return FunctionKind.PROPERTY
-        elif cached_property and isinstance(func_or_desc, cached_property):
+        elif isinstance(func_or_desc, cached_property):
             return FunctionKind.DJANGO_CACHED_PROPERTY
         return FunctionKind.INSTANCE
 
@@ -158,7 +157,7 @@ def get_imports_for_signature(sig: inspect.Signature) -> ImportMap:
 
 def update_signature_args(
     sig: inspect.Signature,
-    arg_types: Dict[str, type],
+    arg_types: dict[str, type],
     has_self: bool,
     existing_annotation_strategy: ExistingAnnotationStrategy = ExistingAnnotationStrategy.REPLICATE,
 ) -> inspect.Signature:
@@ -221,7 +220,7 @@ def update_signature_return(
 
 def shrink_traced_types(
     traces: Iterable[CallTrace], max_typed_dict_size: int
-) -> Tuple[Dict[str, type], Optional[type], Optional[type]]:
+) -> Tuple[dict[str, type], Optional[type], Optional[type]]:
     """Merges the traced types and returns the minimally equivalent types"""
     arg_types: DefaultDict[str, Set[type]] = collections.defaultdict(set)
     return_types: Set[type] = set()
@@ -309,7 +308,7 @@ class RenderAnnotation(GenericTypeRewriter[str]):
     """Render annotation recursively."""
 
     def make_anonymous_typed_dict(
-        self, required_fields: Dict[str, str], optional_fields: Dict[str, str]
+        self, required_fields: dict[str, str], optional_fields: dict[str, str]
     ) -> str:
         raise Exception(
             "Should not receive an anonymous TypedDict in RenderAnnotation,"
@@ -317,7 +316,7 @@ class RenderAnnotation(GenericTypeRewriter[str]):
         )
 
     def make_builtin_typed_dict(
-        self, name: str, annotations: Dict[str, str], total: bool
+        self, name: str, annotations: dict[str, str], total: bool
     ) -> str:
         raise Exception(
             "Should not receive a TypedDict type in RenderAnnotation,"
@@ -552,7 +551,7 @@ class ClassStub(Stub):
         attribute_stubs: Optional[Iterable[AttributeStub]] = None,
     ) -> None:
         self.name = name
-        self.function_stubs: Dict[str, FunctionStub] = {}
+        self.function_stubs: dict[str, FunctionStub] = {}
         self.attribute_stubs = attribute_stubs or []
         if function_stubs is not None:
             self.function_stubs = {stub.name: stub for stub in function_stubs}
@@ -620,7 +619,7 @@ class ReplaceTypedDictsWithStubs(TypeRewriter):
 
     def _add_typed_dict_class_stub(
         self,
-        fields: Dict[str, type],
+        fields: dict[str, type],
         class_name: str,
         base_class_name: str = "TypedDict",
         total: bool = True,
@@ -648,7 +647,7 @@ class ReplaceTypedDictsWithStubs(TypeRewriter):
         has_optional_fields = len(optional_fields) != 0
         if not has_required_fields and not has_optional_fields:
             raise Exception(
-                "Expected empty TypedDicts to be shrunk as Dict[Any, Any]"
+                "Expected empty TypedDicts to be shrunk as dict[Any, Any]"
                 " but got an empty TypedDict anyway"
             )
         elif has_required_fields and not has_optional_fields:
@@ -685,10 +684,10 @@ class ModuleStub(Stub):
         imports_stub: Optional[ImportBlockStub] = None,
         typed_dict_class_stubs: Optional[Iterable[ClassStub]] = None,
     ) -> None:
-        self.function_stubs: Dict[str, FunctionStub] = {}
+        self.function_stubs: dict[str, FunctionStub] = {}
         if function_stubs is not None:
             self.function_stubs = {stub.name: stub for stub in function_stubs}
-        self.class_stubs: Dict[str, ClassStub] = {}
+        self.class_stubs: dict[str, ClassStub] = {}
         if class_stubs is not None:
             self.class_stubs = {stub.name: stub for stub in class_stubs}
         self.imports_stub = imports_stub if imports_stub else ImportBlockStub()
@@ -762,7 +761,7 @@ class FunctionDefinition:
     def from_callable_and_traced_types(
         cls,
         func: Callable[..., Any],
-        arg_types: Dict[str, type],
+        arg_types: dict[str, type],
         return_type: Optional[type],
         yield_type: Optional[type],
         existing_annotation_strategy: ExistingAnnotationStrategy = ExistingAnnotationStrategy.REPLICATE,
@@ -863,9 +862,9 @@ def get_updated_definition(
 
 def build_module_stubs(
     entries: Iterable[FunctionDefinition],
-) -> Dict[str, ModuleStub]:
+) -> dict[str, ModuleStub]:
     """Given an iterable of function definitions, build the corresponding stubs"""
-    mod_stubs: Dict[str, ModuleStub] = {}
+    mod_stubs: dict[str, ModuleStub] = {}
     for entry in entries:
         path = entry.qualname.split(".")
         name = path.pop()
@@ -909,7 +908,7 @@ def build_module_stubs_from_traces(
     max_typed_dict_size: int,
     existing_annotation_strategy: ExistingAnnotationStrategy = ExistingAnnotationStrategy.REPLICATE,
     rewriter: Optional[TypeRewriter] = None,
-) -> Dict[str, ModuleStub]:
+) -> dict[str, ModuleStub]:
     """Given an iterable of call traces, build the corresponding stubs."""
     index: DefaultDict[Callable[..., Any], Set[CallTrace]] = (
         collections.defaultdict(set)
@@ -944,7 +943,7 @@ class StubIndexBuilder(CallTraceLogger):
             return
         self.index[trace.func].add(trace)
 
-    def get_stubs(self) -> Dict[str, ModuleStub]:
+    def get_stubs(self) -> dict[str, ModuleStub]:
         defs = (
             get_updated_definition(func, traces, self.max_typed_dict_size)
             for func, traces in self.index.items()
