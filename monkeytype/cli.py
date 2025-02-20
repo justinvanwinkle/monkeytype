@@ -25,6 +25,7 @@ from libcst.codemod import CodemodContext
 from libcst.codemod.visitors import ApplyTypeAnnotationsVisitor
 from libcst.codemod.visitors import GatherImportsVisitor
 from libcst.codemod.visitors import ImportItem
+
 from monkeytype import trace
 from monkeytype.config import Config
 from monkeytype.exceptions import MonkeyTypeError

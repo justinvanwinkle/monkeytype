@@ -17,6 +17,7 @@ from unittest import mock
 import pytest
 from libcst import parse_module
 from libcst.codemod.visitors import ImportItem
+
 from monkeytype import cli
 from monkeytype.config import DefaultConfig
 from monkeytype.db.sqlite import create_call_trace_table

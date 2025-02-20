@@ -25,6 +25,8 @@ from typing import Union
 from unittest import skipIf
 
 import pytest
+from mypy_extensions import TypedDict
+
 from monkeytype.compat import make_forward_ref
 from monkeytype.stubs import AttributeStub
 from monkeytype.stubs import build_module_stubs
@@ -48,7 +50,6 @@ from monkeytype.stubs import update_signature_return
 from monkeytype.tracing import CallTrace
 from monkeytype.typing import make_typed_dict
 from monkeytype.typing import NoneType
-from mypy_extensions import TypedDict
 
 from .util import Dummy
 

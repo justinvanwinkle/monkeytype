@@ -12,6 +12,7 @@ from typing import Optional
 from typing import Tuple
 
 import pytest
+
 from monkeytype.tracing import CallTrace
 from monkeytype.tracing import CallTraceLogger
 from monkeytype.tracing import get_func

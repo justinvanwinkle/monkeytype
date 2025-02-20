@@ -7,6 +7,7 @@ from functools import cached_property
 from unittest import skipIf
 
 import pytest
+
 from monkeytype.exceptions import InvalidTypeError
 from monkeytype.exceptions import NameLookupError
 from monkeytype.util import get_func_in_module

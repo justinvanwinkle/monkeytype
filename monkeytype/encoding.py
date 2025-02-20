@@ -15,6 +15,8 @@ from typing import Tuple
 from typing import Type
 from typing import TypeVar
 
+from mypy_extensions import TypedDict
+
 from monkeytype.compat import is_any
 from monkeytype.compat import is_generic
 from monkeytype.compat import is_union
@@ -28,7 +30,6 @@ from monkeytype.typing import NoneType
 from monkeytype.typing import NotImplementedType
 from monkeytype.util import get_func_in_module
 from monkeytype.util import get_name_in_module
-from mypy_extensions import TypedDict
 
 logger = logging.getLogger(__name__)
 

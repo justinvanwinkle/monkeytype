@@ -6,6 +6,7 @@
 import sqlite3
 
 import pytest
+
 from monkeytype.db.sqlite import create_call_trace_table
 from monkeytype.db.sqlite import SQLiteStore
 from monkeytype.tracing import CallTrace

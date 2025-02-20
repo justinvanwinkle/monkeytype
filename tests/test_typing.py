@@ -19,6 +19,8 @@ from typing import TypeVar
 from typing import Union
 
 import pytest
+from mypy_extensions import TypedDict
+
 from monkeytype.typing import DUMMY_OPTIONAL_TYPED_DICT_NAME
 from monkeytype.typing import DUMMY_REQUIRED_TYPED_DICT_NAME
 from monkeytype.typing import DUMMY_TYPED_DICT_NAME
@@ -37,7 +39,6 @@ from monkeytype.typing import RewriteMostSpecificCommonBase
 from monkeytype.typing import shrink_types
 from monkeytype.typing import TypeRewriter
 from monkeytype.typing import types_equal
-from mypy_extensions import TypedDict
 
 from .util import Dummy
 

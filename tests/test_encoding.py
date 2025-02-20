@@ -14,6 +14,8 @@ from typing import Union
 from unittest.mock import Mock
 
 import pytest
+from mypy_extensions import TypedDict
+
 from monkeytype.encoding import CallTraceRow
 from monkeytype.encoding import maybe_decode_type
 from monkeytype.encoding import maybe_encode_type
@@ -28,7 +30,6 @@ from monkeytype.typing import DUMMY_TYPED_DICT_NAME
 from monkeytype.typing import mappingproxy
 from monkeytype.typing import NoneType
 from monkeytype.typing import NotImplementedType
-from mypy_extensions import TypedDict
 
 from .util import Outer
 

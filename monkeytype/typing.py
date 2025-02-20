@@ -25,6 +25,8 @@ from typing import Type
 from typing import TypeVar
 from typing import Union
 
+from mypy_extensions import TypedDict
+
 from monkeytype.compat import is_any
 from monkeytype.compat import is_generic
 from monkeytype.compat import is_generic_of
@@ -32,7 +34,6 @@ from monkeytype.compat import is_typed_dict
 from monkeytype.compat import is_union
 from monkeytype.compat import name_of_generic
 from monkeytype.compat import types_equal
-from mypy_extensions import TypedDict
 
 DUMMY_TYPED_DICT_NAME = "DUMMY_NAME"
 DUMMY_REQUIRED_TYPED_DICT_NAME = "REQUIRED_TYPED_DICT_NAME"
