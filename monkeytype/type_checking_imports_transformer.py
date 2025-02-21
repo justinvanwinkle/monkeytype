@@ -30,8 +30,8 @@ from libcst.codemod.visitors import ImportItem
 from libcst.helpers import get_absolute_module_from_package_for_import
 
 
-class MoveImportsToTypeCheckingBlockVisitor(ContextAwareTransformer):
-    CONTEXT_KEY = "MoveImportsToTypeCheckingBlockVisitor"
+class MITTCBVisitor(ContextAwareTransformer):
+    CONTEXT_KEY = "MITTCBVisitor"
 
     def __init__(self, context: CodemodContext) -> None:
         super().__init__(context)
@@ -42,7 +42,7 @@ class MoveImportsToTypeCheckingBlockVisitor(ContextAwareTransformer):
     def store_imports_in_context(
         context: CodemodContext, import_items_to_be_moved: List[ImportItem]
     ) -> None:
-        context.scratch[MoveImportsToTypeCheckingBlockVisitor.CONTEXT_KEY] = (
+        context.scratch[MITTCBVisitor.CONTEXT_KEY] = (
             import_items_to_be_moved,
         )
 
@@ -143,7 +143,7 @@ class MoveImportsToTypeCheckingBlockVisitor(ContextAwareTransformer):
         tree = self._add_type_checking_import(tree)
 
         context_contents = self.context.scratch.get(
-            MoveImportsToTypeCheckingBlockVisitor.CONTEXT_KEY
+            MITTCBVisitor.CONTEXT_KEY
         )
         if context_contents is not None:
             (import_items_to_be_moved,) = context_contents

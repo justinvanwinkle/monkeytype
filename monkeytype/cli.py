@@ -33,9 +33,7 @@ from monkeytype.stubs import build_module_stubs_from_traces
 from monkeytype.stubs import ExistingAnnotationStrategy
 from monkeytype.stubs import Stub
 from monkeytype.tracing import CallTrace
-from monkeytype.type_checking_imports_transformer import (
-    MoveImportsToTypeCheckingBlockVisitor,
-)
+from monkeytype.type_checking_imports_transformer import MITTCBVisitor
 from monkeytype.typing import NoOpRewriter
 from monkeytype.util import get_name_in_module
 
@@ -203,11 +201,11 @@ def apply_stub_using_libcst(
             )
 
             context = CodemodContext()
-            MoveImportsToTypeCheckingBlockVisitor.store_imports_in_context(
+            MITTCBVisitor.store_imports_in_context(
                 context, newly_imported_items
             )
             type_checking_block_transformer = (
-                MoveImportsToTypeCheckingBlockVisitor(context)
+                MITTCBVisitor(context)
             )
             transformed_source_module = (
                 type_checking_block_transformer.transform_module(

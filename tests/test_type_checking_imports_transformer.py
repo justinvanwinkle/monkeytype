@@ -11,13 +11,11 @@ from libcst.codemod import CodemodContext
 from libcst.codemod import CodemodTest
 from libcst.codemod.visitors import ImportItem
 
-from monkeytype.type_checking_imports_transformer import (
-    MoveImportsToTypeCheckingBlockVisitor,
-)
+from monkeytype.type_checking_imports_transformer import MITTCBVisitor
 
 
-class TestMoveImportsToTypeCheckingBlockVisitor(CodemodTest):
-    TRANSFORM: Type[Codemod] = MoveImportsToTypeCheckingBlockVisitor
+class TestMITTCBVisitor(CodemodTest):
+    TRANSFORM: Type[Codemod] = MITTCBVisitor
 
     def run_test_case(
         self,
@@ -26,7 +24,7 @@ class TestMoveImportsToTypeCheckingBlockVisitor(CodemodTest):
         after: str,
     ) -> None:
         context = CodemodContext()
-        MoveImportsToTypeCheckingBlockVisitor.store_imports_in_context(
+        MITTCBVisitor.store_imports_in_context(
             context, import_items_to_be_moved
         )
         self.assertCodemod(before, after, context_override=context)
