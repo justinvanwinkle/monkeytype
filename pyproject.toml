@@ -149,7 +149,7 @@ ignore = [
 
   # Pylint Convention
   'PLC0415',  # Import should be at the top-level of a file
-
+  'PIE790',
   # Pylint Refactor
   'PLR0124',  # Comparison with itself
   'PLR0904',  # Too many public methods ({methods} > {max_methods})

@@ -82,13 +82,13 @@ def store_data():
 @pytest.fixture
 def store(store_data):
     store, __ = store_data
-    yield store
+    return store
 
 
 @pytest.fixture
 def db_file(store_data):
     __, db_file = store_data
-    yield db_file
+    return db_file
 
 
 @pytest.fixture

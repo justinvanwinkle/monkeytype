@@ -159,7 +159,7 @@ def shrink_types(types, max_typed_dict_size):
     # rewriting heterogeneous anonymous TypedDicts to Dict.
     if all(is_list(typ) for typ in types):
         annotation = shrink_types(
-            (getattr(typ, "__args__")[0] for typ in types), max_typed_dict_size
+            (typ.__args__[0] for typ in types), max_typed_dict_size
         )
         return List[annotation]
 
@@ -564,7 +564,7 @@ class RewriteMostSpecificCommonBase(TypeRewriter):
         merged_bases = []
 
         # Only process up to shorter of the lists
-        for first_base, second_base in zip(first_bases, second_bases):
+        for first_base, second_base in zip(first_bases, second_bases, strict=False):
             if first_base is second_base:
                 merged_bases.append(second_base)
             else:

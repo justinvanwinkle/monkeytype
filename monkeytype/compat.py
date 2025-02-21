@@ -21,7 +21,7 @@ def is_any(typ: Any) -> bool:
 
 
 def is_union(typ: Any) -> bool:
-    return typ is Union or is_generic(typ) and typ.__origin__ is Union
+    return typ is Union or (is_generic(typ) and typ.__origin__ is Union)
 
 
 try:

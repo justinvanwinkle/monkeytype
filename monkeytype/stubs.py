@@ -256,7 +256,7 @@ def get_typed_dict_class_name(parameter_name: str) -> str:
 
 
 class Stub(metaclass=ABCMeta):
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, self.__class__):
             return self.__dict__ == other.__dict__
         return NotImplemented
@@ -356,9 +356,7 @@ class RenderAnnotation(GenericTypeRewriter[str]):
         rendered = str(type_variable)
         tilde_prefix = "~"
         return (
-            rendered[len(tilde_prefix) :]
-            if rendered.startswith(tilde_prefix)
-            else rendered
+            rendered.removeprefix(tilde_prefix)
         )
 
     def make_builtin_tuple(self, elements: Iterable[str]) -> str:
@@ -616,7 +614,7 @@ class ReplaceTypedDictsWithStubs(TypeRewriter):
                     + ("" if index == 0 else str(index + 1)),
                 )
                 for index, elem in enumerate(args)
-            ])
+            ], strict=False)
             for stubs in stub_lists:
                 self.stubs.extend(stubs)
         # Value of type "type" is not indexable.
@@ -826,7 +824,7 @@ class FunctionDefinition:
     def has_self(self) -> bool:
         return self.kind in self._KIND_WITH_SELF
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, self.__class__):
             return self.__dict__ == other.__dict__
         return NotImplemented
