@@ -15,9 +15,9 @@ import sys
 from pathlib import Path
 from typing import IO
 from typing import List
+from typing import NoReturn
 from typing import Optional
 from typing import Tuple
-from typing import TYPE_CHECKING
 
 from libcst import Module
 from libcst import parse_module
@@ -37,10 +37,6 @@ from monkeytype.type_checking_imports_transformer import MITTCBVisitor
 from monkeytype.typing import NoOpRewriter
 from monkeytype.util import get_name_in_module
 
-if TYPE_CHECKING:
-    # This is not present in Python 3.6.1, so not safe for runtime import
-    from typing import NoReturn  # noqa
-
 
 def module_path(path: str) -> Tuple[str, Optional[str]]:
     """Parse <module>[:<qualname>] into its constituent parts."""
@@ -49,9 +45,7 @@ def module_path(path: str) -> Tuple[str, Optional[str]]:
     qualname = parts[0] if parts else None
     if os.sep in module:  # Smells like a path
         msg = f"{module} does not look like a valid Python import path"
-        raise argparse.ArgumentTypeError(
-            msg
-        )
+        raise argparse.ArgumentTypeError(msg)
 
     return module, qualname
 
@@ -61,9 +55,7 @@ def module_path_with_qualname(path: str) -> Tuple[str, str]:
     module, qualname = module_path(path)
     if qualname is None:
         msg = "must be of the form <module>:<qualname>"
-        raise argparse.ArgumentTypeError(
-            msg
-        )
+        raise argparse.ArgumentTypeError(msg)
     return module, qualname
 
 
@@ -204,9 +196,7 @@ def apply_stub_using_libcst(
             MITTCBVisitor.store_imports_in_context(
                 context, newly_imported_items
             )
-            type_checking_block_transformer = (
-                MITTCBVisitor(context)
-            )
+            type_checking_block_transformer = MITTCBVisitor(context)
             transformed_source_module = (
                 type_checking_block_transformer.transform_module(
                     transformed_source_module
@@ -316,8 +306,9 @@ def update_args_from_config(args: argparse.Namespace) -> None:
 
 def main(argv: List[str], stdout: IO[str], stderr: IO[str]) -> int:
     parser = argparse.ArgumentParser(
-        description="Generate and apply stub files from collected "
-        "type information."
+        description=(
+            "Generate and apply stub files from collected type information."
+        )
     )
     parser.add_argument(
         "--disable-type-rewriting",
@@ -438,7 +429,9 @@ qualname format.""",
         dest="existing_annotation_strategy",
         default=ExistingAnnotationStrategy.REPLICATE,
         const=ExistingAnnotationStrategy.IGNORE,
-        help="Ignore existing annotations and generate stubs only from traces.",
+        help=(
+            "Ignore existing annotations and generate stubs only from traces."
+        ),
     )
     group.add_argument(
         "--omit-existing-annotations",
@@ -446,15 +439,19 @@ qualname format.""",
         dest="existing_annotation_strategy",
         default=ExistingAnnotationStrategy.REPLICATE,
         const=ExistingAnnotationStrategy.OMIT,
-        help=("Omit from stub any existing annotations in source. "
-              "Implied by --apply."),
+        help=(
+            "Omit from stub any existing annotations in source. "
+            "Implied by --apply."
+        ),
     )
     stub_parser.add_argument(
         "--diff",
         action="store_true",
         default=False,
-        help=("Compare stubs generated with and without considering "
-              "existing annotations."),
+        help=(
+            "Compare stubs generated with and without considering "
+            "existing annotations."
+        ),
     )
     stub_parser.set_defaults(handler=print_stub_handler)
 

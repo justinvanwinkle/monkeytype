@@ -142,9 +142,7 @@ class MITTCBVisitor(ContextAwareTransformer):
         # Add from typing import TYPE_CHECKING
         tree = self._add_type_checking_import(tree)
 
-        context_contents = self.context.scratch.get(
-            MITTCBVisitor.CONTEXT_KEY
-        )
+        context_contents = self.context.scratch.get(MITTCBVisitor.CONTEXT_KEY)
         if context_contents is not None:
             (import_items_to_be_moved,) = context_contents
 

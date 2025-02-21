@@ -130,9 +130,7 @@ def type_from_dict(d: TypeDict) -> type:
             f"Attribute specified by '{qualname}' in module '{module}' "
             f"is of type {type(typ)}, not type."
         )
-        raise InvalidTypeError(
-            msg
-        )
+        raise InvalidTypeError(msg)
     elem_type_dicts = d.get("elem_types")
     if elem_type_dicts is not None and is_generic(typ):
         elem_types = tuple(type_from_dict(e) for e in elem_type_dicts)

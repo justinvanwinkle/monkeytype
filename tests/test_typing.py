@@ -762,7 +762,11 @@ class TestGetType:
         assert get_type(value, max_typed_dict_size=0) == expected_type
 
     @pytest.mark.parametrize(
-        ("value", "expected_when_max_size_is_zero", "expected_when_max_size_is_none"),
+        (
+            "value",
+            "expected_when_max_size_is_zero",
+            "expected_when_max_size_is_none",
+        ),
         [
             ({}, Dict[Any, Any], Dict[Any, Any]),
             (
@@ -815,7 +819,11 @@ class TestGetType:
         )
 
     @pytest.mark.parametrize(
-        ("value", "expected_when_max_size_is_zero", "expected_when_max_size_is_none"),
+        (
+            "value",
+            "expected_when_max_size_is_zero",
+            "expected_when_max_size_is_none",
+        ),
         [
             (
                 get_default_dict_with_dict(key=1, value=3),

@@ -354,8 +354,9 @@ def test_toplevel_filename_parameter(store, db_file, stdout, stderr):
             ret = cli.main(["stub", filename], stdout, stderr)
             mock_exists.assert_called_with(filename)
         err_msg = (
-            f"No traces found for {filename}; did you pass a filename instead of a module name? "
-            f"Maybe try just '{os.path.splitext(filename)[0]}'.\n"
+            f"No traces found for {filename}; did you pass a filename instead"
+            " of a module name? Maybe try just"
+            f" '{os.path.splitext(filename)[0]}'.\n"
         )
         assert stderr.getvalue() == err_msg
         assert stdout.getvalue() == ""

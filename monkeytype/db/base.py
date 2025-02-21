@@ -52,21 +52,18 @@ class CallTraceStore(metaclass=ABCMeta):
         """
         msg = (
             f"Your CallTraceStore ({cls.__module__}.{cls.__name__}) "
-            f"does not implement make_store()"
+            "does not implement make_store()"
         )
-        raise NotImplementedError(
-            msg
-        )
+        raise NotImplementedError(msg)
 
     def list_modules(self) -> List[str]:
         """List of traced modules from the backing store"""
         msg = (
-            f"Your CallTraceStore ({self.__class__.__module__}.{self.__class__.__name__}) "
-            f"does not implement list_modules()"
+            "Your CallTraceStore"
+            f" ({self.__class__.__module__}.{self.__class__.__name__}) does"
+            " not implement list_modules()"
         )
-        raise NotImplementedError(
-            msg
-        )
+        raise NotImplementedError(msg)
 
 
 class CallTraceStoreLogger(CallTraceLogger):

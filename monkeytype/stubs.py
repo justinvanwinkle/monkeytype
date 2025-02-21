@@ -316,22 +316,20 @@ class RenderAnnotation(GenericTypeRewriter[str]):
     ) -> str:
         msg = (
             "Should not receive an anonymous TypedDict in RenderAnnotation,"
-            f" but was called with required_fields={required_fields}, optional_fields={optional_fields}."
+            f" but was called with required_fields={required_fields},"
+            f" optional_fields={optional_fields}."
         )
-        raise Exception(
-            msg
-        )
+        raise Exception(msg)
 
     def make_builtin_typed_dict(
         self, name: str, annotations: dict[str, str], total: bool
     ) -> str:
         msg = (
-            "Should not receive a TypedDict type in RenderAnnotation,"
-            f" but was called with name={name}, annotations={annotations}, total={total}."
+            "Should not receive a TypedDict type in RenderAnnotation, but was"
+            f" called with name={name}, annotations={annotations},"
+            f" total={total}."
         )
-        raise Exception(
-            msg
-        )
+        raise Exception(msg)
 
     def generic_rewrite(self, typ: Any) -> str:
         if hasattr(typ, "__supertype__"):
@@ -362,9 +360,7 @@ class RenderAnnotation(GenericTypeRewriter[str]):
     def rewrite_type_variable(self, type_variable: Any) -> str:
         rendered = str(type_variable)
         tilde_prefix = "~"
-        return (
-            rendered.removeprefix(tilde_prefix)
-        )
+        return rendered.removeprefix(tilde_prefix)
 
     def make_builtin_tuple(self, elements: Iterable[str]) -> str:
         elems = list(elements)
@@ -607,21 +603,22 @@ class ReplaceTypedDictsWithStubs(TypeRewriter):
         args = getattr(container, "__args__", None)
         if args is None:
             return container
-        elif (
-            args in (((),), ())
-        ):  # special case of empty tuple `Tuple[()]`
+        elif args in (((),), ()):  # special case of empty tuple `Tuple[()]`
             elems: Tuple[Any, ...] = ()
         else:
             # Avoid adding a suffix for the first one so that
             # single-element containers don't have a numeric suffix.
-            elems, stub_lists = zip(*[
-                self.rewrite_and_get_stubs(
-                    elem,
-                    class_name_hint=self._class_name_hint
-                    + ("" if index == 0 else str(index + 1)),
-                )
-                for index, elem in enumerate(args)
-            ], strict=False)
+            elems, stub_lists = zip(
+                *[
+                    self.rewrite_and_get_stubs(
+                        elem,
+                        class_name_hint=self._class_name_hint
+                        + ("" if index == 0 else str(index + 1)),
+                    )
+                    for index, elem in enumerate(args)
+                ],
+                strict=False,
+            )
             for stubs in stub_lists:
                 self.stubs.extend(stubs)
         # Value of type "type" is not indexable.
@@ -660,9 +657,7 @@ class ReplaceTypedDictsWithStubs(TypeRewriter):
                 "Expected empty TypedDicts to be shrunk as dict[Any, Any]"
                 " but got an empty TypedDict anyway"
             )
-            raise Exception(
-                msg
-            )
+            raise Exception(msg)
         elif has_required_fields and not has_optional_fields:
             self._add_typed_dict_class_stub(required_fields, class_name)
         elif not has_required_fields and has_optional_fields:

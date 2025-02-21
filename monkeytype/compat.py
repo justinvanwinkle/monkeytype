@@ -29,8 +29,8 @@ try:
     from typing import _SpecialGenericAlias  # type: ignore[attr-defined]
 
     def is_generic(typ: Any) -> bool:
-        return (
-            typ is Union or isinstance(typ, (_GenericAlias, _SpecialGenericAlias))
+        return typ is Union or isinstance(
+            typ, (_GenericAlias, _SpecialGenericAlias)
         )
 
 except ImportError:

@@ -333,13 +333,11 @@ class TestFunctionStub:
             inspect.signature(has_length_exceeds_120_chars),
             FunctionKind.MODULE,
         )
-        expected = dedent(
-            """\
+        expected = dedent("""\
         def has_length_exceeds_120_chars(
             very_long_name_parameter_1: float,
             very_long_name_parameter_2: float
-        ) -> Optional[float]: ..."""
-        )
+        ) -> Optional[float]: ...""")
         assert stub.render() == expected
 
         expected = "\n".join([
@@ -424,7 +422,10 @@ class TestClassStub:
             "    foo: int",
             "    @classmethod",
             "    def a_class_method(cls, foo: Any) -> Optional[frame]: ...",
-            "    def an_instance_method(self, foo: Any, bar: Any) -> Optional[frame]: ...",
+            (
+                "    def an_instance_method(self, foo: Any, bar: Any) ->"
+                " Optional[frame]: ..."
+            ),
         ])
         assert class_stub.render() == expected
 
@@ -464,7 +465,10 @@ class TestReplaceTypedDictsWithStubs:
             ],
         ),
         ClassStub(
-            name="FooBarTypedDict__RENAME_ME__NonTotal(FooBarTypedDict__RENAME_ME__, total=False)",
+            name=(
+                "FooBarTypedDict__RENAME_ME__NonTotal(FooBarTypedDict__RENAME_ME__,"
+                " total=False)"
+            ),
             function_stubs=[],
             attribute_stubs=[AttributeStub(name="c", typ=int)],
         ),
@@ -718,7 +722,10 @@ class TestModuleStub:
             "def a_class_method(foo: Any) -> Optional[frame]: ...",
             "",
             "",
-            "def an_instance_method(self, foo: Any, bar: Any) -> Optional[frame]: ...",
+            (
+                "def an_instance_method(self, foo: Any, bar: Any) ->"
+                " Optional[frame]: ..."
+            ),
             "",
             "",
             "def has_complex_signature(",
@@ -746,7 +753,10 @@ class TestModuleStub:
             "class Test:",
             "    @classmethod",
             "    def a_class_method(foo: Any) -> Optional[frame]: ...",
-            "    def an_instance_method(self, foo: Any, bar: Any) -> Optional[frame]: ...",
+            (
+                "    def an_instance_method(self, foo: Any, bar: Any) ->"
+                " Optional[frame]: ..."
+            ),
             "    def has_complex_signature(",
             "        self,",
             "        a: Any,",
@@ -764,7 +774,10 @@ class TestModuleStub:
             "class Test2:",
             "    @classmethod",
             "    def a_class_method(foo: Any) -> Optional[frame]: ...",
-            "    def an_instance_method(self, foo: Any, bar: Any) -> Optional[frame]: ...",
+            (
+                "    def an_instance_method(self, foo: Any, bar: Any) ->"
+                " Optional[frame]: ..."
+            ),
             "    def has_complex_signature(",
             "        self,",
             "        a: Any,",
@@ -817,7 +830,10 @@ class TestModuleStub:
             "",
             "",
             "class Dummy:",
-            "    def an_instance_method(self, foo: 'FooTypedDict__RENAME_ME__', bar: int) -> int: ...",
+            (
+                "    def an_instance_method(self, foo:"
+                " 'FooTypedDict__RENAME_ME__', bar: int) -> int: ..."
+            ),
         ])
         self.maxDiff = None
         assert build_module_stubs(entries)["tests.util"].render() == expected
@@ -841,8 +857,10 @@ class TestModuleStub:
             "",
             "",
             "class Dummy:",
-            "    def an_instance_method(self, foo: int, bar: int)"
-            " -> 'DummyAnInstanceMethodTypedDict__RENAME_ME__': ...",
+            (
+                "    def an_instance_method(self, foo: int, bar: int)"
+                " -> 'DummyAnInstanceMethodTypedDict__RENAME_ME__': ..."
+            ),
         ])
         self.maxDiff = None
         assert build_module_stubs(entries)["tests.util"].render() == expected
@@ -861,7 +879,10 @@ class TestModuleStub:
             "from typing import Generator",
             "",
             "",
-            "class DummyAnInstanceMethodYieldTypedDict__RENAME_ME__(TypedDict):",
+            (
+                "class"
+                " DummyAnInstanceMethodYieldTypedDict__RENAME_ME__(TypedDict):"
+            ),
             "    a: int",
             "    b: str",
             "",
@@ -871,7 +892,11 @@ class TestModuleStub:
             "        self,",
             "        foo: int,",
             "        bar: int",
-            "    ) -> Generator['DummyAnInstanceMethodYieldTypedDict__RENAME_ME__', None, int]: ...",
+            (
+                "    ) ->"
+                " Generator['DummyAnInstanceMethodYieldTypedDict__RENAME_ME__',"
+                " None, int]: ..."
+            ),
         ])
         self.maxDiff = None
         assert build_module_stubs(entries)["tests.util"].render() == expected
@@ -898,7 +923,10 @@ class TestModuleStub:
             "",
             "",
             "class Dummy:",
-            "    def an_instance_method(self, foo: List['FooTypedDict__RENAME_ME__'], bar: int) -> int: ...",
+            (
+                "    def an_instance_method(self, foo:"
+                " List['FooTypedDict__RENAME_ME__'], bar: int) -> int: ..."
+            ),
         ])
         self.maxDiff = None
         assert build_module_stubs(entries)["tests.util"].render() == expected
@@ -925,12 +953,19 @@ class TestModuleStub:
             "    a: int",
             "",
             "",
-            "class FooTypedDict__RENAME_ME__NonTotal(FooTypedDict__RENAME_ME__, total=False):",
+            (
+                "class"
+                " FooTypedDict__RENAME_ME__NonTotal(FooTypedDict__RENAME_ME__,"
+                " total=False):"
+            ),
             "    b: str",
             "",
             "",
             "class Dummy:",
-            "    def an_instance_method(self, foo: 'FooTypedDict__RENAME_ME__NonTotal', bar: int) -> int: ...",
+            (
+                "    def an_instance_method(self, foo:"
+                " 'FooTypedDict__RENAME_ME__NonTotal', bar: int) -> int: ..."
+            ),
         ])
         assert build_module_stubs(entries)["tests.util"].render() == expected
 
@@ -949,8 +984,10 @@ class TestModuleStub:
             "",
             "",
             "class Dummy:",
-            "    def an_instance_method(self, foo: int, bar: int)"
-            " -> Tuple[()]: ...",
+            (
+                "    def an_instance_method(self, foo: int, bar: int)"
+                " -> Tuple[()]: ..."
+            ),
         ])
         self.maxDiff = None
         assert build_module_stubs(entries)["tests.util"].render() == expected

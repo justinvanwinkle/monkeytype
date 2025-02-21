@@ -278,8 +278,7 @@ class CallTracer:
         if (
             event not in SUPPORTED_EVENTS
             or code.co_name == "trace_types"
-            or (self.should_trace
-            and not self.should_trace(code))
+            or (self.should_trace and not self.should_trace(code))
         ):
             return self
         try:

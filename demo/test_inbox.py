@@ -235,7 +235,9 @@ def test_three_likes():
     assert box.aggregate() == [
         models.AggregatedItem(
             type=models.EventType.LIKED,
-            text='Liker One, Liker Two and 1 others liked your post "My Post".',
+            text=(
+                'Liker One, Liker Two and 1 others liked your post "My Post".'
+            ),
             published=like3.published,
         )
     ]

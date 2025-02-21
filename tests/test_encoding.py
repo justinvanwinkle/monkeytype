@@ -188,7 +188,8 @@ class TestTypeConversion:
             TypedDict(DUMMY_TYPED_DICT_NAME, {"a": int, "b": str}),
             '{"elem_types": {"a": {"module": "builtins", "qualname": "int"},'
             + ' "b": {"module": "builtins", "qualname": "str"}},'
-            + ' "is_typed_dict": true, "module": "tests.test_encoding", "qualname": "DUMMY_NAME"}',
+            + ' "is_typed_dict": true, "module": "tests.test_encoding",'
+            ' "qualname": "DUMMY_NAME"}',
         )],
     )
     def test_type_to_json(self, type_dict, expected):
@@ -199,7 +200,8 @@ class TestTypeConversion:
         [(
             '{"elem_types": {"a": {"module": "builtins", "qualname": "int"},'
             + ' "b": {"module": "builtins", "qualname": "str"}},'
-            + ' "is_typed_dict": true, "module": "tests.test_encoding", "qualname": "DUMMY_NAME"}',
+            + ' "is_typed_dict": true, "module": "tests.test_encoding",'
+            ' "qualname": "DUMMY_NAME"}',
             TypedDict(DUMMY_TYPED_DICT_NAME, {"a": int, "b": str}),
         )],
     )
