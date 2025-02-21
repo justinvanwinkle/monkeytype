@@ -204,7 +204,7 @@ def test_get_diff2(store, db_file, stdout, stderr):
 
 
 @pytest.mark.parametrize(
-    "arg, error",
+    ("arg", "error"),
     [
         (func.__module__, f"No traces found for module {func.__module__}\n"),
         (
@@ -393,7 +393,7 @@ def my_test_function(a, b):
         src_path = os.path.join(tempdir, module + ".py")
         with open(src_path, "w+") as f:
             f.write(src)
-        with mock.patch("sys.path", sys.path + [tempdir]):
+        with mock.patch("sys.path", [*sys.path, tempdir]):
             import my_test_module as mtm
 
             traces = [

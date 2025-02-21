@@ -37,18 +37,21 @@ def get_func_in_module(module: str, qualname: str) -> Callable[..., Any]:
             if (func.fset is None) and (func.fdel is None):
                 func = func.fget
             else:
+                msg = f"Property {module}.{qualname} has setter or deleter."
                 raise InvalidTypeError(
-                    f"Property {module}.{qualname} has setter or deleter."
+                    msg
                 )
         else:
+            msg = f"Property {module}.{qualname} is missing getter"
             raise InvalidTypeError(
-                f"Property {module}.{qualname} is missing getter"
+                msg
             )
     elif isinstance(func, cached_property):
         func = func.func
     elif not isinstance(func, (types.FunctionType, types.BuiltinFunctionType)):
+        msg = f"{module}.{qualname} is of type '{type(func)}', not function."
         raise InvalidTypeError(
-            f"{module}.{qualname} is of type '{type(func)}', not function."
+            msg
         )
     return func  # type: ignore[no-any-return]
 

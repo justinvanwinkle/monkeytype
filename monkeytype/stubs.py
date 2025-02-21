@@ -300,7 +300,8 @@ def _is_optional(anno: Any) -> bool:
 def _get_optional_elem(anno: Any) -> Any:
     """Get the non-null type from an optional."""
     if not _is_optional(anno):
-        raise TypeError("Supplied annotation isn't an optional")
+        msg = "Supplied annotation isn't an optional"
+        raise TypeError(msg)
     elems = tuple(e for e in anno.__args__ if e is not NoneType)
     if len(elems) == 1:
         return elems[0]
@@ -313,17 +314,23 @@ class RenderAnnotation(GenericTypeRewriter[str]):
     def make_anonymous_typed_dict(
         self, required_fields: dict[str, str], optional_fields: dict[str, str]
     ) -> str:
-        raise Exception(
+        msg = (
             "Should not receive an anonymous TypedDict in RenderAnnotation,"
             f" but was called with required_fields={required_fields}, optional_fields={optional_fields}."
+        )
+        raise Exception(
+            msg
         )
 
     def make_builtin_typed_dict(
         self, name: str, annotations: dict[str, str], total: bool
     ) -> str:
-        raise Exception(
+        msg = (
             "Should not receive a TypedDict type in RenderAnnotation,"
             f" but was called with name={name}, annotations={annotations}, total={total}."
+        )
+        raise Exception(
+            msg
         )
 
     def generic_rewrite(self, typ: Any) -> str:
@@ -601,7 +608,7 @@ class ReplaceTypedDictsWithStubs(TypeRewriter):
         if args is None:
             return container
         elif (
-            args == ((),) or args == ()
+            args in (((),), ())
         ):  # special case of empty tuple `Tuple[()]`
             elems: Tuple[Any, ...] = ()
         else:
@@ -649,9 +656,12 @@ class ReplaceTypedDictsWithStubs(TypeRewriter):
         has_required_fields = len(required_fields) != 0
         has_optional_fields = len(optional_fields) != 0
         if not has_required_fields and not has_optional_fields:
-            raise Exception(
+            msg = (
                 "Expected empty TypedDicts to be shrunk as dict[Any, Any]"
                 " but got an empty TypedDict anyway"
+            )
+            raise Exception(
+                msg
             )
         elif has_required_fields and not has_optional_fields:
             self._add_typed_dict_class_stub(required_fields, class_name)

@@ -68,7 +68,7 @@ def transform_path(path: str) -> str:
     path = "monkeytype/" + path[len("tests/") :]
     *basepath, file_name = path.split("/")
     basename, _ext = os.path.splitext(file_name[len("test_") :])
-    return ".".join(basepath + [basename])
+    return ".".join([*basepath, basename])
 
 
 def smartcov_paths_hook(paths: List[str]) -> List[str]:

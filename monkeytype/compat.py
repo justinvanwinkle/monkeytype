@@ -30,9 +30,7 @@ try:
 
     def is_generic(typ: Any) -> bool:
         return (
-            typ is Union
-            or isinstance(typ, _GenericAlias)
-            or isinstance(typ, _SpecialGenericAlias)
+            typ is Union or isinstance(typ, (_GenericAlias, _SpecialGenericAlias))
         )
 
 except ImportError:

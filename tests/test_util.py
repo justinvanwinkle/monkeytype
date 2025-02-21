@@ -86,7 +86,7 @@ class Derived(Dummy):
 
 class TestPascalCase:
     @pytest.mark.parametrize(
-        "input_string, expected",
+        ("input_string", "expected"),
         [
             ("foo", "Foo"),
             ("foo_bar", "FooBar"),

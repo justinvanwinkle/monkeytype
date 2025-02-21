@@ -194,7 +194,7 @@ def get_dict_type(dct, max_typed_dict_size):
         # unintuitive, especially when you've "disabled" TypedDict generation
         # by setting `max_typed_dict_size` to 0.
         return Dict[Any, Any]
-    if all(isinstance(k, str) for k in dct.keys()) and (
+    if all(isinstance(k, str) for k in dct) and (
         max_typed_dict_size is None or len(dct) <= max_typed_dict_size
     ):
         return make_typed_dict(
@@ -204,7 +204,7 @@ def get_dict_type(dct, max_typed_dict_size):
         )
     else:
         key_type = shrink_types(
-            (get_type(k, max_typed_dict_size) for k in dct.keys()),
+            (get_type(k, max_typed_dict_size) for k in dct),
             max_typed_dict_size,
         )
         val_type = shrink_types(
@@ -239,7 +239,7 @@ def get_type(obj, max_typed_dict_size):
         return get_dict_type(obj, max_typed_dict_size)
     elif typ is defaultdict:
         key_type = shrink_types(
-            (get_type(k, max_typed_dict_size) for k in obj.keys()),
+            (get_type(k, max_typed_dict_size) for k in obj),
             max_typed_dict_size,
         )
         val_type = shrink_types(

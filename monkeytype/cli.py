@@ -50,8 +50,9 @@ def module_path(path: str) -> Tuple[str, Optional[str]]:
     module = parts.pop(0)
     qualname = parts[0] if parts else None
     if os.sep in module:  # Smells like a path
+        msg = f"{module} does not look like a valid Python import path"
         raise argparse.ArgumentTypeError(
-            f"{module} does not look like a valid Python import path"
+            msg
         )
 
     return module, qualname
@@ -61,8 +62,9 @@ def module_path_with_qualname(path: str) -> Tuple[str, str]:
     """Require that path be of the form <module>:<qualname>."""
     module, qualname = module_path(path)
     if qualname is None:
+        msg = "must be of the form <module>:<qualname>"
         raise argparse.ArgumentTypeError(
-            "must be of the form <module>:<qualname>"
+            msg
         )
     return module, qualname
 
@@ -103,7 +105,8 @@ def get_monkeytype_config(path: str) -> Config:
     try:
         config = get_name_in_module(module, qualname)
     except MonkeyTypeError as mte:
-        raise argparse.ArgumentTypeError(f"cannot import {path}: {mte}") from mte
+        msg = f"cannot import {path}: {mte}"
+        raise argparse.ArgumentTypeError(msg) from mte
     if should_call:
         config = config()
     return config  # type: ignore[no-any-return]
@@ -213,7 +216,8 @@ def apply_stub_using_libcst(
             )
 
     except Exception as e:
-        raise HandlerError(f"Failed applying stub with libcst:\n{e}") from e
+        msg = f"Failed applying stub with libcst:\n{e}"
+        raise HandlerError(msg) from e
     return transformed_source_module.code
 
 
@@ -295,7 +299,7 @@ def run_handler(
     old_argv = sys.argv.copy()
     try:
         with trace(args.config):
-            sys.argv = [args.script_path] + args.script_args
+            sys.argv = [args.script_path, *args.script_args]
             if args.m:
                 runpy.run_module(
                     args.script_path, run_name="__main__", alter_sys=True

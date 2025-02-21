@@ -80,7 +80,7 @@ class TestTypeConversion:
         assert type_from_json(type_to_json(typ)) == typ
 
     @pytest.mark.parametrize(
-        "typ, expected",
+        ("typ", "expected"),
         [
             (
                 Dict[str, int],
@@ -137,7 +137,7 @@ class TestTypeConversion:
         assert type_to_dict(typ) == expected
 
     @pytest.mark.parametrize(
-        "type_dict, expected",
+        ("type_dict", "expected"),
         [(
             {
                 "elem_types": {
@@ -155,7 +155,7 @@ class TestTypeConversion:
         assert type_from_dict(type_dict) == expected
 
     @pytest.mark.parametrize(
-        "type_dict, expected",
+        ("type_dict", "expected"),
         [(
             {
                 "elem_types": {
@@ -183,7 +183,7 @@ class TestTypeConversion:
         assert type_from_dict(type_dict) == expected
 
     @pytest.mark.parametrize(
-        "type_dict, expected",
+        ("type_dict", "expected"),
         [(
             TypedDict(DUMMY_TYPED_DICT_NAME, {"a": int, "b": str}),
             '{"elem_types": {"a": {"module": "builtins", "qualname": "int"},'
@@ -195,7 +195,7 @@ class TestTypeConversion:
         assert type_to_json(type_dict) == expected
 
     @pytest.mark.parametrize(
-        "type_dict_string, expected",
+        ("type_dict_string", "expected"),
         [(
             '{"elem_types": {"a": {"module": "builtins", "qualname": "int"},'
             + ' "b": {"module": "builtins", "qualname": "str"}},'
@@ -225,7 +225,7 @@ class TestTypeConversion:
             })
 
     @pytest.mark.parametrize(
-        "encoder, typ, expected, should_call_encoder",
+        ("encoder", "typ", "expected", "should_call_encoder"),
         [
             (Mock(), None, None, False),
             (Mock(return_value="foo"), str, "foo", True),
@@ -242,7 +242,7 @@ class TestTypeConversion:
         assert ret == expected
 
     @pytest.mark.parametrize(
-        "encoder, typ, expected, should_call_encoder",
+        ("encoder", "typ", "expected", "should_call_encoder"),
         [
             (Mock(), None, None, False),
             (Mock(), "null", None, False),

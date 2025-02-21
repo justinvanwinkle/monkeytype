@@ -93,14 +93,15 @@ class TestGetFunc:
             GetFuncHelper.a_cached_property.func,
         ))
 
-    @pytest.mark.parametrize("frame, expected_func", cases)
+    @pytest.mark.parametrize(("frame", "expected_func"), cases)
     def test_get_func(self, frame, expected_func):
         assert get_func(frame) == expected_func
 
 
 def throw(should_recover: bool) -> None:
     try:
-        raise Exception("Testing 123")
+        msg = "Testing 123"
+        raise Exception(msg)
     except Exception:
         if should_recover:
             return None

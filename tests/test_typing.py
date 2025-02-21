@@ -47,7 +47,7 @@ VERY_LARGE_MAX_TYPED_DICT_SIZE = 200
 
 class TestTypesEqual:
     @pytest.mark.parametrize(
-        "typ, other_type, expected_output",
+        ("typ", "other_type", "expected_output"),
         [
             (Any, Any, True),
             (Any, int, False),
@@ -154,7 +154,7 @@ class TestTypesEqual:
         assert types_equal(typ, other_type) == expected_output
 
     @pytest.mark.parametrize(
-        "typ, expected",
+        ("typ", "expected"),
         [(List[int], True), (typing_Tuple[int], False), (int, False)],
     )
     def test_is_list(self, typ, expected):
@@ -163,7 +163,7 @@ class TestTypesEqual:
 
 class TestMakeTypedDict:
     @pytest.mark.parametrize(
-        "required_fields, optional_fields, expected_type",
+        ("required_fields", "optional_fields", "expected_type"),
         [(
             {"a": int, "b": str},
             {"c": int},
@@ -189,7 +189,7 @@ class TestMakeTypedDict:
         assert actual == expected_type
 
     @pytest.mark.parametrize(
-        "required_fields, optional_fields",
+        ("required_fields", "optional_fields"),
         [({"a": int, "b": str}, {"c": int})],
     )
     def test_field_annotations(self, required_fields, optional_fields):
@@ -204,7 +204,7 @@ class TestMakeTypedDict:
 
 class TestShrinkType:
     @pytest.mark.parametrize(
-        "types, expected_type",
+        ("types", "expected_type"),
         [
             (
                 (
@@ -389,7 +389,7 @@ class TestShrinkType:
         assert actual == expected_type
 
     @pytest.mark.parametrize(
-        "types, expected_type",
+        ("types", "expected_type"),
         [
             # Sanity-check that it works for primitive types.
             ((int, str), Union[int, str]),
@@ -564,7 +564,7 @@ class TestShrinkType:
         assert types_equal(actual, expected_type)
 
     @pytest.mark.parametrize(
-        "types, expected_type",
+        ("types", "expected_type"),
         [
             ([], Any),
             ((int,), int),
@@ -578,7 +578,7 @@ class TestShrinkType:
         assert shrink_types(types, max_typed_dict_size=0) == expected_type
 
     @pytest.mark.parametrize(
-        "types, expected_type",
+        ("types", "expected_type"),
         [
             # If all are anonymous TypedDicts, we get the shrunk TypedDict.
             (
@@ -621,7 +621,7 @@ class TestShrinkType:
 
 class TestTypedDictHelpers:
     @pytest.mark.parametrize(
-        "typ, expected",
+        ("typ", "expected"),
         [
             (TypedDict(DUMMY_TYPED_DICT_NAME, {"a": int, "b": int}), True),
             (Dict[str, int], False),
@@ -633,7 +633,7 @@ class TestTypedDictHelpers:
         assert is_typed_dict(typ) == expected
 
     @pytest.mark.parametrize(
-        "type1, type2, expected_value",
+        ("type1", "type2", "expected_value"),
         [
             (
                 TypedDict(DUMMY_TYPED_DICT_NAME, {"a": int, "b": int}),
@@ -731,7 +731,7 @@ def get_default_dict_with_dict(key, value):
 
 class TestGetType:
     @pytest.mark.parametrize(
-        "value, expected_type",
+        ("value", "expected_type"),
         [
             (1, int),
             ("foo", str),
@@ -762,7 +762,7 @@ class TestGetType:
         assert get_type(value, max_typed_dict_size=0) == expected_type
 
     @pytest.mark.parametrize(
-        "value, expected_when_max_size_is_zero, expected_when_max_size_is_none",
+        ("value", "expected_when_max_size_is_zero", "expected_when_max_size_is_none"),
         [
             ({}, Dict[Any, Any], Dict[Any, Any]),
             (
@@ -815,7 +815,7 @@ class TestGetType:
         )
 
     @pytest.mark.parametrize(
-        "value, expected_when_max_size_is_zero, expected_when_max_size_is_none",
+        ("value", "expected_when_max_size_is_zero", "expected_when_max_size_is_none"),
         [
             (
                 get_default_dict_with_dict(key=1, value=3),
@@ -863,7 +863,7 @@ class TestGetType:
         assert types_equal(actual_when_none, expected_when_max_size_is_none)
 
     @pytest.mark.parametrize(
-        "value, max_typed_dict_size, expected",
+        ("value", "max_typed_dict_size", "expected"),
         [
             ({"a": 1, "b": 2}, 1, Dict[str, int]),
             (
@@ -918,7 +918,7 @@ class RewriteListToInt(TypeRewriter):
 
 class TestTypeRewriter:
     @pytest.mark.parametrize(
-        "typ, expected",
+        ("typ", "expected"),
         [
             (List[str], int),
             (
@@ -958,7 +958,7 @@ class TestTypeRewriter:
 
 class TestRemoveEmptyContainers:
     @pytest.mark.parametrize(
-        "typ, expected",
+        ("typ", "expected"),
         [
             (Union[Set[Any], Set[int]], Set[int]),
             (Union[Dict[Any, Any], Dict[int, int]], Dict[int, int]),
@@ -980,7 +980,7 @@ class TestRemoveEmptyContainers:
 
 class TestRewriteConfigDict:
     @pytest.mark.parametrize(
-        "typ,expected",
+        ("typ", "expected"),
         [
             # Not all dictionaries; shouldn't rewrite
             (
@@ -1026,7 +1026,7 @@ class TestRewriteMostSpecificCommonBase:
         pass
 
     @pytest.mark.parametrize(
-        "typ, expected",
+        ("typ", "expected"),
         [
             (Union[FirstDerived, SecondDerived], Intermediate),
             (Union[FirstDerived, Base], Base),
@@ -1108,7 +1108,7 @@ class TestRewriteLargeUnion:
         pass
 
     @pytest.mark.parametrize(
-        "typ, expected",
+        ("typ", "expected"),
         [
             # Too few elements; shouldn't rewrite
             (Union[int, str], Union[int, str]),
@@ -1151,7 +1151,7 @@ class TestRewriteLargeUnion:
 
 class TestRewriteGenerator:
     @pytest.mark.parametrize(
-        "typ, expected",
+        ("typ", "expected"),
         [
             # Should not rewrite
             (Generator[int, None, int], Generator[int, None, int]),
@@ -1168,7 +1168,7 @@ class TestRewriteGenerator:
 
 class TestRewriteAnonymousTypedDictToDict:
     @pytest.mark.parametrize(
-        "typ, expected",
+        ("typ", "expected"),
         [
             (
                 make_typed_dict(required_fields={"a": int, "b": str}),
