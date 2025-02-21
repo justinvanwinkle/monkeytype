@@ -118,10 +118,14 @@ def func2(a: int, b: int) -> None: ...
     assert ret == 0
 
 
-def test_print_stub_ignore_existing_annotations(store, db_file, stdout, stderr):
+def test_print_stub_ignore_existing_annotations(
+    store, db_file, stdout, stderr
+):
     traces = [CallTrace(func_anno, {"a": int, "b": int}, int)]
     store.add(traces)
-    with mock.patch.dict(os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}):
+    with mock.patch.dict(
+        os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}
+    ):
         ret = cli.main(
             ["stub", func.__module__, "--ignore-existing-annotations"],
             stdout,
@@ -140,7 +144,9 @@ def test_get_diff(store, db_file, stdout, stderr):
         CallTrace(func_anno2, {"a": str, "b": str}, None),
     ]
     store.add(traces)
-    with mock.patch.dict(os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}):
+    with mock.patch.dict(
+        os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}
+    ):
         ret = cli.main(["stub", func.__module__, "--diff"], stdout, stderr)
     expected = """- def func_anno(a: int, b: str) -> None: ...
 ?                          ^ -     ^^ ^
@@ -168,7 +174,9 @@ def test_get_diff2(store, db_file, stdout, stderr):
         CallTrace(func_anno, {"a": int, "b": int}, int),
     ]
     store.add(traces)
-    with mock.patch.dict(os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}):
+    with mock.patch.dict(
+        os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}
+    ):
         ret = cli.main(["stub", func.__module__, "--diff"], stdout, stderr)
     expected = """- def func_anno(a: int, b: str) -> None: ...
 ?                          ^ -     ^^ ^
@@ -206,7 +214,9 @@ def test_get_diff2(store, db_file, stdout, stderr):
     ],
 )
 def test_no_traces(store, db_file, stdout, stderr, arg, error):
-    with mock.patch.dict(os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}):
+    with mock.patch.dict(
+        os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}
+    ):
         ret = cli.main(["stub", arg], stdout, stderr)
     assert stderr.getvalue() == error
     assert stdout.getvalue() == ""
@@ -216,7 +226,9 @@ def test_no_traces(store, db_file, stdout, stderr, arg, error):
 def test_display_list_of_modules(store, db_file, stdout, stderr):
     traces = [CallTrace(func, {"a": int, "b": str}, NoneType)]
     store.add(traces)
-    with mock.patch.dict(os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}):
+    with mock.patch.dict(
+        os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}
+    ):
         ret = cli.main(["list-modules"], stdout, stderr)
 
     expected = ""
@@ -227,7 +239,9 @@ def test_display_list_of_modules(store, db_file, stdout, stderr):
 
 
 def test_display_list_of_modules_no_modules(store, db_file, stdout, stderr):
-    with mock.patch.dict(os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}):
+    with mock.patch.dict(
+        os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}
+    ):
         ret = cli.main(["list-modules"], stdout, stderr)
     expected = ""
     assert stderr.getvalue() == expected
@@ -257,7 +271,9 @@ def test_display_sample_count_from_cli(store, db_file, stdout, stderr):
         CallTrace(func2, {"a": int, "b": int}, NoneType),
     ]
     store.add(traces)
-    with mock.patch.dict(os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}):
+    with mock.patch.dict(
+        os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}
+    ):
         ret = cli.main(
             ["stub", func.__module__, "--sample-count"], stdout, stderr
         )
@@ -311,7 +327,9 @@ def test_cli_context_manager_activated(capsys, stdout, stderr):
 
 
 def test_pathlike_parameter(store, db_file, capsys, stdout, stderr):
-    with mock.patch.dict(os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}):
+    with mock.patch.dict(
+        os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}
+    ):
         with pytest.raises(SystemExit):
             cli.main(["stub", "test/foo.py:bar"], stdout, stderr)
         out, err = capsys.readouterr()
@@ -322,7 +340,9 @@ def test_pathlike_parameter(store, db_file, capsys, stdout, stderr):
 
 def test_toplevel_filename_parameter(store, db_file, stdout, stderr):
     filename = "foo.py"
-    with mock.patch.dict(os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}):
+    with mock.patch.dict(
+        os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}
+    ):
         orig_exists = os.path.exists
 
         def side_effect(x):
@@ -350,12 +370,15 @@ def test_apply_stub_init(store, db_file, stdout, stderr, collector):
 
     store.add(collector.traces)
 
-    with mock.patch.dict(os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}):
+    with mock.patch.dict(
+        os.environ, {DefaultConfig.DB_PATH_VAR: db_file.name}
+    ):
         ret = cli.main(["apply", Foo.__module__], stdout, stderr)
 
     assert ret == 0
     assert (
-        "def __init__(self, arg1: str, arg2: int) -> None:" in stdout.getvalue()
+        "def __init__(self, arg1: str, arg2: int) -> None:"
+        in stdout.getvalue()
     )
 
 

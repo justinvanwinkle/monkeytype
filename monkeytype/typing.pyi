@@ -87,7 +87,9 @@ class TypeRewriter(GenericTypeRewriter[type]):
     def rewrite_malformed_container(self, container: Any) -> Any: ...
     def rewrite_type_variable(self, type_variable: Any) -> Any: ...
     def make_anonymous_typed_dict(
-        self, required_fields: Dict[str, type], optional_fields: Dict[str, type]
+        self,
+        required_fields: Dict[str, type],
+        optional_fields: Dict[str, type],
     ) -> type: ...
     def make_builtin_typed_dict(
         self, name: str, annotations: Dict[str, type], total: bool

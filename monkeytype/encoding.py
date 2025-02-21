@@ -162,7 +162,8 @@ def arg_types_from_json(arg_types_json: str) -> Dict[str, type]:
     """Reify the encoded argument types from the format produced by arg_types_to_json."""
     arg_types = json.loads(arg_types_json)
     return {
-        name: type_from_dict(type_dict) for name, type_dict in arg_types.items()
+        name: type_from_dict(type_dict)
+        for name, type_dict in arg_types.items()
     }
 
 
@@ -209,7 +210,9 @@ class CallTraceRow(CallTraceThunk):
         self.yield_type = yield_type
 
     @classmethod
-    def from_trace(cls: Type[CallTraceRowT], trace: CallTrace) -> CallTraceRowT:
+    def from_trace(
+        cls: Type[CallTraceRowT], trace: CallTrace
+    ) -> CallTraceRowT:
         module = trace.func.__module__
         qualname = trace.func.__qualname__
         arg_types = arg_types_to_json(trace.arg_types)

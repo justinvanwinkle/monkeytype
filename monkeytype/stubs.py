@@ -202,7 +202,10 @@ def update_signature_return(
         if existing_annotation_strategy == ExistingAnnotationStrategy.OMIT:
             return sig.replace(return_annotation=inspect.Signature.empty)
         # Don't change pre-existing annotations unless asked to
-        if existing_annotation_strategy == ExistingAnnotationStrategy.REPLICATE:
+        if (
+            existing_annotation_strategy
+            == ExistingAnnotationStrategy.REPLICATE
+        ):
             return sig
     # NB: We cannot distinguish between functions that explicitly only
     # return None and those that do so implicitly. In the case of generator
@@ -416,7 +419,9 @@ def render_parameter(param: inspect.Parameter) -> str:
 
 
 def render_signature(
-    sig: inspect.Signature, max_line_len: Optional[int] = None, prefix: str = ""
+    sig: inspect.Signature,
+    max_line_len: Optional[int] = None,
+    prefix: str = "",
 ) -> str:
     """Convert a signature into its stub representation.
 
@@ -850,7 +855,9 @@ def get_updated_definition(
     arg_types, return_type, yield_type = shrink_traced_types(
         traces, max_typed_dict_size
     )
-    arg_types = {name: rewriter.rewrite(typ) for name, typ in arg_types.items()}
+    arg_types = {
+        name: rewriter.rewrite(typ) for name, typ in arg_types.items()
+    }
     if return_type is not None:
         return_type = rewriter.rewrite(return_type)
     if yield_type is not None:

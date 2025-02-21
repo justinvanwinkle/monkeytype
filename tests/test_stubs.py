@@ -283,7 +283,9 @@ class TestFunctionStub:
         stub = FunctionStub(
             f.__name__, inspect.signature(f), FunctionKind.MODULE, to_strip
         )
-        expected = "def strip_modules_helper(d1: Dummy, d2: Dummy) -> None: ..."
+        expected = (
+            "def strip_modules_helper(d1: Dummy, d2: Dummy) -> None: ..."
+        )
         assert stub.render() == expected
 
     def test_async_function(self):
@@ -293,7 +295,9 @@ class TestFunctionStub:
             FunctionKind.MODULE,
             is_async=True,
         )
-        expected = "async def test%s: ..." % (render_signature(stub.signature),)
+        expected = "async def test%s: ..." % (
+            render_signature(stub.signature),
+        )
         assert stub.render() == expected
 
     def test_optional_parameter_annotation(self):
@@ -1015,8 +1019,12 @@ class TestStubIndexBuilder:
         sig = Signature.from_callable(untyped_helper)
         sig = sig.replace(
             parameters=[
-                Parameter("x", Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
-                Parameter("y", Parameter.POSITIONAL_OR_KEYWORD, annotation=str),
+                Parameter(
+                    "x", Parameter.POSITIONAL_OR_KEYWORD, annotation=int
+                ),
+                Parameter(
+                    "y", Parameter.POSITIONAL_OR_KEYWORD, annotation=str
+                ),
             ],
             return_annotation=str,
         )
@@ -1061,7 +1069,9 @@ class TestUpdateSignatureArgs:
         sig = update_signature_args(sig, {"a": str}, False)
         expected = Signature(
             parameters=[
-                Parameter("a", Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
+                Parameter(
+                    "a", Parameter.POSITIONAL_OR_KEYWORD, annotation=int
+                ),
                 Parameter("b", Parameter.POSITIONAL_OR_KEYWORD),
             ],
             return_annotation=int,
@@ -1171,7 +1181,9 @@ class TestUpdateSignatureReturn:
         sig = update_signature_return(sig, return_type=str)
         expected = Signature(
             parameters=[
-                Parameter("a", Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
+                Parameter(
+                    "a", Parameter.POSITIONAL_OR_KEYWORD, annotation=int
+                ),
                 Parameter("b", Parameter.POSITIONAL_OR_KEYWORD),
             ],
             return_annotation=int,
@@ -1188,7 +1200,9 @@ class TestUpdateSignatureReturn:
         )
         expected = Signature(
             parameters=[
-                Parameter("a", Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
+                Parameter(
+                    "a", Parameter.POSITIONAL_OR_KEYWORD, annotation=int
+                ),
                 Parameter("b", Parameter.POSITIONAL_OR_KEYWORD),
             ]
         )
@@ -1204,7 +1218,9 @@ class TestUpdateSignatureReturn:
         )
         expected = Signature(
             parameters=[
-                Parameter("a", Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
+                Parameter(
+                    "a", Parameter.POSITIONAL_OR_KEYWORD, annotation=int
+                ),
                 Parameter("b", Parameter.POSITIONAL_OR_KEYWORD),
             ],
             return_annotation=str,
@@ -1215,24 +1231,32 @@ class TestUpdateSignatureReturn:
         sig = Signature.from_callable(UpdateSignatureHelper.a_class_method)
         sig = update_signature_return(sig, yield_type=int)
         assert sig == Signature(return_annotation=Iterator[int])
-        sig = update_signature_return(sig, return_type=NoneType, yield_type=int)
+        sig = update_signature_return(
+            sig, return_type=NoneType, yield_type=int
+        )
         assert sig == Signature(return_annotation=Iterator[int])
 
     def test_update_yield_and_return(self):
         sig = Signature.from_callable(UpdateSignatureHelper.a_class_method)
         sig = update_signature_return(sig, return_type=str, yield_type=int)
-        assert sig == Signature(return_annotation=Generator[int, NoneType, str])
+        assert sig == Signature(
+            return_annotation=Generator[int, NoneType, str]
+        )
 
     def test_update_yield_none_and_return(self):
         sig = Signature.from_callable(UpdateSignatureHelper.a_class_method)
-        sig = update_signature_return(sig, return_type=str, yield_type=NoneType)
+        sig = update_signature_return(
+            sig, return_type=str, yield_type=NoneType
+        )
         assert sig == Signature(
             return_annotation=Generator[NoneType, NoneType, str]
         )
 
     def test_update_yield_and_return_none(self):
         sig = Signature.from_callable(UpdateSignatureHelper.a_class_method)
-        sig = update_signature_return(sig, return_type=NoneType, yield_type=str)
+        sig = update_signature_return(
+            sig, return_type=NoneType, yield_type=str
+        )
         assert sig == Signature(return_annotation=Iterator[str])
 
 
@@ -1533,9 +1557,15 @@ class TestGetImportsForAnnotation:
             (Dict[str, Dummy], {"tests.util": {"Dummy"}, "typing": {"Dict"}}),
             (List[Dummy], {"tests.util": {"Dummy"}, "typing": {"List"}}),
             (Set[Dummy], {"tests.util": {"Dummy"}, "typing": {"Set"}}),
-            (Tuple[str, Dummy], {"tests.util": {"Dummy"}, "typing": {"Tuple"}}),
+            (
+                Tuple[str, Dummy],
+                {"tests.util": {"Dummy"}, "typing": {"Tuple"}},
+            ),
             (Type[Dummy], {"tests.util": {"Dummy"}, "typing": {"Type"}}),
-            (Union[str, Dummy], {"tests.util": {"Dummy"}, "typing": {"Union"}}),
+            (
+                Union[str, Dummy],
+                {"tests.util": {"Dummy"}, "typing": {"Union"}},
+            ),
         ],
     )
     def test_container_types(self, anno, expected):

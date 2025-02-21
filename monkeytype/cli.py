@@ -67,10 +67,14 @@ def module_path_with_qualname(path: str) -> Tuple[str, str]:
     return module, qualname
 
 
-def complain_about_no_traces(args: argparse.Namespace, stderr: IO[str]) -> None:
+def complain_about_no_traces(
+    args: argparse.Namespace, stderr: IO[str]
+) -> None:
     module, qualname = args.module_path
     if qualname:
-        print(f"No traces found for specifier {module}:{qualname}", file=stderr)
+        print(
+            f"No traces found for specifier {module}:{qualname}", file=stderr
+        )
     # When there is no trace and a top level module's filename is passed, print
     # a useful error message.
     elif os.path.exists(module):

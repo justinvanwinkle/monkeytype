@@ -76,7 +76,10 @@ def a_module_function() -> Optional[FrameType]:
 class TestGetFunc:
     cases = [
         (GetFuncHelper.a_static_method(), GetFuncHelper.a_static_method),
-        (GetFuncHelper.a_class_method(), GetFuncHelper.a_class_method.__func__),
+        (
+            GetFuncHelper.a_class_method(),
+            GetFuncHelper.a_class_method.__func__,
+        ),
         (
             GetFuncHelper().an_instance_method(),
             GetFuncHelper.an_instance_method,

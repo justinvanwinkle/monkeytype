@@ -189,7 +189,8 @@ class TestMakeTypedDict:
         assert actual == expected_type
 
     @pytest.mark.parametrize(
-        "required_fields, optional_fields", [({"a": int, "b": str}, {"c": int})]
+        "required_fields, optional_fields",
+        [({"a": int, "b": str}, {"c": int})],
     )
     def test_field_annotations(self, required_fields, optional_fields):
         typed_dict = make_typed_dict(
@@ -264,7 +265,9 @@ class TestShrinkType:
                     make_typed_dict(optional_fields={"a": int, "b": int}),
                     make_typed_dict(optional_fields={"a": int, "c": int}),
                 ),
-                make_typed_dict(optional_fields={"a": int, "b": int, "c": int}),
+                make_typed_dict(
+                    optional_fields={"a": int, "b": int, "c": int}
+                ),
             ),
             (
                 (
@@ -437,7 +440,9 @@ class TestShrinkType:
                 ),
                 make_typed_dict(
                     required_fields={
-                        "foo": List[make_typed_dict(required_fields={"a": int})]
+                        "foo": List[
+                            make_typed_dict(required_fields={"a": int})
+                        ]
                     }
                 ),
             ),

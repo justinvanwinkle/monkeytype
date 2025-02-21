@@ -174,7 +174,9 @@ class RemoveImportsTransformer(CSTTransformer):
     def leave_Import(
         self, original_node: Import, updated_node: Import
     ) -> Union[
-        BaseSmallStatement, FlattenSentinel[BaseSmallStatement], RemovalSentinel
+        BaseSmallStatement,
+        FlattenSentinel[BaseSmallStatement],
+        RemovalSentinel,
     ]:
         names_to_keep = []
         for name in updated_node.names:
@@ -197,7 +199,9 @@ class RemoveImportsTransformer(CSTTransformer):
     def leave_ImportFrom(
         self, original_node: ImportFrom, updated_node: ImportFrom
     ) -> Union[
-        BaseSmallStatement, FlattenSentinel[BaseSmallStatement], RemovalSentinel
+        BaseSmallStatement,
+        FlattenSentinel[BaseSmallStatement],
+        RemovalSentinel,
     ]:
         if isinstance(updated_node.names, ImportStar):
             return updated_node

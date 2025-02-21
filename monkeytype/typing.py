@@ -218,12 +218,14 @@ def get_type(obj, max_typed_dict_size):
     typ = type(obj)
     if typ is list:
         elem_type = shrink_types(
-            (get_type(e, max_typed_dict_size) for e in obj), max_typed_dict_size
+            (get_type(e, max_typed_dict_size) for e in obj),
+            max_typed_dict_size,
         )
         return List[elem_type]
     elif typ is set:
         elem_type = shrink_types(
-            (get_type(e, max_typed_dict_size) for e in obj), max_typed_dict_size
+            (get_type(e, max_typed_dict_size) for e in obj),
+            max_typed_dict_size,
         )
         return Set[elem_type]
     elif typ is dict:
@@ -288,7 +290,9 @@ class GenericTypeRewriter(Generic[T], ABC):
             elems = self.make_builtin_tuple(
                 self.rewrite(elem) for elem in container.__args__
             )
-        return self.make_container_type(self.rewrite_container_type(cls), elems)
+        return self.make_container_type(
+            self.rewrite_container_type(cls), elems
+        )
 
     def rewrite_Dict(self, dct):
         return self._rewrite_container(Dict, dct)
@@ -310,10 +314,12 @@ class GenericTypeRewriter(Generic[T], ABC):
         required_fields, optional_fields = field_annotations(typed_dict)
         return self.make_anonymous_typed_dict(
             required_fields={
-                name: self.rewrite(typ) for name, typ in required_fields.items()
+                name: self.rewrite(typ)
+                for name, typ in required_fields.items()
             },
             optional_fields={
-                name: self.rewrite(typ) for name, typ in optional_fields.items()
+                name: self.rewrite(typ)
+                for name, typ in optional_fields.items()
             },
         )
 
@@ -467,7 +473,10 @@ class RewriteAnonymousTypedDictToDict(TypeRewriter):
     def rewrite_anonymous_TypedDict(self, typed_dict):
         assert is_anonymous_typed_dict(typed_dict)
         required_fields, optional_fields = field_annotations(typed_dict)
-        all_value_types = [*required_fields.values(), *optional_fields.values()]
+        all_value_types = [
+            *required_fields.values(),
+            *optional_fields.values(),
+        ]
         if not all_value_types:
             # Special-case this because we can't justify any type.
             return Dict[Any, Any]

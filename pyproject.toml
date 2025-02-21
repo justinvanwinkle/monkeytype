@@ -6,7 +6,7 @@ requires-python = ">=3.13"
 version = "2.1.1"
 
 [tool.black]
-line_length = 80
+line_length = 79
 skip_magic_trailing_comma = true
 preview = true
 enable_unstable_feature = ["hug_parens_with_braces_and_square_brackets", "wrap_long_dict_values_in_parens"]

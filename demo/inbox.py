@@ -159,7 +159,9 @@ class Inbox:
             clauses.append(f"{follows} new follower{self._pluralize(follows)}")
         comments = counter[EventType.COMMENTED]
         if comments:
-            clauses.append(f"{comments} new comment{self._pluralize(comments)}")
+            clauses.append(
+                f"{comments} new comment{self._pluralize(comments)}"
+            )
         if not clauses:
             combined = "no new activity"
         elif len(clauses) == 1:

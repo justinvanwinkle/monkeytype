@@ -121,7 +121,9 @@ class RepoInterface:
     ) -> Dict[UserId, Optional[User]]:
         raise NotImplementedError()
 
-    def get_inbox_events_for_user_id(self, user_id: UserId) -> List[InboxEvent]:
+    def get_inbox_events_for_user_id(
+        self, user_id: UserId
+    ) -> List[InboxEvent]:
         raise NotImplementedError()
 
 

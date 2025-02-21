@@ -90,7 +90,9 @@ if venv_real_prefix:
     lib_paths.add(
         sysconfig.get_path("stdlib", vars={"installed_base": venv_real_prefix})
     )
-LIB_PATHS = tuple(pathlib.Path(p).resolve() for p in lib_paths if p is not None)
+LIB_PATHS = tuple(
+    pathlib.Path(p).resolve() for p in lib_paths if p is not None
+)
 
 
 def _startswith(a: pathlib.Path, b: pathlib.Path) -> bool:
