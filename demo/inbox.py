@@ -42,7 +42,9 @@ class CommentsAggregator(AggregatorInterface[CommentedEvent]):
         return [
             AggregatedItem(
                 type=self.type,
-                text=f"{users_by_id[e.commenter_id].name} commented on your post.",
+                text=(
+                    f"{users_by_id[e.commenter_id].name} "
+                    "commented on your post."),
                 published=e.published,
             )
             for e in self.events
@@ -114,7 +116,8 @@ class FollowersAggregator(AggregatorInterface[FollowedEvent]):
         return [
             AggregatedItem(
                 type=self.type,
-                text=f"{users_by_id[e.follower_id].name} started following you.",
+                text=(f"{users_by_id[e.follower_id].name} "
+                      "started following you."),
                 published=e.published,
             )
             for e in self.events

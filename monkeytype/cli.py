@@ -79,7 +79,8 @@ def complain_about_no_traces(
     # a useful error message.
     elif os.path.exists(module):
         print(
-            f"No traces found for {module}; did you pass a filename instead of a module name? "
+            f"No traces found for {module}; did you pass a "
+            "filename instead of a module name? "
             f"Maybe try just '{os.path.splitext(module)[0]}'.",
             file=stderr,
         )
@@ -90,8 +91,9 @@ def complain_about_no_traces(
 def get_monkeytype_config(path: str) -> Config:
     """Imports the config instance specified by path.
 
-    Path should be in the form module:qualname. Optionally, path may end with (),
-    in which case we will call/instantiate the given class/function.
+    Path should be in the form module:qualname. Optionally, path may
+      end with (), in which case we will call/instantiate the given
+      class/function.
     """
     should_call = False
     if path.endswith("()"):
@@ -101,7 +103,7 @@ def get_monkeytype_config(path: str) -> Config:
     try:
         config = get_name_in_module(module, qualname)
     except MonkeyTypeError as mte:
-        raise argparse.ArgumentTypeError(f"cannot import {path}: {mte}")
+        raise argparse.ArgumentTypeError(f"cannot import {path}: {mte}") from mte
     if should_call:
         config = config()
     return config  # type: ignore[no-any-return]
@@ -133,7 +135,8 @@ def get_stub(
             failed_to_decode_count += 1
     if failed_to_decode_count and not args.verbose:
         print(
-            f"{failed_to_decode_count} traces failed to decode; use -v for details",
+            f"{failed_to_decode_count} traces failed to decode; "
+            "use -v for details",
             file=stderr,
         )
     if not traces:
@@ -209,8 +212,8 @@ def apply_stub_using_libcst(
                 )
             )
 
-    except Exception as exception:
-        raise HandlerError(f"Failed applying stub with libcst:\n{exception}")
+    except Exception as e:
+        raise HandlerError(f"Failed applying stub with libcst:\n{e}") from e
     return transformed_source_module.code
 
 
@@ -248,7 +251,7 @@ def get_diff(
     diff = []
     seq1 = (s + "\n" for s in stub.render().split("\n\n\n"))
     seq2 = (s + "\n" for s in stub_ignore_anno.render().split("\n\n\n"))
-    for stub1, stub2 in zip(seq1, seq2):
+    for stub1, stub2 in zip(seq1, seq2, strict=True):
         if stub1 != stub2:
             stub_diff = "".join(
                 difflib.ndiff(
@@ -311,7 +314,8 @@ def update_args_from_config(args: argparse.Namespace) -> None:
 
 def main(argv: List[str], stdout: IO[str], stderr: IO[str]) -> int:
     parser = argparse.ArgumentParser(
-        description="Generate and apply stub files from collected type information."
+        description="Generate and apply stub files from collected "
+        "type information."
     )
     parser.add_argument(
         "--disable-type-rewriting",
@@ -358,7 +362,7 @@ def main(argv: List[str], stdout: IO[str], stderr: IO[str]) -> int:
     run_parser.add_argument(
         "script_path",
         type=str,
-        help="""Filesystem path to a Python script file to run under tracing""",
+        help="Filesystem path to a Python script file to run under tracing",
     )
     run_parser.add_argument(
         "-m", action="store_true", help="Run a library module as a script"
@@ -440,13 +444,15 @@ qualname format.""",
         dest="existing_annotation_strategy",
         default=ExistingAnnotationStrategy.REPLICATE,
         const=ExistingAnnotationStrategy.OMIT,
-        help="Omit from stub any existing annotations in source. Implied by --apply.",
+        help=("Omit from stub any existing annotations in source. "
+              "Implied by --apply."),
     )
     stub_parser.add_argument(
         "--diff",
         action="store_true",
         default=False,
-        help="Compare stubs generated with and without considering existing annotations.",
+        help=("Compare stubs generated with and without considering "
+              "existing annotations."),
     )
     stub_parser.set_defaults(handler=print_stub_handler)
 

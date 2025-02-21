@@ -159,7 +159,10 @@ def arg_types_to_json(arg_types: Dict[str, type]) -> str:
 
 
 def arg_types_from_json(arg_types_json: str) -> Dict[str, type]:
-    """Reify the encoded argument types from the format produced by arg_types_to_json."""
+    """
+    Reify the encoded argument types from the format produced
+      by arg_types_to_json.
+    """
     arg_types = json.loads(arg_types_json)
     return {
         name: type_from_dict(type_dict)
@@ -248,8 +251,8 @@ class CallTraceRow(CallTraceThunk):
 def serialize_traces(traces: Iterable[CallTrace]) -> Iterable[CallTraceRow]:
     """Serialize an iterable of CallTraces to an iterable of CallTraceRow.
 
-    Catches and logs exceptions, so a failure to serialize one CallTrace doesn't
-    lose all traces.
+    Catches and logs exceptions, so a failure to serialize one CallTrace
+      doesn't lose all traces.
 
     """
     for trace in traces:
