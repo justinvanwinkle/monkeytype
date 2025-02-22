@@ -4,11 +4,10 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 from typing import _GenericAlias  # type: ignore[attr-defined]
+from typing import _TypedDictMeta  # type: ignore[attr-defined]
 from typing import Any
 from typing import ForwardRef
 from typing import Union
-
-from mypy_extensions import _TypedDictMeta  # type: ignore[attr-defined]
 
 
 def is_typed_dict(typ: type) -> bool:

@@ -13,9 +13,8 @@ from typing import List
 from typing import Optional
 from typing import Tuple
 from typing import Type
+from typing import TypedDict
 from typing import TypeVar
-
-from mypy_extensions import TypedDict
 
 from monkeytype.compat import is_any
 from monkeytype.compat import is_generic

@@ -52,7 +52,7 @@ class FunctionKind(enum.Enum):
     STATIC = 3
     # Properties are really instance methods, but this is fine for now...
     PROPERTY = 4
-    DJANGO_CACHED_PROPERTY = 5
+    CACHED_PROPERTY = 5
 
     @classmethod
     def from_callable(cls, func: Callable[..., Any]) -> "FunctionKind":
@@ -68,7 +68,7 @@ class FunctionKind(enum.Enum):
         elif isinstance(func_or_desc, property):
             return FunctionKind.PROPERTY
         elif isinstance(func_or_desc, cached_property):
-            return FunctionKind.DJANGO_CACHED_PROPERTY
+            return FunctionKind.CACHED_PROPERTY
         return FunctionKind.INSTANCE
 
 
@@ -539,7 +539,7 @@ class FunctionStub(Stub):
             s = prefix + "@staticmethod\n" + s
         elif self.kind == FunctionKind.PROPERTY:
             s = prefix + "@property\n" + s
-        elif self.kind == FunctionKind.DJANGO_CACHED_PROPERTY:
+        elif self.kind == FunctionKind.CACHED_PROPERTY:
             s = prefix + "@cached_property\n" + s
         return s
 
@@ -744,7 +744,7 @@ class FunctionDefinition:
         FunctionKind.CLASS,
         FunctionKind.INSTANCE,
         FunctionKind.PROPERTY,
-        FunctionKind.DJANGO_CACHED_PROPERTY,
+        FunctionKind.CACHED_PROPERTY,
     }
 
     def __init__(
@@ -897,7 +897,7 @@ def build_module_stubs(
         imports = get_imports_for_signature(entry.signature)
         # Import TypedDict, if needed.
         if entry.typed_dict_class_stubs:
-            imports["mypy_extensions"].add("TypedDict")
+            imports["typing"].add("TypedDict")
         func_stub = FunctionStub(
             name,
             entry.signature,

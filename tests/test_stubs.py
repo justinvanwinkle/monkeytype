@@ -20,12 +20,12 @@ from typing import Optional
 from typing import Set
 from typing import Tuple
 from typing import Type
+from typing import TypedDict
 from typing import TypeVar
 from typing import Union
 from unittest import skipIf
 
 import pytest
-from mypy_extensions import TypedDict
 
 from monkeytype.compat import make_forward_ref
 from monkeytype.stubs import AttributeStub
@@ -256,7 +256,7 @@ class TestFunctionStub:
         stub = FunctionStub(
             "test",
             inspect.signature(Dummy.a_cached_property.func),
-            FunctionKind.DJANGO_CACHED_PROPERTY,
+            FunctionKind.CACHED_PROPERTY,
         )
         expected = "\n".join([
             "@cached_property",
@@ -811,7 +811,7 @@ class TestModuleStub:
         )
         entries = [function]
         expected = "\n".join([
-            "from mypy_extensions import TypedDict",
+            "from typing import TypedDict",
             "",
             "",
             "class FooTypedDict__RENAME_ME__(TypedDict):",
@@ -844,7 +844,7 @@ class TestModuleStub:
         )
         entries = [function]
         expected = "\n".join([
-            "from mypy_extensions import TypedDict",
+            "from typing import TypedDict",
             "",
             "",
             "class DummyAnInstanceMethodTypedDict__RENAME_ME__(TypedDict):",
@@ -871,7 +871,7 @@ class TestModuleStub:
         )
         entries = [function]
         expected = "\n".join([
-            "from mypy_extensions import TypedDict",
+            "from typing import TypedDict",
             "from typing import Generator",
             "",
             "",
@@ -910,7 +910,7 @@ class TestModuleStub:
         )
         entries = [function]
         expected = "\n".join([
-            "from mypy_extensions import TypedDict",
+            "from typing import TypedDict",
             "from typing import List",
             "",
             "",
@@ -942,7 +942,7 @@ class TestModuleStub:
         )
         entries = [function]
         expected = "\n".join([
-            "from mypy_extensions import TypedDict",
+            "from typing import TypedDict",
             "",
             "",
             "class FooTypedDict__RENAME_ME__(TypedDict):",
@@ -1304,7 +1304,7 @@ class TestFunctionKind:
     ]
     if cached_property:
         cases.append(
-            (Dummy.a_cached_property.func, FunctionKind.DJANGO_CACHED_PROPERTY)
+            (Dummy.a_cached_property.func, FunctionKind.CACHED_PROPERTY)
         )
 
     @pytest.mark.parametrize(("func", "expected"), cases)
@@ -1375,7 +1375,7 @@ if cached_property:
         FunctionDefinition(
             "tests.util",
             "Dummy.a_cached_property",
-            FunctionKind.DJANGO_CACHED_PROPERTY,
+            FunctionKind.CACHED_PROPERTY,
             Signature.from_callable(Dummy.a_cached_property.func),
         ),
     ))

@@ -22,10 +22,9 @@ from typing import List
 from typing import Set
 from typing import Tuple
 from typing import Type
+from typing import TypedDict
 from typing import TypeVar
 from typing import Union
-
-from mypy_extensions import TypedDict
 
 from monkeytype.compat import is_any
 from monkeytype.compat import is_generic
@@ -187,8 +186,10 @@ _BUILTIN_CALLABLE_TYPES = (
 
 
 def get_dict_type(dct, max_typed_dict_size):
-    """Return a TypedDict for `dct` if all the keys are strings.
-    Else, default to the union of the keys and of the values."""
+    """
+    Return a TypedDict for `dct` if all the keys are strings.
+    Else, default to the union of the keys and of the values.
+    """
     if len(dct) == 0:
         # Special-case this because returning an empty TypedDict is
         # unintuitive, especially when you've "disabled" TypedDict generation

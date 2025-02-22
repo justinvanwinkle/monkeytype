@@ -432,7 +432,7 @@ def test_apply_stub_using_libcst():
           return None
     """
     stub = """
-        from mypy_extensions import TypedDict
+        from typing import TypedDict
         from typing import Union
         def my_test_function(a: int, b: str) -> bool: ...
 
@@ -449,7 +449,7 @@ def test_apply_stub_using_libcst():
           year: int
     """
     expected = """
-        from mypy_extensions import TypedDict
+        from typing import TypedDict
         from typing import Union
 
         class Foo: ...

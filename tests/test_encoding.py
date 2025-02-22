@@ -10,11 +10,11 @@ from typing import Optional
 from typing import Set
 from typing import Tuple
 from typing import Type
+from typing import TypedDict
 from typing import Union
 from unittest.mock import Mock
 
 import pytest
-from mypy_extensions import TypedDict
 
 from monkeytype.encoding import CallTraceRow
 from monkeytype.encoding import maybe_decode_type

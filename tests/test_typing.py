@@ -15,11 +15,11 @@ from typing import Optional
 from typing import Set
 from typing import Tuple as typing_Tuple
 from typing import Type
+from typing import TypedDict
 from typing import TypeVar
 from typing import Union
 
 import pytest
-from mypy_extensions import TypedDict
 
 from monkeytype.typing import DUMMY_OPTIONAL_TYPED_DICT_NAME
 from monkeytype.typing import DUMMY_REQUIRED_TYPED_DICT_NAME
