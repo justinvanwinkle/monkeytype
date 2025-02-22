@@ -491,9 +491,7 @@ class TestReplaceTypedDictsWithStubs:
             (List[List[Dict[str, int]]], (List[List[Dict[str, int]]], [])),
             (List[List[Dict[str, int]]], (List[List[Dict[str, int]]], [])),
             (
-                List[
-                    List[make_typed_dict(required_fields={a: int, b: str})]
-                ],
+                List[List[make_typed_dict(required_fields={a: int, b: str})]],
                 (
                     List[
                         List[make_forward_ref("FooBarTypedDict__RENAME_ME__")]
@@ -502,9 +500,7 @@ class TestReplaceTypedDictsWithStubs:
                 ),
             ),
             (
-                Dict[
-                    str, make_typed_dict(required_fields={a: int, b: str})
-                ],
+                Dict[str, make_typed_dict(required_fields={a: int, b: str})],
                 (
                     Dict[
                         str, make_forward_ref("FooBar2TypedDict__RENAME_ME__")
@@ -520,9 +516,7 @@ class TestReplaceTypedDictsWithStubs:
                 ),
             ),
             (
-                Tuple[
-                    int, make_typed_dict(required_fields={a: int, b: str})
-                ],
+                Tuple[int, make_typed_dict(required_fields={a: int, b: str})],
                 (
                     Tuple[
                         int, make_forward_ref("FooBar2TypedDict__RENAME_ME__")
@@ -546,8 +540,7 @@ class TestReplaceTypedDictsWithStubs:
             ),
             (
                 make_typed_dict(
-                    required_fields={a: int, b: str},
-                    optional_fields={c: int},
+                    required_fields={a: int, b: str}, optional_fields={c: int}
                 ),
                 (
                     make_forward_ref("FooBarTypedDict__RENAME_ME__NonTotal"),
@@ -562,9 +555,7 @@ class TestReplaceTypedDictsWithStubs:
                 make_typed_dict(
                     required_fields={
                         a: int,
-                        b: make_typed_dict(
-                            required_fields={a: int, b: str}
-                        ),
+                        b: make_typed_dict(required_fields={a: int, b: str}),
                     }
                 ),
                 (
@@ -677,10 +668,7 @@ module_stub_for_method_with_typed_dict = {
             ClassStub(
                 name="FooTypedDict__RENAME_ME__(TypedDict)",
                 function_stubs=[],
-                attribute_stubs=[
-                    AttributeStub(a, int),
-                    AttributeStub(b, str),
-                ],
+                attribute_stubs=[AttributeStub(a, int), AttributeStub(b, str)],
             ),
             ClassStub(
                 # We use the name of the method, `Dummy.an_instance_method`,
@@ -807,9 +795,7 @@ class TestModuleStub:
                     required_fields={
                         # Naming the key 'z' to test a class name
                         # that comes last in alphabetical order.
-                        "z": make_typed_dict(
-                            required_fields={a: int, b: str}
-                        ),
+                        "z": make_typed_dict(required_fields={a: int, b: str}),
                         b: str,
                     }
                 ),
@@ -1112,9 +1098,7 @@ class TestUpdateSignatureArgs:
         sig = update_signature_args(sig, {a: str}, False)
         expected = Signature(
             parameters=[
-                Parameter(
-                    a, Parameter.POSITIONAL_OR_KEYWORD, annotation=int
-                ),
+                Parameter(a, Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
                 Parameter(b, Parameter.POSITIONAL_OR_KEYWORD),
             ],
             return_annotation=int,
@@ -1224,9 +1208,7 @@ class TestUpdateSignatureReturn:
         sig = update_signature_return(sig, return_type=str)
         expected = Signature(
             parameters=[
-                Parameter(
-                    a, Parameter.POSITIONAL_OR_KEYWORD, annotation=int
-                ),
+                Parameter(a, Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
                 Parameter(b, Parameter.POSITIONAL_OR_KEYWORD),
             ],
             return_annotation=int,
@@ -1241,9 +1223,7 @@ class TestUpdateSignatureReturn:
         )
         expected = Signature(
             parameters=[
-                Parameter(
-                    a, Parameter.POSITIONAL_OR_KEYWORD, annotation=int
-                ),
+                Parameter(a, Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
                 Parameter(b, Parameter.POSITIONAL_OR_KEYWORD),
             ]
         )
@@ -1257,9 +1237,7 @@ class TestUpdateSignatureReturn:
         )
         expected = Signature(
             parameters=[
-                Parameter(
-                    a, Parameter.POSITIONAL_OR_KEYWORD, annotation=int
-                ),
+                Parameter(a, Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
                 Parameter(b, Parameter.POSITIONAL_OR_KEYWORD),
             ],
             return_annotation=str,
@@ -1325,8 +1303,77 @@ class TestFunctionKind:
         assert FunctionKind.from_callable(func) == expected
 
 
+cases = [
+    (
+        Dummy.a_static_method,
+        FunctionDefinition(
+            "tests.util",
+            "Dummy.a_static_method",
+            FunctionKind.STATIC,
+            Signature.from_callable(Dummy.a_static_method),
+        ),
+    ),
+    (
+        Dummy.a_class_method.__func__,
+        FunctionDefinition(
+            "tests.util",
+            "Dummy.a_class_method",
+            FunctionKind.CLASS,
+            Signature.from_callable(Dummy.a_class_method.__func__),
+        ),
+    ),
+    (
+        Dummy.an_instance_method,
+        FunctionDefinition(
+            "tests.util",
+            "Dummy.an_instance_method",
+            FunctionKind.INSTANCE,
+            Signature.from_callable(Dummy.an_instance_method),
+        ),
+    ),
+    (
+        Dummy.a_property.fget,
+        FunctionDefinition(
+            "tests.util",
+            "Dummy.a_property",
+            FunctionKind.PROPERTY,
+            Signature.from_callable(Dummy.a_property.fget),
+        ),
+    ),
+    (
+        a_module_func,
+        FunctionDefinition(
+            "tests.test_stubs",
+            "a_module_func",
+            FunctionKind.MODULE,
+            Signature.from_callable(a_module_func),
+        ),
+    ),
+    (
+        an_async_func,
+        FunctionDefinition(
+            "tests.test_stubs",
+            "an_async_func",
+            FunctionKind.MODULE,
+            Signature.from_callable(a_module_func),
+            is_async=True,
+        ),
+    ),
+]
+if cached_property:
+    cases.append((
+        Dummy.a_cached_property.func,
+        FunctionDefinition(
+            "tests.util",
+            "Dummy.a_cached_property",
+            FunctionKind.DJANGO_CACHED_PROPERTY,
+            Signature.from_callable(Dummy.a_cached_property.func),
+        ),
+    ))
+
+
 class TestFunctionDefinition:
-    cases = [
+    self_cases = [
         (Dummy.a_static_method, False),
         (Dummy.a_class_method.__func__, True),
         (Dummy.an_instance_method, True),
@@ -1334,80 +1381,12 @@ class TestFunctionDefinition:
         (a_module_func, False),
     ]
     if cached_property:
-        cases.append((Dummy.a_cached_property.func, True))
+        self_cases.append((Dummy.a_cached_property.func, True))
 
-    @pytest.mark.parametrize("func, expected", cases)
+    @pytest.mark.parametrize("func, expected", self_cases)
     def test_has_self(self, func, expected):
         defn = FunctionDefinition.from_callable(func)
         assert defn.has_self == expected
-
-    cases = [
-        (
-            Dummy.a_static_method,
-            FunctionDefinition(
-                "tests.util",
-                "Dummy.a_static_method",
-                FunctionKind.STATIC,
-                Signature.from_callable(Dummy.a_static_method),
-            ),
-        ),
-        (
-            Dummy.a_class_method.__func__,
-            FunctionDefinition(
-                "tests.util",
-                "Dummy.a_class_method",
-                FunctionKind.CLASS,
-                Signature.from_callable(Dummy.a_class_method.__func__),
-            ),
-        ),
-        (
-            Dummy.an_instance_method,
-            FunctionDefinition(
-                "tests.util",
-                "Dummy.an_instance_method",
-                FunctionKind.INSTANCE,
-                Signature.from_callable(Dummy.an_instance_method),
-            ),
-        ),
-        (
-            Dummy.a_property.fget,
-            FunctionDefinition(
-                "tests.util",
-                "Dummy.a_property",
-                FunctionKind.PROPERTY,
-                Signature.from_callable(Dummy.a_property.fget),
-            ),
-        ),
-        (
-            a_module_func,
-            FunctionDefinition(
-                "tests.test_stubs",
-                "a_module_func",
-                FunctionKind.MODULE,
-                Signature.from_callable(a_module_func),
-            ),
-        ),
-        (
-            an_async_func,
-            FunctionDefinition(
-                "tests.test_stubs",
-                "an_async_func",
-                FunctionKind.MODULE,
-                Signature.from_callable(a_module_func),
-                is_async=True,
-            ),
-        ),
-    ]
-    if cached_property:
-        cases.append((
-            Dummy.a_cached_property.func,
-            FunctionDefinition(
-                "tests.util",
-                "Dummy.a_cached_property",
-                FunctionKind.DJANGO_CACHED_PROPERTY,
-                Signature.from_callable(Dummy.a_cached_property.func),
-            ),
-        ))
 
     @pytest.mark.parametrize("func, expected", cases)
     def test_from_callable(self, func, expected):
@@ -1455,9 +1434,7 @@ class TestFunctionDefinition:
             (
                 Dummy.an_instance_method,
                 {
-                    "foo": make_typed_dict(
-                        required_fields={a: int, b: str}
-                    ),
+                    "foo": make_typed_dict(required_fields={a: int, b: str}),
                     "bar": make_typed_dict(required_fields={c: int}),
                 },
                 int,
