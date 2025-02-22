@@ -1,0 +1,17 @@
+[flake8]
+max-line-length = 80
+extend-ignore = E203,E701,E800,B101,B105,B106,B110,B017,S101,S105,S106,S107,S311,S404,S603,U101,TC001,TC008,TC003,TC002,TC006,NU003,F821
+
+# B017: `assertRaises(Exception)` and `pytest.raises(Exception)` should be considered evil
+# E203: Whitespace before ':'
+# E704: Multiple statements on one line (def)
+# E800: Found commented out code
+# S105: Possible hardcoded password
+# S106: Possible hardcoded password
+# S107: Possible hardcoded password
+# S311: Standard pseudo-random generators are not suitable for security/cryptographic purposes
+# S404: Consider possible security implications associated with the subprocess module
+# S603: Subprocess call - check for execution of untrusted input
+# U100: Unused argument
+# U101: Unused argument
+# W503: Line break before binary operator
