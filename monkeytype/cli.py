@@ -30,7 +30,7 @@ from monkeytype import trace
 from monkeytype.config import Config
 from monkeytype.exceptions import MonkeyTypeError
 from monkeytype.stubs import build_module_stubs_from_traces
-from monkeytype.stubs import ExistingAnnotationStrategy
+from monkeytype.stubs import ExistingStrategy
 from monkeytype.stubs import Stub
 from monkeytype.tracing import CallTrace
 from monkeytype.type_checking_imports_transformer import MITTCBVisitor
@@ -140,7 +140,7 @@ def get_stub(
     stubs = build_module_stubs_from_traces(
         traces,
         args.config.max_typed_dict_size(),
-        existing_annotation_strategy=args.existing_annotation_strategy,
+        existing_strategy=args.existing_strategy,
         rewriter=rewriter,
     )
     if args.sample_count:
@@ -223,8 +223,8 @@ def apply_stub_handler(
     source_with_types = apply_stub_using_libcst(
         stub=stub.render(),
         source=source_path.read_text(),
-        overwrite_existing_annotations=args.existing_annotation_strategy
-        == ExistingAnnotationStrategy.IGNORE,
+        overwrite_existing_annotations=args.existing_strategy
+        == ExistingStrategy.IGNORE,
         confine_new_imports_in_type_checking_block=args.pep_563,
     )
     source_path.write_text(source_with_types)
@@ -234,9 +234,9 @@ def apply_stub_handler(
 def get_diff(
     args: argparse.Namespace, stdout: IO[str], stderr: IO[str]
 ) -> Optional[str]:
-    args.existing_annotation_strategy = ExistingAnnotationStrategy.REPLICATE
+    args.existing_strategy = ExistingStrategy.REPLICATE
     stub = get_stub(args, stdout, stderr)
-    args.existing_annotation_strategy = ExistingAnnotationStrategy.IGNORE
+    args.existing_strategy = ExistingStrategy.IGNORE
     stub_ignore_anno = get_stub(args, stdout, stderr)
     if stub is None or stub_ignore_anno is None:
         return None
@@ -388,9 +388,9 @@ qualname format.""",
     apply_parser.add_argument(
         "--ignore-existing-annotations",
         action="store_const",
-        dest="existing_annotation_strategy",
-        default=ExistingAnnotationStrategy.REPLICATE,
-        const=ExistingAnnotationStrategy.IGNORE,
+        dest="existing_strategy",
+        default=ExistingStrategy.REPLICATE,
+        const=ExistingStrategy.IGNORE,
         help="Ignore existing annotations when applying stubs from traces.",
     )
     apply_parser.add_argument(
@@ -426,9 +426,9 @@ qualname format.""",
     group.add_argument(
         "--ignore-existing-annotations",
         action="store_const",
-        dest="existing_annotation_strategy",
-        default=ExistingAnnotationStrategy.REPLICATE,
-        const=ExistingAnnotationStrategy.IGNORE,
+        dest="existing_strategy",
+        default=ExistingStrategy.REPLICATE,
+        const=ExistingStrategy.IGNORE,
         help=(
             "Ignore existing annotations and generate stubs only from traces."
         ),
@@ -436,9 +436,9 @@ qualname format.""",
     group.add_argument(
         "--omit-existing-annotations",
         action="store_const",
-        dest="existing_annotation_strategy",
-        default=ExistingAnnotationStrategy.REPLICATE,
-        const=ExistingAnnotationStrategy.OMIT,
+        dest="existing_strategy",
+        default=ExistingStrategy.REPLICATE,
+        const=ExistingStrategy.OMIT,
         help=(
             "Omit from stub any existing annotations in source. "
             "Implied by --apply."

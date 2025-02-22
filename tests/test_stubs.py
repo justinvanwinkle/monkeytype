@@ -31,7 +31,7 @@ from monkeytype.compat import make_forward_ref
 from monkeytype.stubs import AttributeStub
 from monkeytype.stubs import build_module_stubs
 from monkeytype.stubs import ClassStub
-from monkeytype.stubs import ExistingAnnotationStrategy
+from monkeytype.stubs import ExistingStrategy
 from monkeytype.stubs import FunctionDefinition
 from monkeytype.stubs import FunctionKind
 from monkeytype.stubs import FunctionStub
@@ -333,11 +333,13 @@ class TestFunctionStub:
             inspect.signature(has_length_exceeds_120_chars),
             FunctionKind.MODULE,
         )
-        expected = dedent("""\
+        expected = dedent(
+            """\
         def has_length_exceeds_120_chars(
             very_long_name_parameter_1: float,
             very_long_name_parameter_2: float
-        ) -> Optional[float]: ...""")
+        ) -> Optional[float]: ..."""
+        )
         assert stub.render() == expected
 
         expected = "\n".join([
@@ -371,7 +373,7 @@ class TestFunctionStub:
             sig,
             {"a": Dict[str, NoneType]},
             has_self=False,
-            existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
+            existing_strategy=ExistingStrategy.IGNORE,
         )
         stub = FunctionStub("test", sig, FunctionKind.MODULE)
         expected = "def test(a: Dict[str, None], b) -> int: ..."
@@ -811,7 +813,7 @@ class TestModuleStub:
             },
             int,
             None,
-            existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
+            existing_strategy=ExistingStrategy.IGNORE,
         )
         entries = [function]
         expected = "\n".join([
@@ -844,7 +846,7 @@ class TestModuleStub:
             {"foo": int, "bar": int},
             make_typed_dict(required_fields={"a": int, "b": str}),
             yield_type=None,
-            existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
+            existing_strategy=ExistingStrategy.IGNORE,
         )
         entries = [function]
         expected = "\n".join([
@@ -871,7 +873,7 @@ class TestModuleStub:
             {"foo": int, "bar": int},
             int,
             yield_type=make_typed_dict(required_fields={"a": int, "b": str}),
-            existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
+            existing_strategy=ExistingStrategy.IGNORE,
         )
         entries = [function]
         expected = "\n".join([
@@ -910,7 +912,7 @@ class TestModuleStub:
             },
             int,
             None,
-            existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
+            existing_strategy=ExistingStrategy.IGNORE,
         )
         entries = [function]
         expected = "\n".join([
@@ -942,7 +944,7 @@ class TestModuleStub:
             },
             int,
             None,
-            existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
+            existing_strategy=ExistingStrategy.IGNORE,
         )
         entries = [function]
         expected = "\n".join([
@@ -976,7 +978,7 @@ class TestModuleStub:
             {"foo": int, "bar": int},
             Tuple[()],
             yield_type=None,
-            existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
+            existing_strategy=ExistingStrategy.IGNORE,
         )
         entries = [function]
         expected = "\n".join([
@@ -1032,7 +1034,7 @@ class TestBuildModuleStubs:
             },
             make_typed_dict(required_fields={"c": int}),
             None,
-            existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
+            existing_strategy=ExistingStrategy.IGNORE,
         )
         entries = [function]
         expected = module_stub_for_method_with_typed_dict
@@ -1144,7 +1146,7 @@ class TestUpdateSignatureArgs:
             sig,
             {"a": str, "b": bool},
             has_self=False,
-            existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
+            existing_strategy=ExistingStrategy.IGNORE,
         )
         params = [
             Parameter("a", Parameter.POSITIONAL_OR_KEYWORD, annotation=str),
@@ -1159,7 +1161,7 @@ class TestUpdateSignatureArgs:
             sig,
             {"self": UpdateSignatureHelper},
             has_self=True,
-            existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
+            existing_strategy=ExistingStrategy.IGNORE,
         )
         expected = Signature(
             parameters=[Parameter("self", Parameter.POSITIONAL_OR_KEYWORD)]
@@ -1173,7 +1175,7 @@ class TestUpdateSignatureArgs:
             sig,
             {"a": None, "b": int},
             has_self=False,
-            existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
+            existing_strategy=ExistingStrategy.IGNORE,
         )
         params = [
             Parameter(
@@ -1192,7 +1194,7 @@ class TestUpdateSignatureArgs:
             sig,
             {"a": int, "b": int},
             has_self=False,
-            existing_annotation_strategy=ExistingAnnotationStrategy.OMIT,
+            existing_strategy=ExistingStrategy.OMIT,
         )
         params = [
             Parameter(
@@ -1231,9 +1233,7 @@ class TestUpdateSignatureReturn:
         """Generate stub for application with no annotation where source has one"""
         sig = Signature.from_callable(UpdateSignatureHelper.has_annos)
         sig = update_signature_return(
-            sig,
-            return_type=str,
-            existing_annotation_strategy=ExistingAnnotationStrategy.OMIT,
+            sig, return_type=str, existing_strategy=ExistingStrategy.OMIT
         )
         expected = Signature(
             parameters=[
@@ -1249,9 +1249,7 @@ class TestUpdateSignatureReturn:
         """Leave existing return annotations alone"""
         sig = Signature.from_callable(UpdateSignatureHelper.has_annos)
         sig = update_signature_return(
-            sig,
-            return_type=str,
-            existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
+            sig, return_type=str, existing_strategy=ExistingStrategy.IGNORE
         )
         expected = Signature(
             parameters=[
@@ -1516,7 +1514,7 @@ class TestFunctionDefinition:
             arg_types,
             return_type,
             yield_type,
-            existing_annotation_strategy=ExistingAnnotationStrategy.IGNORE,
+            existing_strategy=ExistingStrategy.IGNORE,
         )
         assert function == expected
 

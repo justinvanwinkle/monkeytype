@@ -72,14 +72,15 @@ class FunctionKind(enum.Enum):
         return FunctionKind.INSTANCE
 
 
-class ExistingAnnotationStrategy(enum.Enum):
+class ExistingStrategy(enum.Enum):
     """Strategies for handling existing annotations in the source."""
 
     # Attempt to replicate existing source annotations in the stub. Useful for
     # generating complete-looking stubs for inspection.
     REPLICATE = 0
-    # Ignore existing annotations entirely and generate a stub purely from trace
-    # data. Probably won't apply cleanly, but useful for comparison purposes.
+    # Ignore existing annotations entirely and generate a stub purely from
+    #   trace data. Probably won't apply cleanly, but useful for comparison
+    #   purposes.
     IGNORE = 1
     # Generate a stub that omits annotations anywhere the existing source has
     # them. Maximizes likelihood that the stub will cleanly apply using retype.
@@ -104,7 +105,9 @@ def _get_import_for_qualname(qualname: str) -> str:
 
 
 def get_imports_for_annotation(anno: Any) -> ImportMap:
-    """Return the imports (module, name) needed for the type in the annotation"""
+    """
+    Return the imports (module, name) needed for the type in the annotation
+    """
     imports = ImportMap()
     if (
         anno is inspect.Parameter.empty
@@ -159,7 +162,7 @@ def update_signature_args(
     sig: inspect.Signature,
     arg_types: dict[str, type],
     has_self: bool,
-    existing_annotation_strategy: ExistingAnnotationStrategy = ExistingAnnotationStrategy.REPLICATE,
+    existing_strategy: ExistingStrategy = (ExistingStrategy.REPLICATE),
 ) -> inspect.Signature:
     """Update argument annotations with the supplied types"""
     params = []
@@ -169,18 +172,14 @@ def update_signature_args(
         typ = inspect.Parameter.empty if typ is None else typ
         is_self = has_self and arg_idx == 0
         annotated = param.annotation is not inspect.Parameter.empty
-        if (
-            annotated
-            and existing_annotation_strategy == ExistingAnnotationStrategy.OMIT
-        ):
+        if annotated and existing_strategy == ExistingStrategy.OMIT:
             # generate no annotation for already-annotated args when generating
             # a stub to apply, avoiding the possibility of "incompatible
             # annotation" errors
             param = param.replace(annotation=inspect.Parameter.empty)
         # Don't touch existing annotations unless asked to ignore them
         if not is_self and (
-            (existing_annotation_strategy == ExistingAnnotationStrategy.IGNORE)
-            or not annotated
+            (existing_strategy == ExistingStrategy.IGNORE) or not annotated
         ):
             param = param.replace(annotation=typ)
         params.append(param)
@@ -191,7 +190,7 @@ def update_signature_return(
     sig: inspect.Signature,
     return_type: Optional[type] = None,
     yield_type: Optional[type] = None,
-    existing_annotation_strategy: ExistingAnnotationStrategy = ExistingAnnotationStrategy.REPLICATE,
+    existing_strategy: ExistingStrategy = ExistingStrategy.REPLICATE,
 ) -> inspect.Signature:
     """Update return annotation with the supplied types"""
     anno = sig.return_annotation
@@ -199,13 +198,10 @@ def update_signature_return(
         # If generating a stub to apply and there's already a return type
         # annotation, generate a stub with no return type annotation, to avoid
         # the possibility of "incompatible annotation" errors.
-        if existing_annotation_strategy == ExistingAnnotationStrategy.OMIT:
+        if existing_strategy == ExistingStrategy.OMIT:
             return sig.replace(return_annotation=inspect.Signature.empty)
         # Don't change pre-existing annotations unless asked to
-        if (
-            existing_annotation_strategy
-            == ExistingAnnotationStrategy.REPLICATE
-        ):
+        if existing_strategy == ExistingStrategy.REPLICATE:
             return sig
     # NB: We cannot distinguish between functions that explicitly only
     # return None and those that do so implicitly. In the case of generator
@@ -772,7 +768,7 @@ class FunctionDefinition:
         arg_types: dict[str, type],
         return_type: Optional[type],
         yield_type: Optional[type],
-        existing_annotation_strategy: ExistingAnnotationStrategy = ExistingAnnotationStrategy.REPLICATE,
+        existing_strategy: ExistingStrategy = ExistingStrategy.REPLICATE,
     ) -> "FunctionDefinition":
         typed_dict_class_stubs: List[ClassStub] = []
         new_arg_types = {}
@@ -808,13 +804,10 @@ class FunctionDefinition:
         function = FunctionDefinition.from_callable(func)
         signature = function.signature
         signature = update_signature_args(
-            signature,
-            new_arg_types,
-            function.has_self,
-            existing_annotation_strategy,
+            signature, new_arg_types, function.has_self, existing_strategy
         )
         signature = update_signature_return(
-            signature, return_type, yield_type, existing_annotation_strategy
+            signature, return_type, yield_type, existing_strategy
         )
         return FunctionDefinition(
             function.module,
@@ -850,7 +843,7 @@ def get_updated_definition(
     traces: Iterable[CallTrace],
     max_typed_dict_size: int,
     rewriter: Optional[TypeRewriter] = None,
-    existing_annotation_strategy: ExistingAnnotationStrategy = ExistingAnnotationStrategy.REPLICATE,
+    existing_strategy: ExistingStrategy = ExistingStrategy.REPLICATE,
 ) -> FunctionDefinition:
     """Update the definition for func using the types collected in traces."""
     if rewriter is None:
@@ -866,7 +859,7 @@ def get_updated_definition(
     if yield_type is not None:
         yield_type = rewriter.rewrite(yield_type)
     return FunctionDefinition.from_callable_and_traced_types(
-        func, arg_types, return_type, yield_type, existing_annotation_strategy
+        func, arg_types, return_type, yield_type, existing_strategy
     )
 
 
@@ -916,7 +909,7 @@ def build_module_stubs(
 def build_module_stubs_from_traces(
     traces: Iterable[CallTrace],
     max_typed_dict_size: int,
-    existing_annotation_strategy: ExistingAnnotationStrategy = ExistingAnnotationStrategy.REPLICATE,
+    existing_strategy: ExistingStrategy = ExistingStrategy.REPLICATE,
     rewriter: Optional[TypeRewriter] = None,
 ) -> dict[str, ModuleStub]:
     """Given an iterable of call traces, build the corresponding stubs."""
@@ -928,11 +921,7 @@ def build_module_stubs_from_traces(
     defns = []
     for func, traces in index.items():
         defn = get_updated_definition(
-            func,
-            traces,
-            max_typed_dict_size,
-            rewriter,
-            existing_annotation_strategy,
+            func, traces, max_typed_dict_size, rewriter, existing_strategy
         )
         defns.append(defn)
     return build_module_stubs(defns)
