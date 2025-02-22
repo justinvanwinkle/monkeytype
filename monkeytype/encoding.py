@@ -232,20 +232,16 @@ class CallTraceRow(CallTraceThunk):
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, CallTraceRow):
-            return (
-                self.module,
-                self.qualname,
-                self.arg_types,
-                self.return_type,
-                self.yield_type,
-            ) == (
-                other.module,
-                other.qualname,
-                other.arg_types,
-                other.return_type,
-                other.yield_type,
-            )
-        return NotImplemented
+            return (self.module,
+                    self.qualname,
+                    self.arg_types,
+                    self.return_type,
+                    self.yield_type) == (other.module,
+                                         other.qualname,
+                                         other.arg_types,
+                                         other.return_type,
+                                         other.yield_type)
+        raise NotImplementedError
 
 
 def serialize_traces(traces: Iterable[CallTrace]) -> Iterable[CallTraceRow]:

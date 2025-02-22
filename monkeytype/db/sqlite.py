@@ -79,6 +79,14 @@ def make_query(
     return raw_query, values
 
 
+insert_q = "INSERT INTO {table} VALUES (?, ?, ?, ?, ?, ?)"
+list_q = """\
+SELECT module FROM {table}
+GROUP BY module
+ORDER BY date(created_at) DESC
+"""
+
+
 class SQLiteStore(CallTraceStore):
     def __init__(
         self, conn: sqlite3.Connection, table: str = DEFAULT_TABLE
@@ -104,12 +112,7 @@ class SQLiteStore(CallTraceStore):
                 row.yield_type,
             ))
         with self.conn:
-            self.conn.executemany(
-                "INSERT INTO {table} VALUES (?, ?, ?, ?, ?, ?)".format(
-                    table=self.table
-                ),
-                values,
-            )
+            self.conn.executemany(insert_q.format(table=self.table), values)
 
     def filter(
         self,
@@ -128,13 +131,5 @@ class SQLiteStore(CallTraceStore):
     def list_modules(self) -> List[str]:
         with self.conn:
             cur = self.conn.cursor()
-            cur.execute(
-                """
-                        SELECT module FROM {table}
-                        GROUP BY module
-                        ORDER BY date(created_at) DESC
-                        """.format(
-                    table=self.table
-                )
-            )
+            cur.execute(list_q.format(table=self.table))
             return [row[0] for row in cur.fetchall() if row[0]]

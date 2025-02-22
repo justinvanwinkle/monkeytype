@@ -168,11 +168,6 @@ class Oracle:
         return 42
 
 
-@pytest.fixture
-def collector() -> TraceCollector:
-    return TraceCollector()
-
-
 class lazy_property:
     def __init__(self, fget, doc=None):
         self.fget = fget

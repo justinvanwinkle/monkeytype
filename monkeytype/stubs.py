@@ -887,7 +887,7 @@ def build_module_stubs(
         path = entry.qualname.split(".")
         name = path.pop()
         class_path = path
-        # TODO: Handle nested classes
+        # TODO: Handle nested classes  # noqa: FIX002
         klass = None
         if len(class_path) > 0:
             klass = ".".join(class_path)
@@ -934,10 +934,12 @@ def build_module_stubs_from_traces(
     for trace in traces:
         index[trace.func].add(trace)
     defns = []
-    for func, traces in index.items():
-        defn = get_updated_definition(
-            func, traces, max_typed_dict_size, rewriter, existing_strategy
-        )
+    for func, index_traces in index.items():
+        defn = get_updated_definition(func,
+                                      index_traces,
+                                      max_typed_dict_size,
+                                      rewriter,
+                                      existing_strategy)
         defns.append(defn)
     return build_module_stubs(defns)
 

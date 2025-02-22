@@ -187,8 +187,8 @@ class TestTypeConversion:
         [(
             TypedDict(DUMMY_TYPED_DICT_NAME, {"a": int, "b": str}),
             '{"elem_types": {"a": {"module": "builtins", "qualname": "int"},'
-            + ' "b": {"module": "builtins", "qualname": "str"}},'
-            + ' "is_typed_dict": true, "module": "tests.test_encoding",'
+            ' "b": {"module": "builtins", "qualname": "str"}},'
+            ' "is_typed_dict": true, "module": "tests.test_encoding",'
             ' "qualname": "DUMMY_NAME"}',
         )],
     )
@@ -199,8 +199,8 @@ class TestTypeConversion:
         ("type_dict_string", "expected"),
         [(
             '{"elem_types": {"a": {"module": "builtins", "qualname": "int"},'
-            + ' "b": {"module": "builtins", "qualname": "str"}},'
-            + ' "is_typed_dict": true, "module": "tests.test_encoding",'
+            ' "b": {"module": "builtins", "qualname": "str"}},'
+            ' "is_typed_dict": true, "module": "tests.test_encoding",'
             ' "qualname": "DUMMY_NAME"}',
             TypedDict(DUMMY_TYPED_DICT_NAME, {"a": int, "b": str}),
         )],
