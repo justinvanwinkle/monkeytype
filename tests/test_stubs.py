@@ -142,7 +142,7 @@ def has_optional_return() -> Optional[int]:
     return None
 
 
-def default_none_parameter(x: int = None) -> None:
+def default_none_parameter(x: int | None = None) -> None:
     pass
 
 
@@ -168,7 +168,7 @@ def has_forward_ref_within_generator() -> (
 
 class TestAttributeStub:
     @pytest.mark.parametrize(
-        "stub, expected",
+        ("stub", "expected"),
         [
             (AttributeStub(name="foo", typ=int), "    foo: int"),
             (
@@ -183,7 +183,7 @@ class TestAttributeStub:
 
 class TestRenderAnnotation:
     @pytest.mark.parametrize(
-        "annotation, expected",
+        ("annotation", "expected"),
         [
             (make_forward_ref("Foo"), "'Foo'"),
             (List[make_forward_ref("Foo")], "List['Foo']"),
@@ -404,7 +404,7 @@ class TestFunctionStub:
         assert stub.render() == expected
 
 
-def _func_stub_from_callable(func: Callable, strip_modules: List[str] = None):
+def _func_stub_from_callable(func: Callable, strip_modules: List[str] | None = None):
     kind = FunctionKind.from_callable(func)
     sig = Signature.from_callable(func)
     return FunctionStub(func.__name__, sig, kind, strip_modules)
@@ -481,14 +481,13 @@ class TestReplaceTypedDictsWithStubs:
     ]
 
     @pytest.mark.parametrize(
-        "typ, expected",
+        ("typ", "expected"),
         [
             (int, (int, [])),
             (List[int], (List[int], [])),
             (Set[int], (Set[int], [])),
             (Dict[str, int], (Dict[str, int], [])),
             (Tuple[str, int], (Tuple[str, int], [])),
-            (List[List[Dict[str, int]]], (List[List[Dict[str, int]]], [])),
             (List[List[Dict[str, int]]], (List[List[Dict[str, int]]], [])),
             (
                 List[List[make_typed_dict(required_fields={a: int, b: str})]],
@@ -1298,7 +1297,7 @@ class TestFunctionKind:
             (Dummy.a_cached_property.func, FunctionKind.DJANGO_CACHED_PROPERTY)
         )
 
-    @pytest.mark.parametrize("func, expected", cases)
+    @pytest.mark.parametrize(("func", "expected"), cases)
     def test_from_callable(self, func, expected):
         assert FunctionKind.from_callable(func) == expected
 
@@ -1383,18 +1382,18 @@ class TestFunctionDefinition:
     if cached_property:
         self_cases.append((Dummy.a_cached_property.func, True))
 
-    @pytest.mark.parametrize("func, expected", self_cases)
+    @pytest.mark.parametrize(("func", "expected"), self_cases)
     def test_has_self(self, func, expected):
         defn = FunctionDefinition.from_callable(func)
         assert defn.has_self == expected
 
-    @pytest.mark.parametrize("func, expected", cases)
+    @pytest.mark.parametrize(("func", "expected"), cases)
     def test_from_callable(self, func, expected):
         defn = FunctionDefinition.from_callable(func)
         assert defn == expected
 
     @pytest.mark.parametrize(
-        "func, arg_types, return_type, yield_type, expected",
+        ("func", "arg_types", "return_type", "yield_type", "expected"),
         [
             # Non-TypedDict case.
             (
@@ -1554,7 +1553,7 @@ class TestGetImportsForAnnotation:
         assert get_imports_for_annotation(anno) == {}
 
     @pytest.mark.parametrize(
-        "anno, expected",
+        ("anno", "expected"),
         [(Any, {"typing": {"Any"}}), (Union[int, str], {"typing": {"Union"}})],
     )
     def test_special_case_types(self, anno, expected):
@@ -1568,7 +1567,7 @@ class TestGetImportsForAnnotation:
         assert get_imports_for_annotation(Dummy) == {"tests.util": {"Dummy"}}
 
     @pytest.mark.parametrize(
-        "anno, expected",
+        ("anno", "expected"),
         [
             (Dict[str, Dummy], {"tests.util": {"Dummy"}, "typing": {"Dict"}}),
             (List[Dummy], {"tests.util": {"Dummy"}, "typing": {"List"}}),
