@@ -80,7 +80,7 @@ ignore = [
 
   # flake8-bugbear
   'B017',  # pytest.raises(Exception) considered too broad, specify more specific exceptions
-
+  'B027',
   # flake8-blind-except
   'BLE',  # Checks for blind except statements (catching Exception, BaseException, or no exception type)
 

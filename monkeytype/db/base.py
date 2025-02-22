@@ -23,7 +23,9 @@ class CallTraceThunk(metaclass=ABCMeta):
 
 
 class CallTraceStore(metaclass=ABCMeta):
-    """An interface that all concrete calltrace storage backends must implement."""
+    """
+    An interface that all concrete calltrace storage backends must implement.
+    """
 
     @abstractmethod
     def add(self, traces: Iterable[CallTrace]) -> None:
@@ -37,10 +39,11 @@ class CallTraceStore(metaclass=ABCMeta):
         qualname_prefix: Optional[str] = None,
         limit: int = 2000,
     ) -> List[CallTraceThunk]:
-        """Query the backing store for any traces that match the supplied query.
+        """
+        Query the backing store for any traces that match the supplied query.
 
-        By returning a list of thunks we let the caller get a partial result in the
-        event that decoding one or more call traces fails.
+        By returning a list of thunks we let the caller get a partial result in
+          the event that decoding one or more call traces fails.
         """
         pass
 

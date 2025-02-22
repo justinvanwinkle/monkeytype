@@ -56,6 +56,10 @@ from .util import Dummy
 UserId = NewType("UserId", int)
 T = TypeVar("T")
 
+a = "a"
+b = "b"
+c = "c"
+
 
 class TestImportMap:
     def test_merge(self):
@@ -371,7 +375,7 @@ class TestFunctionStub:
         sig = Signature.from_callable(UpdateSignatureHelper.has_annos)
         sig = update_signature_args(
             sig,
-            {"a": Dict[str, NoneType]},
+            {a: Dict[str, NoneType]},
             has_self=False,
             existing_strategy=ExistingStrategy.IGNORE,
         )
@@ -437,24 +441,24 @@ class TestReplaceTypedDictsWithStubs:
         name="FooBarTypedDict__RENAME_ME__(TypedDict)",
         function_stubs=[],
         attribute_stubs=[
-            AttributeStub(name="a", typ=int),
-            AttributeStub(name="b", typ=str),
+            AttributeStub(name=a, typ=int),
+            AttributeStub(name=b, typ=str),
         ],
     )
     SIMPLE_TYPED_DICT_STUB2: ClassStub = ClassStub(
         name="FooBar2TypedDict__RENAME_ME__(TypedDict)",
         function_stubs=[],
         attribute_stubs=[
-            AttributeStub(name="a", typ=int),
-            AttributeStub(name="b", typ=str),
+            AttributeStub(name=a, typ=int),
+            AttributeStub(name=b, typ=str),
         ],
     )
     SIMPLE_NON_TOTAL_TYPED_DICT_STUB: ClassStub = ClassStub(
         name="FooBarTypedDict__RENAME_ME__(TypedDict, total=False)",
         function_stubs=[],
         attribute_stubs=[
-            AttributeStub(name="a", typ=int),
-            AttributeStub(name="b", typ=str),
+            AttributeStub(name=a, typ=int),
+            AttributeStub(name=b, typ=str),
         ],
     )
     SIMPLE_BASE_AND_SUBCLASS: List[ClassStub] = [
@@ -462,8 +466,8 @@ class TestReplaceTypedDictsWithStubs:
             name="FooBarTypedDict__RENAME_ME__(TypedDict)",
             function_stubs=[],
             attribute_stubs=[
-                AttributeStub(name="a", typ=int),
-                AttributeStub(name="b", typ=str),
+                AttributeStub(name=a, typ=int),
+                AttributeStub(name=b, typ=str),
             ],
         ),
         ClassStub(
@@ -472,7 +476,7 @@ class TestReplaceTypedDictsWithStubs:
                 " total=False)"
             ),
             function_stubs=[],
-            attribute_stubs=[AttributeStub(name="c", typ=int)],
+            attribute_stubs=[AttributeStub(name=c, typ=int)],
         ),
     ]
 
@@ -488,7 +492,7 @@ class TestReplaceTypedDictsWithStubs:
             (List[List[Dict[str, int]]], (List[List[Dict[str, int]]], [])),
             (
                 List[
-                    List[make_typed_dict(required_fields={"a": int, "b": str})]
+                    List[make_typed_dict(required_fields={a: int, b: str})]
                 ],
                 (
                     List[
@@ -499,7 +503,7 @@ class TestReplaceTypedDictsWithStubs:
             ),
             (
                 Dict[
-                    str, make_typed_dict(required_fields={"a": int, "b": str})
+                    str, make_typed_dict(required_fields={a: int, b: str})
                 ],
                 (
                     Dict[
@@ -509,7 +513,7 @@ class TestReplaceTypedDictsWithStubs:
                 ),
             ),
             (
-                Set[make_typed_dict(required_fields={"a": int, "b": str})],
+                Set[make_typed_dict(required_fields={a: int, b: str})],
                 (
                     Set[make_forward_ref("FooBarTypedDict__RENAME_ME__")],
                     [SIMPLE_TYPED_DICT_STUB],
@@ -517,7 +521,7 @@ class TestReplaceTypedDictsWithStubs:
             ),
             (
                 Tuple[
-                    int, make_typed_dict(required_fields={"a": int, "b": str})
+                    int, make_typed_dict(required_fields={a: int, b: str})
                 ],
                 (
                     Tuple[
@@ -527,14 +531,14 @@ class TestReplaceTypedDictsWithStubs:
                 ),
             ),
             (
-                make_typed_dict(required_fields={"a": int, "b": str}),
+                make_typed_dict(required_fields={a: int, b: str}),
                 (
                     make_forward_ref("FooBarTypedDict__RENAME_ME__"),
                     [SIMPLE_TYPED_DICT_STUB],
                 ),
             ),
             (
-                make_typed_dict(optional_fields={"a": int, "b": str}),
+                make_typed_dict(optional_fields={a: int, b: str}),
                 (
                     make_forward_ref("FooBarTypedDict__RENAME_ME__"),
                     [SIMPLE_NON_TOTAL_TYPED_DICT_STUB],
@@ -542,8 +546,8 @@ class TestReplaceTypedDictsWithStubs:
             ),
             (
                 make_typed_dict(
-                    required_fields={"a": int, "b": str},
-                    optional_fields={"c": int},
+                    required_fields={a: int, b: str},
+                    optional_fields={c: int},
                 ),
                 (
                     make_forward_ref("FooBarTypedDict__RENAME_ME__NonTotal"),
@@ -551,15 +555,15 @@ class TestReplaceTypedDictsWithStubs:
                 ),
             ),
             (
-                TypedDict("GenuineTypedDict", {"a": int, "b": str}),
-                (TypedDict("GenuineTypedDict", {"a": int, "b": str}), []),
+                TypedDict("GenuineTypedDict", {a: int, b: str}),
+                (TypedDict("GenuineTypedDict", {a: int, b: str}), []),
             ),
             (
                 make_typed_dict(
                     required_fields={
-                        "a": int,
-                        "b": make_typed_dict(
-                            required_fields={"a": int, "b": str}
+                        a: int,
+                        b: make_typed_dict(
+                            required_fields={a: int, b: str}
                         ),
                     }
                 ),
@@ -570,17 +574,17 @@ class TestReplaceTypedDictsWithStubs:
                             name="BTypedDict__RENAME_ME__(TypedDict)",
                             function_stubs=[],
                             attribute_stubs=[
-                                AttributeStub(name="a", typ=int),
-                                AttributeStub(name="b", typ=str),
+                                AttributeStub(name=a, typ=int),
+                                AttributeStub(name=b, typ=str),
                             ],
                         ),
                         ClassStub(
                             name="FooBarTypedDict__RENAME_ME__(TypedDict)",
                             function_stubs=[],
                             attribute_stubs=[
-                                AttributeStub(name="a", typ=int),
+                                AttributeStub(name=a, typ=int),
                                 AttributeStub(
-                                    name="b",
+                                    name=b,
                                     typ=make_forward_ref(
                                         "BTypedDict__RENAME_ME__"
                                     ),
@@ -592,8 +596,8 @@ class TestReplaceTypedDictsWithStubs:
             ),
             (
                 Tuple[
-                    make_typed_dict(required_fields={"a": int}),
-                    make_typed_dict(required_fields={"b": str}),
+                    make_typed_dict(required_fields={a: int}),
+                    make_typed_dict(required_fields={b: str}),
                 ],
                 (
                     Tuple[
@@ -604,12 +608,12 @@ class TestReplaceTypedDictsWithStubs:
                         ClassStub(
                             name="FooBarTypedDict__RENAME_ME__(TypedDict)",
                             function_stubs=[],
-                            attribute_stubs=[AttributeStub(name="a", typ=int)],
+                            attribute_stubs=[AttributeStub(name=a, typ=int)],
                         ),
                         ClassStub(
                             name="FooBar2TypedDict__RENAME_ME__(TypedDict)",
                             function_stubs=[],
-                            attribute_stubs=[AttributeStub(name="b", typ=str)],
+                            attribute_stubs=[AttributeStub(name=b, typ=str)],
                         ),
                     ],
                 ),
@@ -674,8 +678,8 @@ module_stub_for_method_with_typed_dict = {
                 name="FooTypedDict__RENAME_ME__(TypedDict)",
                 function_stubs=[],
                 attribute_stubs=[
-                    AttributeStub("a", int),
-                    AttributeStub("b", str),
+                    AttributeStub(a, int),
+                    AttributeStub(b, str),
                 ],
             ),
             ClassStub(
@@ -683,7 +687,7 @@ module_stub_for_method_with_typed_dict = {
                 # to get `DummyAnInstanceMethodTypedDict__RENAME_ME__`.
                 name="DummyAnInstanceMethodTypedDict__RENAME_ME__(TypedDict)",
                 function_stubs=[],
-                attribute_stubs=[AttributeStub("c", int)],
+                attribute_stubs=[AttributeStub(c, int)],
             ),
         ],
     )
@@ -804,9 +808,9 @@ class TestModuleStub:
                         # Naming the key 'z' to test a class name
                         # that comes last in alphabetical order.
                         "z": make_typed_dict(
-                            required_fields={"a": int, "b": str}
+                            required_fields={a: int, b: str}
                         ),
-                        "b": str,
+                        b: str,
                     }
                 ),
                 "bar": int,
@@ -844,7 +848,7 @@ class TestModuleStub:
         function = FunctionDefinition.from_callable_and_traced_types(
             Dummy.an_instance_method,
             {"foo": int, "bar": int},
-            make_typed_dict(required_fields={"a": int, "b": str}),
+            make_typed_dict(required_fields={a: int, b: str}),
             yield_type=None,
             existing_strategy=ExistingStrategy.IGNORE,
         )
@@ -872,7 +876,7 @@ class TestModuleStub:
             Dummy.an_instance_method,
             {"foo": int, "bar": int},
             int,
-            yield_type=make_typed_dict(required_fields={"a": int, "b": str}),
+            yield_type=make_typed_dict(required_fields={a: int, b: str}),
             existing_strategy=ExistingStrategy.IGNORE,
         )
         entries = [function]
@@ -907,7 +911,7 @@ class TestModuleStub:
         function = FunctionDefinition.from_callable_and_traced_types(
             Dummy.an_instance_method,
             {
-                "foo": List[make_typed_dict(required_fields={"a": int})],
+                "foo": List[make_typed_dict(required_fields={a: int})],
                 "bar": int,
             },
             int,
@@ -938,7 +942,7 @@ class TestModuleStub:
             Dummy.an_instance_method,
             {
                 "foo": make_typed_dict(
-                    required_fields={"a": int}, optional_fields={"b": str}
+                    required_fields={a: int}, optional_fields={b: str}
                 ),
                 "bar": int,
             },
@@ -1029,10 +1033,10 @@ class TestBuildModuleStubs:
         function = FunctionDefinition.from_callable_and_traced_types(
             Dummy.an_instance_method,
             {
-                "foo": make_typed_dict(required_fields={"a": int, "b": str}),
+                "foo": make_typed_dict(required_fields={a: int, b: str}),
                 "bar": int,
             },
-            make_typed_dict(required_fields={"c": int}),
+            make_typed_dict(required_fields={c: int}),
             None,
             existing_strategy=ExistingStrategy.IGNORE,
         )
@@ -1095,23 +1099,23 @@ class TestUpdateSignatureArgs:
     def test_update_arg(self):
         """Update arg annotations from types"""
         sig = Signature.from_callable(UpdateSignatureHelper.has_annos)
-        sig = update_signature_args(sig, {"b": int}, False)
+        sig = update_signature_args(sig, {b: int}, False)
         params = [
-            Parameter("a", Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
-            Parameter("b", Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
+            Parameter(a, Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
+            Parameter(b, Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
         ]
         assert sig == Signature(parameters=params, return_annotation=int)
 
     def test_update_arg_with_anno(self):
         """Leave existing arg annotations alone"""
         sig = Signature.from_callable(UpdateSignatureHelper.has_annos)
-        sig = update_signature_args(sig, {"a": str}, False)
+        sig = update_signature_args(sig, {a: str}, False)
         expected = Signature(
             parameters=[
                 Parameter(
-                    "a", Parameter.POSITIONAL_OR_KEYWORD, annotation=int
+                    a, Parameter.POSITIONAL_OR_KEYWORD, annotation=int
                 ),
-                Parameter("b", Parameter.POSITIONAL_OR_KEYWORD),
+                Parameter(b, Parameter.POSITIONAL_OR_KEYWORD),
             ],
             return_annotation=int,
         )
@@ -1144,13 +1148,13 @@ class TestUpdateSignatureArgs:
         sig = Signature.from_callable(UpdateSignatureHelper.has_annos)
         sig = update_signature_args(
             sig,
-            {"a": str, "b": bool},
+            {a: str, b: bool},
             has_self=False,
             existing_strategy=ExistingStrategy.IGNORE,
         )
         params = [
-            Parameter("a", Parameter.POSITIONAL_OR_KEYWORD, annotation=str),
-            Parameter("b", Parameter.POSITIONAL_OR_KEYWORD, annotation=bool),
+            Parameter(a, Parameter.POSITIONAL_OR_KEYWORD, annotation=str),
+            Parameter(b, Parameter.POSITIONAL_OR_KEYWORD, annotation=bool),
         ]
         assert sig == Signature(parameters=params, return_annotation=int)
 
@@ -1173,17 +1177,17 @@ class TestUpdateSignatureArgs:
         sig = Signature.from_callable(UpdateSignatureHelper.has_annos)
         sig = update_signature_args(
             sig,
-            {"a": None, "b": int},
+            {a: None, b: int},
             has_self=False,
             existing_strategy=ExistingStrategy.IGNORE,
         )
         params = [
             Parameter(
-                "a",
+                a,
                 Parameter.POSITIONAL_OR_KEYWORD,
                 annotation=inspect.Parameter.empty,
             ),
-            Parameter("b", Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
+            Parameter(b, Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
         ]
         assert sig == Signature(parameters=params, return_annotation=int)
 
@@ -1192,17 +1196,17 @@ class TestUpdateSignatureArgs:
         sig = Signature.from_callable(UpdateSignatureHelper.has_annos)
         sig = update_signature_args(
             sig,
-            {"a": int, "b": int},
+            {a: int, b: int},
             has_self=False,
             existing_strategy=ExistingStrategy.OMIT,
         )
         params = [
             Parameter(
-                "a",
+                a,
                 Parameter.POSITIONAL_OR_KEYWORD,
                 annotation=inspect.Parameter.empty,
             ),
-            Parameter("b", Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
+            Parameter(b, Parameter.POSITIONAL_OR_KEYWORD, annotation=int),
         ]
         assert sig == Signature(parameters=params, return_annotation=int)
 
@@ -1221,9 +1225,9 @@ class TestUpdateSignatureReturn:
         expected = Signature(
             parameters=[
                 Parameter(
-                    "a", Parameter.POSITIONAL_OR_KEYWORD, annotation=int
+                    a, Parameter.POSITIONAL_OR_KEYWORD, annotation=int
                 ),
-                Parameter("b", Parameter.POSITIONAL_OR_KEYWORD),
+                Parameter(b, Parameter.POSITIONAL_OR_KEYWORD),
             ],
             return_annotation=int,
         )
@@ -1238,9 +1242,9 @@ class TestUpdateSignatureReturn:
         expected = Signature(
             parameters=[
                 Parameter(
-                    "a", Parameter.POSITIONAL_OR_KEYWORD, annotation=int
+                    a, Parameter.POSITIONAL_OR_KEYWORD, annotation=int
                 ),
-                Parameter("b", Parameter.POSITIONAL_OR_KEYWORD),
+                Parameter(b, Parameter.POSITIONAL_OR_KEYWORD),
             ]
         )
         assert sig == expected
@@ -1254,9 +1258,9 @@ class TestUpdateSignatureReturn:
         expected = Signature(
             parameters=[
                 Parameter(
-                    "a", Parameter.POSITIONAL_OR_KEYWORD, annotation=int
+                    a, Parameter.POSITIONAL_OR_KEYWORD, annotation=int
                 ),
-                Parameter("b", Parameter.POSITIONAL_OR_KEYWORD),
+                Parameter(b, Parameter.POSITIONAL_OR_KEYWORD),
             ],
             return_annotation=str,
         )
@@ -1452,9 +1456,9 @@ class TestFunctionDefinition:
                 Dummy.an_instance_method,
                 {
                     "foo": make_typed_dict(
-                        required_fields={"a": int, "b": str}
+                        required_fields={a: int, b: str}
                     ),
-                    "bar": make_typed_dict(required_fields={"c": int}),
+                    "bar": make_typed_dict(required_fields={c: int}),
                 },
                 int,
                 None,
@@ -1492,14 +1496,14 @@ class TestFunctionDefinition:
                             name="FooTypedDict__RENAME_ME__(TypedDict)",
                             function_stubs=[],
                             attribute_stubs=[
-                                AttributeStub("a", int),
-                                AttributeStub("b", str),
+                                AttributeStub(a, int),
+                                AttributeStub(b, str),
                             ],
                         ),
                         ClassStub(
                             name="BarTypedDict__RENAME_ME__(TypedDict)",
                             function_stubs=[],
-                            attribute_stubs=[AttributeStub("c", int)],
+                            attribute_stubs=[AttributeStub(c, int)],
                         ),
                     ],
                 ),
@@ -1526,11 +1530,11 @@ def tie_helper(a, b):
 class TestShrinkTracedTypes:
     def test_shrink_args(self):
         traces = [
-            CallTrace(tie_helper, {"a": str, "b": int}),
-            CallTrace(tie_helper, {"a": str, "b": NoneType}),
+            CallTrace(tie_helper, {a: str, b: int}),
+            CallTrace(tie_helper, {a: str, b: NoneType}),
         ]
         assert shrink_traced_types(traces, max_typed_dict_size=0) == (
-            {"a": str, "b": Optional[int]},
+            {a: str, b: Optional[int]},
             None,
             None,
         )

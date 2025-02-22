@@ -26,8 +26,8 @@ from monkeytype.typing import TypeRewriter
 
 
 class Config(metaclass=ABCMeta):
-    """A Config ties together concrete implementations of the different abstractions
-    that make up a typical deployment of MonkeyType.
+    """A Config ties together concrete implementations of the different
+    abstractions that make up a typical deployment of MonkeyType.
     """
 
     @abstractmethod
@@ -57,8 +57,8 @@ class Config(metaclass=ABCMeta):
         """Return the (optional) CodeFilter predicate for triaging calls.
 
         A CodeFilter is a callable that takes a code object and returns a
-        boolean determining whether the call should be traced or not. If None is
-        returned, all calls will be traced and logged.
+        boolean determining whether the call should be traced or not. If None
+        is returned, all calls will be traced and logged.
         """
         return None
 
@@ -110,7 +110,8 @@ def default_code_filter(code: CodeType) -> bool:
         return False
 
     filename = pathlib.Path(code.co_filename).resolve()
-    # if MONKEYTYPE_TRACE_MODULES is defined, trace only specified packages or modules
+    # if MONKEYTYPE_TRACE_MODULES is defined, trace only specified packages
+    #   or modules
     trace_modules_str = os.environ.get("MONKEYTYPE_TRACE_MODULES")
     if trace_modules_str is not None:
         trace_modules = trace_modules_str.split(",")

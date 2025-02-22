@@ -29,7 +29,10 @@ logger = logging.getLogger(__name__)
 
 
 class CallTrace:
-    """CallTrace contains the types observed during a single invocation of a function"""
+    """
+    CallTrace contains the types observed during a single invocation of a
+      function
+    """
 
     def __init__(
         self,
@@ -40,12 +43,14 @@ class CallTrace:
     ) -> None:
         """
         Args:
-            func: The function where the trace occurred
-            arg_types: The collected argument types
-            return_type: The collected return type. This will be None if the called function returns
-                due to an unhandled exception. It will be NoneType if the function returns the value None.
-            yield_type: The collected yield type. This will be None if the called function never
-                yields. It will be NoneType if the function yields the value None.
+          func: The function where the trace occurred
+          arg_types: The collected argument types
+          return_type: The collected return type. This will be None if the
+            called function returns due to an unhandled exception. It will be
+            NoneType if the function returns the value None.
+          yield_type: The collected yield type. This will be None if the
+            called function never yields. It will be NoneType if the function
+            yields the value None.
         """
         self.func = func
         self.arg_types = arg_types
@@ -93,7 +98,8 @@ class CallTraceLogger(metaclass=ABCMeta):
         pass
 
     def flush(self) -> None:
-        """Flush all logged traces to output / database.
+        """
+        Flush all logged traces to output / database.
 
         Not an abstractmethod because it's OK to leave it as a no-op; for very
         simple loggers it may not be necessary to batch-flush traces, and `log`
@@ -149,7 +155,10 @@ def get_locals_from_previous_frames(frame: FrameType) -> Iterator[Any]:
 
 
 def get_func(frame: FrameType) -> Optional[Callable[..., Any]]:
-    """Return the function whose code object corresponds to the supplied stack frame."""
+    """
+    Return the function whose code object corresponds to the supplied stack
+      frame.
+    """
     code = frame.f_code
     if code.co_name is None:
         return None
@@ -157,14 +166,14 @@ def get_func(frame: FrameType) -> Optional[Callable[..., Any]]:
     cand = frame.f_globals.get(code.co_name, None)
     func = _has_code(cand, code)
     # If that failed, as will be the case with class and instance methods, try
-    # to look up the function from the first argument. In the case of class/instance
-    # methods, this should be the class (or an instance of the class) on which our
-    # method is defined.
+    #   to look up the function from the first argument. In the case of
+    #   class/instance methods, this should be the class (or an instance of the
+    #   class) on which our method is defined.
     if func is None and code.co_argcount >= 1:
         first_arg = frame.f_locals.get(code.co_varnames[0])
         func = get_func_in_mro(first_arg, code)
-    # If we still can't find the function, as will be the case with static methods,
-    # try looking at classes in global scope.
+    # If we still can't find the function, as will be the case with static
+    #   methods, try looking at classes in global scope.
     if func is None:
         for v in frame.f_globals.values():
             if not isinstance(v, type):
@@ -172,7 +181,8 @@ def get_func(frame: FrameType) -> Optional[Callable[..., Any]]:
             func = get_func_in_mro(v, code)
             if func is not None:
                 break
-    # If we still can't find the function, try looking at the locals of all previous frames.
+    # If we still can't find the function, try looking at the locals of all
+    #   previous frames.
     if func is None:
         for v in get_locals_from_previous_frames(frame):
             if not callable(v):
@@ -196,7 +206,8 @@ SUPPORTED_EVENTS = {EVENT_CALL, EVENT_RETURN}
 
 
 class CallTracer:
-    """CallTracer captures the concrete types involved in a function invocation.
+    """
+    CallTracer captures the concrete types involved in a function invocation.
 
     On a per function call basis, CallTracer will record the types of arguments
     supplied, the type of the function's return value (if any), and the types

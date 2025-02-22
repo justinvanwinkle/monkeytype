@@ -12,7 +12,10 @@ from mypy_extensions import _TypedDictMeta  # type: ignore[attr-defined]
 
 
 def is_typed_dict(typ: type) -> bool:
-    """Test indirectly using _TypedDictMeta because TypedDict does not support `isinstance`."""
+    """
+    Test indirectly using _TypedDictMeta because TypedDict does not
+      support `isinstance`.
+    """
     return isinstance(typ, _TypedDictMeta)
 
 
