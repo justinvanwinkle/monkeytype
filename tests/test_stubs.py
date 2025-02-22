@@ -98,7 +98,9 @@ class TestImportBlockStub:
         assert stub.render() == expected
 
     def test_multiple_imports(self):
-        """Multiple imports from a single module should each be on their own line"""
+        """
+        Multiple imports from a single module should each be on their own line
+        """
         imports = ImportMap()
         imports["a.module"] = {"AClass", "AnotherClass", "AThirdClass"}
         stub = ImportBlockStub(imports)
@@ -112,7 +114,9 @@ class TestImportBlockStub:
         assert stub.render() == expected
 
     def test_multiple_io_imports(self):
-        """Multiple imports from single _io module should be convert to io import"""
+        """
+        Multiple imports from single _io module should be convert to io import
+        """
         imports = ImportMap()
         imports["_io"] = {"BytesIO", "FileIO"}
         stub = ImportBlockStub(imports)
@@ -147,7 +151,7 @@ def default_none_parameter(x: int | None = None) -> None:
 
 
 def has_length_exceeds_120_chars(
-    very_long_name_parameter_1: float, very_long_name_parameter_2: float
+        very_long_name_parameter_1: float, very_long_name_parameter_2: float
 ) -> Optional[float]:
     return None
 
@@ -161,7 +165,7 @@ def has_forward_ref() -> Optional["TestFunctionStub"]:
 
 
 def has_forward_ref_within_generator() -> (
-    Generator["TestFunctionStub", None, int]
+        Generator["TestFunctionStub", None, int]
 ):
     pass
 
@@ -184,37 +188,30 @@ class TestAttributeStub:
 class TestRenderAnnotation:
     @pytest.mark.parametrize(
         ("annotation", "expected"),
-        [
-            (make_forward_ref("Foo"), "'Foo'"),
-            (List[make_forward_ref("Foo")], "List['Foo']"),
-            (List[List[make_forward_ref("Foo")]], "List[List['Foo']]"),
-            (Optional[int], "Optional[int]"),
-            (List[Optional[int]], "List[Optional[int]]"),
-            (UserId, "UserId"),
-            (List[UserId], "List[UserId]"),
-            (List[int], "List[int]"),
-            (List[List[int]], "List[List[int]]"),
-            (None, "None"),
-            (List[None], "List[None]"),
-            (int, "int"),
-            (Dummy, "tests.util.Dummy"),
-            (List[Dummy], "List[tests.util.Dummy]"),
-            ("some_string", "some_string"),
-            (Iterable[None], "Iterable[None]"),
-            (List[Iterable[None]], "List[Iterable[None]]"),
-            (
-                Generator[make_forward_ref("Foo"), None, None],
-                "Generator['Foo', None, None]",
-            ),
-            (
-                List[Generator[make_forward_ref("Foo"), None, None]],
-                "List[Generator['Foo', None, None]]",
-            ),
-            (T, "T"),
-            (Dict[str, T], "Dict[str, T]"),
-            (Tuple[()], "Tuple[()]"),
-        ],
-    )
+        [(make_forward_ref("Foo"), "'Foo'"),
+         (List[make_forward_ref("Foo")], "List['Foo']"),
+         (List[List[make_forward_ref("Foo")]], "List[List['Foo']]"),
+         (Optional[int], "Optional[int]"),
+         (List[Optional[int]], "List[Optional[int]]"),
+         (UserId, "UserId"),
+         (List[UserId], "List[UserId]"),
+         (List[int], "List[int]"),
+         (List[List[int]], "List[List[int]]"),
+         (None, "None"),
+         (List[None], "List[None]"),
+         (int, "int"),
+         (Dummy, "tests.util.Dummy"),
+         (List[Dummy], "List[tests.util.Dummy]"),
+         ("some_string", "some_string"),
+         (Iterable[None], "Iterable[None]"),
+         (List[Iterable[None]], "List[Iterable[None]]"),
+         (Generator[make_forward_ref("Foo"), None, None],
+          "Generator['Foo', None, None]"),
+         (List[Generator[make_forward_ref("Foo"), None, None]],
+          "List[Generator['Foo', None, None]]"),
+         (T, "T"),
+         (Dict[str, T], "Dict[str, T]"),
+         (Tuple[()], "Tuple[()]")])
     def test_render_annotation(self, annotation, expected):
         assert render_annotation(annotation) == expected
 
@@ -305,7 +302,10 @@ class TestFunctionStub:
         assert stub.render() == expected
 
     def test_optional_parameter_annotation(self):
-        """Optional should always be included in parameter annotations, even if the default value is None"""
+        """
+        Optional should always be included in parameter annotations, even if
+          the default value is None
+        """
         stub = FunctionStub(
             "test", inspect.signature(has_optional_param), FunctionKind.MODULE
         )
@@ -313,7 +313,10 @@ class TestFunctionStub:
         assert stub.render() == expected
 
     def test_optional_union_parameter_annotation(self):
-        """Optional[Union[X, Y]] should always be rendered as such, not Union[X, Y, None]"""
+        """
+        Optional[Union[X, Y]] should always be rendered as such, not
+          Union[X, Y, None]
+        """
         stub = FunctionStub(
             "test",
             inspect.signature(has_optional_union_param),
@@ -331,7 +334,10 @@ class TestFunctionStub:
         assert stub.render() == expected
 
     def test_split_parameters_across_multiple_lines(self):
-        """When single-line length exceeds 120 characters, parameters should be split into multiple lines."""
+        """
+        When single-line length exceeds 120 characters, parameters
+          should be split into multiple lines.
+        """
         stub = FunctionStub(
             "has_length_exceeds_120_chars",
             inspect.signature(has_length_exceeds_120_chars),
@@ -404,7 +410,8 @@ class TestFunctionStub:
         assert stub.render() == expected
 
 
-def _func_stub_from_callable(func: Callable, strip_modules: List[str] | None = None):
+def _func_stub_from_callable(func: Callable,
+                             strip_modules: List[str] | None = None):
     kind = FunctionKind.from_callable(func)
     sig = Signature.from_callable(func)
     return FunctionStub(func.__name__, sig, kind, strip_modules)
@@ -467,13 +474,11 @@ class TestReplaceTypedDictsWithStubs:
             function_stubs=[],
             attribute_stubs=[
                 AttributeStub(name=a, typ=int),
-                AttributeStub(name=b, typ=str),
-            ],
-        ),
+                AttributeStub(name=b, typ=str)]),
         ClassStub(
             name=(
-                "FooBarTypedDict__RENAME_ME__NonTotal(FooBarTypedDict__RENAME_ME__,"
-                " total=False)"
+                "FooBarTypedDict__RENAME_ME__NonTotal("
+                "FooBarTypedDict__RENAME_ME__, total=False)"
             ),
             function_stubs=[],
             attribute_stubs=[AttributeStub(name=c, typ=int)],
@@ -885,8 +890,8 @@ class TestModuleStub:
             "        bar: int",
             (
                 "    ) ->"
-                " Generator['DummyAnInstanceMethodYieldTypedDict__RENAME_ME__',"
-                " None, int]: ..."
+                " Generator['DummyAnInstanceMethodYieldTypedDict"
+                "__RENAME_ME__', None, int]: ..."
             ),
         ])
         self.maxDiff = None
@@ -1065,8 +1070,8 @@ class TestStubIndexBuilder:
         assert idxb.get_stubs() == expected
 
 
-# These functions are intentionally partially typed to ensure we do not modify pre-existing
-# annotations as well as to ensure we update empty annotations.
+# These functions are intentionally partially typed to ensure we do not modify
+#   pre-existing annotations as well as to ensure we update empty annotations.
 class UpdateSignatureHelper:
     @staticmethod
     def has_annos(a: int, b) -> int:
@@ -1175,7 +1180,10 @@ class TestUpdateSignatureArgs:
         assert sig == Signature(parameters=params, return_annotation=int)
 
     def test_update_arg_avoid_incompatible_anno(self):
-        """Can generate stub with no annotations where they already exist in the source."""
+        """
+        Can generate stub with no annotations where they already exist in the
+          source.
+        """
         sig = Signature.from_callable(UpdateSignatureHelper.has_annos)
         sig = update_signature_args(
             sig,
@@ -1215,7 +1223,9 @@ class TestUpdateSignatureReturn:
         assert sig == expected
 
     def test_avoid_incompatible_return(self):
-        """Generate stub for application with no annotation where source has one"""
+        """
+        Generate stub for application with no annotation where source has one
+        """
         sig = Signature.from_callable(UpdateSignatureHelper.has_annos)
         sig = update_signature_return(
             sig, return_type=str, existing_strategy=ExistingStrategy.OMIT
@@ -1394,100 +1404,98 @@ class TestFunctionDefinition:
 
     @pytest.mark.parametrize(
         ("func", "arg_types", "return_type", "yield_type", "expected"),
-        [
-            # Non-TypedDict case.
-            (
-                Dummy.an_instance_method,
-                {"foo": int, "bar": List[str]},
-                int,
-                None,
-                FunctionDefinition(
-                    "tests.util",
-                    "Dummy.an_instance_method",
-                    FunctionKind.INSTANCE,
-                    Signature(
-                        parameters=[
-                            Parameter(
-                                name="self",
-                                kind=Parameter.POSITIONAL_OR_KEYWORD,
-                                annotation=Parameter.empty,
-                            ),
-                            Parameter(
-                                name="foo",
-                                kind=Parameter.POSITIONAL_OR_KEYWORD,
-                                annotation=int,
-                            ),
-                            Parameter(
-                                name="bar",
-                                kind=Parameter.POSITIONAL_OR_KEYWORD,
-                                annotation=List[str],
-                            ),
-                        ],
-                        return_annotation=int,
-                    ),
-                    False,
-                    [],
-                ),
-            ),
-            # TypedDict: Add class definitions and use the class names as types.
-            (
-                Dummy.an_instance_method,
-                {
-                    "foo": make_typed_dict(required_fields={a: int, b: str}),
-                    "bar": make_typed_dict(required_fields={c: int}),
-                },
-                int,
-                None,
-                FunctionDefinition(
-                    "tests.util",
-                    "Dummy.an_instance_method",
-                    FunctionKind.INSTANCE,
-                    Signature(
-                        parameters=[
-                            Parameter(
-                                name="self",
-                                kind=Parameter.POSITIONAL_OR_KEYWORD,
-                                annotation=Parameter.empty,
-                            ),
-                            Parameter(
-                                name="foo",
-                                kind=Parameter.POSITIONAL_OR_KEYWORD,
-                                annotation=make_forward_ref(
-                                    "FooTypedDict__RENAME_ME__"
-                                ),
-                            ),
-                            Parameter(
-                                name="bar",
-                                kind=Parameter.POSITIONAL_OR_KEYWORD,
-                                annotation=make_forward_ref(
-                                    "BarTypedDict__RENAME_ME__"
-                                ),
-                            ),
-                        ],
-                        return_annotation=int,
-                    ),
-                    False,
-                    [
-                        ClassStub(
-                            name="FooTypedDict__RENAME_ME__(TypedDict)",
-                            function_stubs=[],
-                            attribute_stubs=[
-                                AttributeStub(a, int),
-                                AttributeStub(b, str),
-                            ],
+        [(
+            Dummy.an_instance_method,
+            {"foo": int, "bar": List[str]},
+            int,
+            None,
+            FunctionDefinition(
+                "tests.util",
+                "Dummy.an_instance_method",
+                FunctionKind.INSTANCE,
+                Signature(
+                    parameters=[
+                        Parameter(
+                            name="self",
+                            kind=Parameter.POSITIONAL_OR_KEYWORD,
+                            annotation=Parameter.empty,
                         ),
-                        ClassStub(
-                            name="BarTypedDict__RENAME_ME__(TypedDict)",
-                            function_stubs=[],
-                            attribute_stubs=[AttributeStub(c, int)],
+                        Parameter(
+                            name="foo",
+                            kind=Parameter.POSITIONAL_OR_KEYWORD,
+                            annotation=int,
+                        ),
+                        Parameter(
+                            name="bar",
+                            kind=Parameter.POSITIONAL_OR_KEYWORD,
+                            annotation=List[str],
                         ),
                     ],
+                    return_annotation=int,
                 ),
+                False,
+                [],
             ),
-        ],
+        ),
+         # TypedDict: Add class definitions and use the class names as types.
+         (
+             Dummy.an_instance_method,
+             {
+                 "foo": make_typed_dict(required_fields={a: int, b: str}),
+                 "bar": make_typed_dict(required_fields={c: int}),
+             },
+             int,
+             None,
+             FunctionDefinition(
+                 "tests.util",
+                 "Dummy.an_instance_method",
+                 FunctionKind.INSTANCE,
+                 Signature(
+                     parameters=[
+                         Parameter(
+                             name="self",
+                             kind=Parameter.POSITIONAL_OR_KEYWORD,
+                             annotation=Parameter.empty,
+                         ),
+                         Parameter(
+                             name="foo",
+                             kind=Parameter.POSITIONAL_OR_KEYWORD,
+                             annotation=make_forward_ref(
+                                 "FooTypedDict__RENAME_ME__"
+                             ),
+                         ),
+                         Parameter(
+                             name="bar",
+                             kind=Parameter.POSITIONAL_OR_KEYWORD,
+                             annotation=make_forward_ref(
+                                 "BarTypedDict__RENAME_ME__"
+                             ),
+                         ),
+                     ],
+                     return_annotation=int,
+                 ),
+                 False,
+                 [
+                     ClassStub(
+                         name="FooTypedDict__RENAME_ME__(TypedDict)",
+                         function_stubs=[],
+                         attribute_stubs=[
+                             AttributeStub(a, int),
+                             AttributeStub(b, str),
+                         ],
+                     ),
+                     ClassStub(
+                         name="BarTypedDict__RENAME_ME__(TypedDict)",
+                         function_stubs=[],
+                         attribute_stubs=[AttributeStub(c, int)],
+                     ),
+                 ],
+             ),
+         ),
+         ],
     )
     def test_from_callable_and_traced_types(
-        self, func, arg_types, return_type, yield_type, expected
+            self, func, arg_types, return_type, yield_type, expected
     ):
         function = FunctionDefinition.from_callable_and_traced_types(
             func,
@@ -1557,7 +1565,10 @@ class TestGetImportsForAnnotation:
         [(Any, {"typing": {"Any"}}), (Union[int, str], {"typing": {"Union"}})],
     )
     def test_special_case_types(self, anno, expected):
-        """Any and Union do not have module/qualname and need to be treated specially"""
+        """
+        Any and Union do not have module/qualname and need to be treated
+          specially
+        """
         assert get_imports_for_annotation(anno) == expected
 
     def test_callable(self):

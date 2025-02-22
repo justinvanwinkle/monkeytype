@@ -365,7 +365,10 @@ def test_toplevel_filename_parameter(store, db_file, stdout, stderr):
 
 @pytest.mark.usefixtures("collector")
 def test_apply_stub_init(store, db_file, stdout, stderr, collector):
-    """Regression test for applying stubs to testmodule/__init__.py style module layout"""
+    """
+    Regression test for applying stubs to testmodule/__init__.py style module
+      layout
+    """
     with trace_calls(collector, max_typed_dict_size=0):
         func_foo()
 
@@ -384,7 +387,9 @@ def test_apply_stub_init(store, db_file, stdout, stderr, collector):
 
 
 def test_apply_stub_file_with_spaces(store, db_file, stdout, stderr):
-    """Regression test for applying a stub to a filename containing spaces"""
+    """
+    Regression test for applying a stub to a filename containing spaces
+    """
     src = """
 def my_test_function(a, b):
   return a + b

@@ -42,7 +42,7 @@ def uses_kw_only_arg(a: int, *, b: int) -> int:
 
 
 def has_locals(foo: str) -> Optional[FrameType]:
-    bar = "baz"  # noqa - Needed to ensure non-argument locals are present in the returned frame
+    bar = "baz"  # noqa: F841
     return inspect.currentframe()
 
 
@@ -116,7 +116,7 @@ def nested_throw(should_recover: bool) -> str:
 def recover_from_nested_throw() -> str:
     try:
         throw(False)
-    except Exception:
+    except Exception:  # noqa: S110
         pass
     return "Testing 123"
 
@@ -232,7 +232,7 @@ class TestTraceCalls:
         with trace_calls(collector, max_typed_dict_size=0):
             try:
                 throw(should_recover=False)
-            except Exception:
+            except Exception:  # noqa: S110
                 pass
         assert collector.traces == [CallTrace(throw, {"should_recover": bool})]
 
@@ -240,7 +240,7 @@ class TestTraceCalls:
         with trace_calls(collector, max_typed_dict_size=0):
             try:
                 nested_throw(should_recover=False)
-            except Exception:
+            except Exception:  # noqa: S110
                 pass
         expected = [
             CallTrace(throw, {"should_recover": bool}),
@@ -296,7 +296,10 @@ class TestTraceCalls:
         assert collector.traces[0] == CallTrace(function, {"n": int}, int)
 
     def test_return_none(self, collector):
-        """Ensure traces have a return_type of NoneType for functions that return a value of None"""
+        """
+        Ensure traces have a return_type of NoneType for functions that return
+          a value of None
+        """
         with trace_calls(collector, max_typed_dict_size=0):
             implicit_return_none()
             explicit_return_none()
@@ -310,13 +313,16 @@ class TestTraceCalls:
         """Check that we correctly trace functions decorated with @property"""
         o = Oracle()
         with trace_calls(collector, max_typed_dict_size=0):
-            o.meaning_of_life
+            o.meaning_of_life  # noqa: B018
         assert collector.traces == [
             CallTrace(Oracle.meaning_of_life.fget, {"self": Oracle}, int)
         ]
 
     def test_filtering(self, collector):
-        """If supplied, the code filter should decide which code objects are traced"""
+        """
+        If supplied, the code filter should decide which code objects are
+          traced
+        """
         with trace_calls(
             collector,
             max_typed_dict_size=0,
@@ -329,7 +335,8 @@ class TestTraceCalls:
         ]
 
     def test_lazy_value(self, collector):
-        """Check that function lookup does not invoke custom descriptors.
+        """
+        Check that function lookup does not invoke custom descriptors.
 
         LazyValue is an interesting corner case. Internally, LazyValue stores a
         function and its arguments. When LazyValue.value is accessed for the
@@ -349,4 +356,4 @@ class TestTraceCalls:
         """
         lazy_val = LazyValue(explicit_return_none)
         with trace_calls(collector, max_typed_dict_size=0):
-            lazy_val.value
+            lazy_val.value  # noqa: B018

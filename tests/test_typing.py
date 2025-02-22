@@ -402,7 +402,8 @@ class TestShrinkType:
                 ),
                 List[make_typed_dict(required_fields={a: int})],
             ),
-            # Non-TypedDict types but not all the same - convert anonymous TypedDicts to Dicts.
+            # Non-TypedDict types but not all the same - convert anonymous
+            #   TypedDicts to Dicts.
             (
                 (
                     List[make_typed_dict(required_fields={a: int})],
@@ -480,7 +481,8 @@ class TestShrinkType:
                 ),
                 typing_Tuple[Dict[str, int]],
             ),
-            # Fall back to Dict when the resulting TypedDict would be too large.
+            # Fall back to Dict when the resulting TypedDict would be too
+            #   large.
             # Keep any nested anonymous TypedDicts, though.
             (
                 (

@@ -64,18 +64,18 @@ def get_name_in_module(
         attr_getter = getattr
     try:
         obj = importlib.import_module(module)
-    except ModuleNotFoundError:
-        raise NameLookupError("No module named '%s'" % (module,))
+    except ModuleNotFoundError as e:
+        raise NameLookupError("No module named '%s'" % (module,)) from e
     walked = []
     for part in qualname.split("."):
         walked.append(part)
         try:
             obj = attr_getter(obj, part)
-        except AttributeError:
+        except AttributeError as e:
             raise NameLookupError(
                 "Module '%s' has no attribute '%s'"
                 % (module, ".".join(walked))
-            )
+            ) from e
     return obj
 
 

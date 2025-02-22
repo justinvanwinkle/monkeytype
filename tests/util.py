@@ -65,14 +65,16 @@ class Outer:
 
 def transform_path(path: str) -> str:
     """Transform tests/test_foo.py to monkeytype.foo"""
-    path = "monkeytype/" + path[len("tests/") :]
+    path = "monkeytype/" + path[len("tests/"):]
     *basepath, file_name = path.split("/")
-    basename, _ext = os.path.splitext(file_name[len("test_") :])
+    basename, _ext = os.path.splitext(file_name[len("test_"):])
     return ".".join([*basepath, basename])
 
 
 def smartcov_paths_hook(paths: List[str]) -> List[str]:
-    """Given list of test files to run, return modules to measure coverage of."""
+    """
+    Given list of test files to run, return modules to measure coverage of.
+    """
     if not paths:
         return ["monkeytype"]
     return [transform_path(path) for path in paths]
