@@ -247,7 +247,10 @@ def shrink_traced_types(
 
 
 def get_typed_dict_class_name(parameter_name: str) -> str:
-    """Return the name for a TypedDict class generated for parameter `parameter_name`."""
+    """
+    Return the name for a TypedDict class generated for parameter
+      `parameter_name`.
+    """
     return f"{pascal_case(parameter_name)}TypedDict__RENAME_ME__"
 
 
@@ -375,7 +378,8 @@ class RenderAnnotation(GenericTypeRewriter[str]):
         rendered = super().rewrite(typ)
         if getattr(typ, "__module__", None) == "typing":
             rendered = rendered.replace("typing.", "")
-        # Temporary hacky workaround for #76 to fix remaining NoneType hints by search-replace
+        # Temporary hacky workaround for #76 to fix remaining NoneType hints
+        #   by search-replace
         rendered = rendered.replace("NoneType", "None")
         return rendered
 
@@ -388,8 +392,10 @@ def render_annotation(anno: Any) -> str:
 def render_parameter(param: inspect.Parameter) -> str:
     """Convert a parameter into its stub representation.
 
-    NB: This is copied almost entirely from https://github.com/python/cpython/blob/3.6/Lib/inspect.py
-    with the modification that it calls our own rendering functions for annotations.
+    NB: This is copied almost entirely from
+      https://github.com/python/cpython/blob/3.6/Lib/inspect.py
+      with the modification that it calls our own rendering functions
+      for annotations.
 
     TODO: push a patch upstream so we don't have to do this on Python 3.x.
     """
@@ -422,8 +428,10 @@ def render_signature(
 ) -> str:
     """Convert a signature into its stub representation.
 
-    NB: This is copied almost entirely from https://github.com/python/cpython/blob/3.6/Lib/inspect.py
-    with the modification that it calls our own rendering functions for annotations.
+    NB: This is copied almost entirely from
+      https://github.com/python/cpython/blob/3.6/Lib/inspect.py
+      with the modification that it calls our own rendering functions
+      for annotations.
 
     TODO: push a patch upstream so we don't have to do this on Python 3.x.
     """
@@ -583,17 +591,22 @@ class ClassStub(Stub):
 
 
 class ReplaceTypedDictsWithStubs(TypeRewriter):
-    """Replace TypedDicts in a generic type with class stubs and store all the stubs."""
+    """
+    Replace TypedDicts in a generic type with class stubs and store all the
+      stubs.
+    """
 
     def __init__(self, class_name_hint: str) -> None:
         self._class_name_hint = class_name_hint
         self.stubs: List[ClassStub] = []
 
     def _rewrite_container(self, cls: type, container: type) -> type:
-        """Rewrite while using the index of the inner type as a class name hint.
+        """
+        Rewrite while using the index of the inner type as a class name hint.
 
         Otherwise, Tuple[TypedDict(...), TypedDict(...)] would give the same
-        name for both the generated classes."""
+        name for both the generated classes.
+        """
         if container.__module__ != "typing":
             return container
         args = getattr(container, "__args__", None)
@@ -643,7 +656,7 @@ class ReplaceTypedDictsWithStubs(TypeRewriter):
             )
         )
 
-    def rewrite_anonymous_TypedDict(self, typed_dict: type) -> ForwardRef:  # type: ignore[override]
+    def rewrite_anonymous_TypedDict(self, typed_dict: type) -> ForwardRef:
         class_name = get_typed_dict_class_name(self._class_name_hint)
         required_fields, optional_fields = field_annotations(typed_dict)
         has_required_fields = len(required_fields) != 0
@@ -866,7 +879,9 @@ def get_updated_definition(
 def build_module_stubs(
     entries: Iterable[FunctionDefinition],
 ) -> dict[str, ModuleStub]:
-    """Given an iterable of function definitions, build the corresponding stubs"""
+    """
+    Given an iterable of function definitions, build the corresponding stubs
+    """
     mod_stubs: dict[str, ModuleStub] = {}
     for entry in entries:
         path = entry.qualname.split(".")

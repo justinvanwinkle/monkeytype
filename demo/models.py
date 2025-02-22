@@ -1,9 +1,6 @@
 # Copyright 2017-present, Facebook, Inc.
 # All rights reserved.
-"""
-Sample code for MonkeyType demonstration exercise at PyCon 2018.
-
-"""
+"""Sample code for MonkeyType demonstration exercise at PyCon 2018."""
 
 import enum
 from datetime import datetime
